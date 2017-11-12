@@ -5,4 +5,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Classifier Auto Rank</name>
   <description>Automatic Ranking of Classification Algorithms Using Meta-Learning on Performance Measures</description>
+  <properties>
+    <maven.compiler.source>1.9</maven.compiler.source>
+    <maven.compiler.target>1.9</maven.compiler.target>
+  </properties>
 </project>
