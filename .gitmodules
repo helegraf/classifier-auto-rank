@@ -1,0 +1,3 @@
+[submodule "ISG-jpl"]
+	path = ISG-jpl
+	url = https://github.com/Intelligent-Systems-Group/jpl-framework.git

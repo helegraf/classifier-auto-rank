@@ -1,0 +1,160 @@
+\documentclass[runningheads,a4paper]{llncs}
+
+\usepackage[american]{babel}
+\usepackage{graphicx}
+
+%extended enumerate, such as \begin{compactenum}
+\usepackage{paralist}
+%for easy quotations: \enquote{text}
+\usepackage{csquotes}
+
+\usepackage[T1]{fontenc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% use math packages
+\usepackage{amsmath,amsfonts, amssymb}
+% use placeins package for getting FloatBarrier
+\usepackage{placeins}
+%\usepackage{caption}
+\usepackage{subcaption}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%enable margin kerning
+\usepackage{microtype}
+
+%better font, similar to the default springer font
+\usepackage[%
+rm={oldstyle=false,proportional=true},%
+sf={oldstyle=false,proportional=true},%
+tt={oldstyle=false,proportional=true,variable=true},%
+qt=false%
+]{cfr-lm}
+%
+
+\usepackage[
+%pdfauthor={},
+%pdfsubject={},
+%pdftitle={},
+%pdfkeywords={},
+bookmarks=false,
+breaklinks=true,
+colorlinks=true,
+linkcolor=black,
+citecolor=black,
+urlcolor=black,
+%pdfstartpage=19,
+pdfpagelayout=SinglePage
+]{hyperref}
+%enables correct jumping to figures when referencing
+\usepackage[all]{hypcap}
+
+\usepackage[capitalise,nameinlink]{cleveref}
+%Nice formats for \cref
+\crefname{section}{Sect.}{Sect.}
+\Crefname{section}{Section}{Sections}
+\crefname{figure}{Fig.}{Fig.}
+\Crefname{figure}{Figure}{Figures}
+
+\usepackage{xspace}
+%\newcommand{\eg}{e.\,g.\xspace}
+%\newcommand{\ie}{i.\,e.\xspace}
+\newcommand{\eg}{e.\,g.,\ }
+\newcommand{\ie}{i.\,e.,\ }
+
+%introduce \powerset - hint by http://matheplanet.com/matheplanet/nuke/html/viewtopic.php?topic=136492&post_id=997377
+\DeclareFontFamily{U}{MnSymbolC}{}
+\DeclareSymbolFont{MnSyC}{U}{MnSymbolC}{m}{n}
+\DeclareFontShape{U}{MnSymbolC}{m}{n}{
+    <-6>  MnSymbolC5
+   <6-7>  MnSymbolC6
+   <7-8>  MnSymbolC7
+   <8-9>  MnSymbolC8
+   <9-10> MnSymbolC9
+  <10-12> MnSymbolC10
+  <12->   MnSymbolC12%
+}{}
+\DeclareMathSymbol{\powerset}{\mathord}{MnSyC}{180}
+
+%improve wrapping of URLs - hint by http://tex.stackexchange.com/a/10419/9075
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\UrlOrds}
+\makeatother
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{todonotes}
+\usepackage{tabularx}
+\usepackage{boiboites}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+\newboxedtheorem[boxcolor=orange, 
+                 background=orange!15, 
+                 titlebackground=orange!5,
+                 titleboxcolor = black]
+                 {theo}{Theorem}{thm}
+
+\newboxedtheorem[boxcolor=green!62, 
+                 background=green!10, 
+                 titlebackground=green!5,
+                 titleboxcolor = black]
+                 {defn}{Definition}{thm}
+                 
+\newboxedtheorem[boxcolor=blue, 
+                 background=blue!15, 
+                 titlebackground=blue!5,
+                 titleboxcolor = black]
+                 {intuition}{Intuition}{intuiCtr}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%Works on MiKTeX only
+%hint by http://goemonx.blogspot.de/2012/01/pdflatex-ligaturen-und-copynpaste.html
+%also http://tex.stackexchange.com/questions/4397/make-ligatures-in-linux-libertine-copyable-and-searchable
+%This allows a copy'n'paste of the text from the paper
+\input glyphtounicode.tex
+\pdfgentounicode=1
+
+\title{Multilayer Perceptrons}
+%If Title is too long, use \titlerunning
+%\titlerunning{Short Title}
+
+%Single insitute
+\author{Marcel Wever (6686504)}
+%If there are too many authors, use \authorrunning
+%\authorrunning{First Author et al.}
+\institute{Paderborn University\\
+\email{wever@mail.uni-paderborn.de}
+}
+
+%Multiple insitutes
+%Currently disabled
+%
+\iffalse
+%Multiple institutes are typeset as follows:
+\author{Marcel Wever\inst{1}}
+%If there are too many authors, use \authorrunning
+%\authorrunning{First Author et al.}
+
+\institute{
+Paderborn University\\
+\email{wever@mail.uni-paderborn.de}
+}
+\fi
+			
+\maketitle
+
+\begin{abstract}
+Lately, in the context of machine learning deep learning techniques using artificial neural networks gained in importance, providing a powerful model. In particular, multilayer perceptrons, a sub-class of artificial neural networks, have the ability to learn nearly all practice-oriented non-linear functions and generalize well from given training data. The backpropagation learning algorithm is a fundamental technique to train multilayer perceptrons with the help of a given data set containing only inputs and expected outputs of the network without revealing information about interim results of intermediate layers. However, multilayer perceptrons are also limited in their capabilities. This paper provides an overview on fundamentals of multilayer perceptrons, the backpropagation algorithm and the abilities and limits of multilayer perceptrons. Additionally, 
+\end{abstract}
+
+\keywords{Artificial Neural Networks, Multilayer Perceptrons, Backpropagation Algorithm, Rectified Linear Unit, Sigmoid Unit}

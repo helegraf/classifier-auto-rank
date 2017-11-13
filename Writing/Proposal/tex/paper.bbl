@@ -1,0 +1,71 @@
+\begin{thebibliography}{DPAM00}
+
+\bibitem[BL05]{activeCoEvo}
+\textsc{Bongard}, Josh; \textsc{Lipson}, Hod:
+\newblock Active Coevolutionary Learning of Deterministic Finite Automata.
+\newblock {In: }\emph{J. Mach. Learn. Res.}
+\newblock 6 (2005), Dezember, S. 1651--1678. --
+\newblock ISSN 1532--4435
+
+\bibitem[CHT03]{soa}
+\textsc{Channabasavaiah}, Kishore; \textsc{Holley}, Kerrie; \textsc{Tuggle},
+  Edward:
+\newblock Migrating to a service-oriented architecture.
+\newblock {In: }\emph{IBM DeveloperWorks}
+\newblock 16 (2003)
+
+\bibitem[DPAM00]{NSGA}
+\textsc{Deb}, Kalyanmoy; \textsc{Pratap}, Amrit; \textsc{Agarwal}, Sameer;
+  \textsc{Meyarivan}, T.:
+\newblock A Fast Elitist Multi-Objective Genetic Algorithm: NSGA-II.
+\newblock {In: }\emph{IEEE Transactions on Evolutionary Computation}
+\newblock 6 (2000), S. 182--197
+
+\bibitem[Hor51]{horn}
+\textsc{Horn}, Alfred:
+\newblock On Sentences Which are True of Direct Unions of Algebras.
+\newblock {In: }\emph{The Journal of Symbolic Logic}
+\newblock 16 (1951), Nr. 1, S. 14--21. --
+\newblock ISSN 00224812
+
+\bibitem[Lan94]{breedingGrammars}
+\textsc{Lankhorst}, Marc~M.:
+\newblock Breeding Grammars: Grammatical Inference with a Genetic Algorithm.
+\newblock {In: }\emph{Proceedings of the 1994 EUROSIM conference on massively
+  parallel processing applications and development}, Elsevier, 1994, S.
+  423--430
+
+\bibitem[LPP98]{EDSM}
+\textsc{Lang}, Kevin~J.; \textsc{Pearlmutter}, Barak~A.; \textsc{Price},
+  Rodney~A.:
+\newblock Results of the Abbadingo One DFA Learning Competition and a New
+  Evidence-Driven State Merging Algorithm.
+\newblock {In: }\emph{Proceedings of the 4th International Colloquium on
+  Grammatical Inference}.
+\newblock London, UK, UK : Springer-Verlag, 1998
+\newblock (ICGI '98). --
+\newblock ISBN 3--540--64776--7, S. 1--12
+
+\bibitem[LR05]{evoGram}
+\textsc{Lucas}, Simon~M.; \textsc{Reynolds}, T.~J.:
+\newblock Learning Deterministic Finite Automata with a Smart State Labeling
+  Evolutionary Algorithm.
+\newblock {In: }\emph{IEEE Trans. Pattern Anal. Mach. Intell.}
+\newblock 27 (2005), Juli, Nr. 7, S. 1063--1074. --
+\newblock ISSN 0162--8828
+
+\bibitem[Obj15]{umlSequenceDiags}
+Object Management Group (OMG):
+\newblock \emph{OMG Unified Modelling Language}.
+\newblock v 2.5.
+\newblock March 2015
+
+\bibitem[RH16]{heikoLorijn}
+\textsc{van Rooijen}, Lorijn; \textsc{Hamann}, Heiko:
+\newblock Requirements Specification-by-Example Using a Multi-Objective
+  Evolutionary Algorithm.
+\newblock
+\newblock  (2016). --
+\newblock AIRE16
+
+\end{thebibliography}
