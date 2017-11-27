@@ -1,0 +1,259 @@
+\documentclass[12pt]{scrartcl}
+
+\usepackage[american]{babel}
+
+\usepackage{graphicx}
+\graphicspath{{images/}}
+
+\usepackage{paralist}
+\usepackage{csquotes}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\usepackage[marginal]{footmisc}
+\usepackage{hyperref}
+\usepackage{pgfgantt}
+\usepackage{float}
+\usepackage[backend=biber,style=numeric-comp]{biblatex}
+\addbibresource{literature3.bib}
+
+\usepackage{geometry}
+% \geometry{a4paper,body={5.8in,9in}}
+\geometry{a4paper}
+
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{placeins}
+\usepackage{subcaption}
+
+\usepackage{setspace}
+
+\setlength{\parindent}{0pt}
+
+\renewcommand{\labelenumi}{\arabic{enumi}.} 
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumii}}
+
+
+\begin{document}
+
+\title{Automatic Ranking of Classification Algorithms}
+\subtitle{A Comparison of Regression-Based Ranking and Preference Models
+\\\vspace{2em}Bachelor Thesis Proposal \& Work Plan}
+
+\author{Helena Graf\\ 
+\small{matriculation number: 7011643}\\ 
+\small{hgraf@mail.upb.de}}
+\date{\today}
+
+\maketitle
+\vspace{2em}
+
+\begin{center}
+\small{Supervisors:}\\
+\large{Prof. Dr. Eyke H\"ullermeier}\\
+\large{Prof. Dr. Axel-Cyrille Ngonga Ngomo}
+\end{center}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Motivation}\label{sec:motivation}
+%start with why ML is becoming more important
+As the potential of big data is evident, an increasing amount of data is collected and available for analyzation - but this potential is not utilized. In a white paper, the international data corporation claims that in 2012, out of the 2.8 zettabytes (ZB) of available data, only 3\% where tagged as to enable further processing, and only 0.5\% where analyzed. While the claim of a follow-up paper in 2017 projects that in 2025, 15\% of the then estimated 163ZB of global data will be tagged, and approximately 3\% analyzed, is more optimistic, it still shows that there is a huge amount of data that could potentially be useful, but this is not exploited. This shows that the demand of data to be analyzed cannot be covered by data scientists alone, and thus calls for automation of the process, in a way that not much expertise in the field of machine learning is needed to gain insights about the collected data.[citations will follow]\\ %TODO sources!! 
+
+Often, the problem at hand is classification: Assigning an instance a certain class, for example deciding if a client of a bank will be given a credit, based on factors like other existing credits or the  job of the client. But selecting a fitting classifier for a new dataset is difficult, since algorithm performances can vary substantially among datasets, and it is not feasible to simply apply a large number of them to empirically to find a good match. For example, on a dataset about the electricity prices in the Australian state New South Wales, %TODO cite
+ the predictive accuracy for the Multilayer Perceptron\footnote{With standart hyperparameters (L:0.3,M:0.2,N:500,V:0,S:0,E:20,H:a).} is 0.7887 %TODO cite
+. The predictive accuracy of the Random Forests\footnote{With standart hyperparameters (P:100,I:100,num-slots:1,K:0,M:1.0,V:0.001,S:1).} algorithm on the same data set is 0.9236, a much higher value. %TODO cite
+On a different data set, with the topic of vehicle silhouettes, %TODO cite
+ we get a predictive accuracy of 0.7979 %TODO cite
+ for the Multilayer Perceptron, and 0.7518 %TODO cite
+ for Random Forests, showing an advantage of the former on this dataset\footnote{Hyperparameters as above.}. So in each case, one would have picked a different algorithm in order to achieve the best results. In general, this means that for a different dataset, a different algorithm might yield the best performance.[citations will follow]\\
+ 
+Since there is no one best classifier for all datasets, it is likely that how well a classifier performs on a given dataset is to at least some degree dependent on properties of the dataset. Combined with the need for automatic machine learning, this calls for an approach that takes past performances of classifiers, dependent on properties of datasets, in consideration to automatically make suggestions for classifiers for a given dataset.
+
+\section{Related Work}\label{sec:related_work}
+The demand for aid in the process of selecting an algorithm has already lead to the development of tools that automate machine-learning (Auto-ML). In the following paragraphs, The way that three of those tools work is outlined briefly.\\
+
+Auto-WEKA is an Auto-ML tool that both selects a machine learning algorithm and sets its hyperparameters by using Bayesian optimization \cite{thornton2013auto}. It was first released in 2013 as an extension to the popular data mining software WEKA \cite{hall2009weka} to assist the large number of novice users of the software in selecting parameterized algorithms for their problems. The tool has since grown in popularity and is in version 2.0 as of March 2016 \cite{kotthoff2016auto}. In Auto-WEKA, the problem of selecting an algorithm and its hyperparameters is combined by treating the algorithm itself as a hyperparameter and searching the joint space of algorithms and hyperparameters for the best solution. An input dataset is first preprocessed by means of feature selection. Then, Sequential Model-Based Optimization is used to 'iterate[...] between fitting models and using them to make choices about which configurations to investigate' \cite{hutter2011sequential}. In the case of Auto-WEKA, this means that during the optimization process, a model is built, a configuration of hyperparameters that is promising regarding the current model and training data is tried out, and the result is integrated into the model. This cycle is then repeated until the allocated time has run out. While Auto-WEKA works reasonably well, it does not use meta-knowledge, that is the algorithms performance regarding properties of the datasets, to make its decisions. \\
+
+% SK-learn
+AUTO-SKLEARN has been described as a sister-package to Auto-WEKA and is an Auto-ML tool which is based on scikit-learn \cite{feurer2015efficient}. It works very similar to Auto-ML but extends it by adding a meta-learning pre-processing step to warmstart the Bayesian Optimization and automatically constructing ensembles during optimization. During the pre-processing phase, performance values for the classifiers available in AUTO-SKLEARN are recorded on a set of datasets. Then, for each dataset, the algorithm which shows the best empirical performance is noted for each dataset. Then, certain meta-features are calculated for each dataset. For a new dataset, at first, its meta-features are computed. Then, the Manhattan distance to the other datasets is determined according to the meta-features, and the algorithms that are associated with the k-nearest datasets are used as a starting point for further optimization. The authors observe that the additional meta-learning and ensemble construction result in a more efficient and robust way. Their results show that Meta-Learning can be used to improve the overall Auto-ML process.\\
+
+% ML-Plan
+ML-Plan is an Auto-ML tool that instead of concentrating on hyperparameter optimization, aims to optimize the whole machine-learning pipeline [Reference will follow]. This is achieved by viewing machine-learning as a task, building a hierarchical task network out of those tasks, and then searching for a solution in the induced tree structure. In the tree, the root node is a complex task, middle nodes represent incomplete pipelines, and leaf nodes are complete pipelines. An example of this might be 'classify' as the root node, with an intermediate node on some level that contains the tasks 'build NN', 'train NN' and 'predict from NN'. The first of these tasks would then further be decomposed down the tree and could lead to a leaf node with n tasks 'Add layer', 'build NN' and 'predict from NN', which are all so-called primitive tasks that do not need to be further decomposed. A best-first search algorithms in a modified variant is then used to find the good solutions in this pipeline. While this variant does not use meta-learning in the process of optimizing the pipeline, the authors find that their results exceed those achieved by Auto-WEKA.\\
+
+\section{Goals}\label{sec:goals}
+The aim of this thesis is to test the assumption that given a new dataset, one can derive an accuracy-based ranking of classification algorithms from their past performances by means of regression-based compared with preference-based ranking, and to compare the two methods. It is derived from the need for Auto-ML tools and the fact that related solutions so far have not exploited Meta-Learning in this way. If the hypothesis is true, this tool could be used as a pre-processing step in another Auto-ML framework similarly to how Meta-Learning is used in AUTO-SKLEARN, as a pre-processing step to speed up the whole process. The aim presented consists of multiple goals, which can be divided into required and optional goals.
+
+\subsection{Required Goals}\label{subsec:required_goals}
+Based on the general objective of the thesis, several goals should be achieved:
+
+\begin{enumerate}
+	\item Implementing a tool with the following functionality:
+	\begin{enumerate}
+		\item A pre-processing phase in which the performances of the available set of classifiers is calculated for a set of datasets, a regression model is fit to each of the classifiers, and a preference-ranker is fit to the ranks of the algorithms which can be deduced from their performance values.
+		\item A method where the tool is given a dataset and returns a ranking of classifiers for this dataset.
+		\item The possibility to choose between regression-based and preference-based ranking.
+	\end{enumerate}
+	\item Evaluate the performance of both the regression and preference-ranking variant of the implementation by comparing them against each other, an oracle, and a baseline.
+\end{enumerate}
+
+\subsection{Optional Goals}\label{subsec:optional_goals}
+If the required goals have been met in less time than originally allocated, addressing additional goals may be considered. The following list suggests possible optional goals. However, they may be replaced if while working on the thesis it becomes clear that more appropriate expansions exists.
+
+\begin{enumerate}
+	\item Extend the evaluation to compare the tool with other Auto-ML solutions.
+	\item Extend the evaluation to compare with a more intelligent baseline.
+	\item Adding another layer to search by including hyperparameters, possibly by means of iterative requests to tool.
+	\item If the accuracy prediction is succesful, add runtime and / or complexity predictions and make combined predictions
+\end{enumerate}
+
+\section{Approach}\label{sec:approach}
+As described in chapter \ref{sec:goals}, the goal is to implement an Auto-ML tool that returns a ranking of classification algorithms for a given dataset based on past performances of the classifiers by using regression and preference-ranking, and comparing and evaluating the results. 
+
+% what about meta classifiers / ensemble methods or just base classifiers
+The implementation of the tool will be done in Java 8, and will consist of two phases. In the first phase, a basic functionality is going to be ensured, but placeholder regression and preference-ranking models are going to be used. The first step of this phase is to implement the first preprocessing phase, which consist of computing the performances of classifiers on datasets. For the implementation of the classifiers, WEKA 3.8.1 is going to be used, which dictates the set of classifiers that will be included. The datasets will be fetched from OpenML.org, which is an open-source project where users can contribute datasets, implementations for machine learning algorithms, and run said algorithms on the datasets. Since the results of the runs are available publicly on the website, not all of the required base data will be needed to be computed, but can be extracted instead. OpenML.org provides the datasets in .ARFF format, and supplies a plugin that works from WEKA, which should ensure that these libraries work together smoothly. The second step of the first phase is to add the functionality to fit a preliminary regression model and preference ranker to the performance data, based on properties of the datasets. This step also includes providing a method that can be given a dataset and returns a ranking, based on the choice of ranking method.\\
+
+In the second phase of the implementation, the preliminary algorithms used in the first phase will be replaced. The regression models are going to be customized for each classifier by using ML-Plan (described in section \ref{sec:related_work}) and configuring it to work with regression models. To do this, the configuration file of ML-Plan has to be manipulated. The ranking model is going to be optimized in this phase as well, using the jPL framework [citation will follow]. The project provides a framework for the evaluation of preference learners, including label ranking, which is the problem at hand.\\
+
+For the evaluation, it is necessary to generate a baseline and an oracle. Both can be obtained from the data of the preprocessing phase. Since due to all performances of classifiers being recorded on all sets, one can obtain a best ranking of classifiers for each dataset from the same table. The baseline which is going to be used is the best algorithm, which performs best on the largest number of datasets. This can be obtained from the table by counting the number of times each algorithm performes the best. The rankings of the oracle, the baseline, and the results of the tool are then going to be compared using the Kendall Rank Correlation Coefficient.
+
+
+\newpage
+\section{Preliminary Document Structure}\label{sec:doc-structure}
+The following structure will serve as an orientation during the writing process. While the chapters should remain the same, subsections may be added, removed or moved.
+
+\begin{enumerate}
+	\item Introduction
+	\item Fundamentals
+	\begin{enumerate}
+		\item Meta-Learning
+		\item Kendall Rank Correclation Coefficient
+		\item JPL
+		\item WEKA
+	\end{enumerate}
+	\item Approach
+	\item Implementation
+	\begin{enumerate} 
+		\item Regression-based Ranking
+		\begin{enumerate}
+			\item Preliminary Regression Algorithm
+			\item Automatic Algorithm Selection
+		\end{enumerate}
+		\item Preference Models
+		\begin{enumerate}
+			\item Preliminary Ranking Algorithm
+			\item Automatic Algorithm Selection
+		\end{enumerate}
+	\end{enumerate}
+	\item Evaluation
+	\begin{enumerate}
+		\item Computing the Accuracy of the Results
+		\item Assessment of the Accuracy
+	\end{enumerate}
+	\item Related Work
+		% Include RECIPE in final work also
+		%Auto-WEKA
+		%Auto-sklearn
+		% ML-Plan
+	\item Conclusion
+	\item Literature
+	\item Appendix
+\end{enumerate}
+
+
+\newpage
+\section{Schedule}\label{sec:schedule}
+The working time is going to be structured according to the schedule shown in figure \ref{fig:schedule}. Variations due to unforeseeable circumstances may occur.
+
+\begin{figure}[H]
+% Colour Definitions for Gantt Chart
+\definecolor{uniblue}{RGB}{000,032,091}
+\definecolor{unigrey}{RGB}{199,201,199}
+\definecolor{uniaccentblue}{RGB}{000,163,224}
+
+% Gantt Chart of Schedule
+\begin{ganttchart}[
+%% Style Definitions %%
+% Canvas %
+x unit=0.6cm,
+y unit chart = 0.65cm,
+canvas/.append style={fill=none, draw=unigrey},
+hgrid style/.style={draw=black!25, line width=.75pt},
+vgrid={*1{draw=unigrey, line width=.75pt}},
+title/.style={draw=none, fill=none},
+% Title %
+title label font=\bfseries,
+title label node/.append style={below=0pt},
+include title in canvas=false,
+% Bar %
+bar height=.5,
+bar label node/.append style={align=left,text width=14em},
+bar/.append style={draw=none, fill=uniblue},
+% Group %
+group height=.2,
+   group peaks tip position=0,
+group label node/.append style={align=left,text width=15em},
+group/.append style={fill=black,opacity=0}
+]{1}{16}
+
+%% Chart %%
+% Title %
+\gantttitle[title label node/.append style={below left=0pt and -7pt}]{WEEK:\quad1}{1}
+\gantttitlelist{2,...,16}{1} \\
+
+% Elements %
+\ganttgroup[]{Implementation}{1}{10} \\
+\ganttbar{Phase 1}{1}{2} \\
+\ganttbar[]{Phase 2}{3}{4} \\
+\ganttbar[]{Evaluation}{6}{7} \\
+\ganttbar[bar/.append style={fill=unigrey}]{Buffer}{5}{5} \\
+
+\ganttgroup[]{Writing\footnotemark}{1}{13} \\
+\ganttbar[]{Related \& Fundamentals}{1}{3} \\
+\ganttbar[]{Approach \& Implementation}{4}{7} \\
+\ganttbar[]{Evaluation \& Conclusion}{8}{10} \\
+\ganttbar[bar/.append style={fill=unigrey}]{Buffer, Proofreading}{11}{13} \\
+\ganttbar[]{Corrections}{14}{15} \\
+
+\ganttgroup[]{Other}{5}{16} \\
+\ganttbar[]{Presentation Preparation}{15}{16} \\
+
+\end{ganttchart}
+
+\caption{Sketch of the Work Schedule for the thesis.}
+\label{fig:schedule}
+\end{figure}
+
+\footnotetext{The chapter 'Introduction' is not included since it will be written in parallel to other chapters, in small bits according to the progress of the thesis.}
+
+
+\newpage
+\printbibliography
+
+\newpage
+% Signatures and Delcaration %
+Hereby supervisor and student confirm that this proposal is the basis for the topic assignment of the described work. The timetable and topic description are accepted by both sides as laid out in this proposal.
+
+\vspace{6cm}
+
+\begin{center}
+     \begin{tabular}{l p{0.1\textwidth} r}
+       \cline{1-1} \cline{3-3}
+       \begin{minipage}[t]{0.4\textwidth}
+         \centering
+         Supervisor\\(Prof. Dr. Eyke H\"ullermeier)
+         \end{minipage}
+&
+         \begin{minipage}[t]{0.2\textwidth}
+         \end{minipage}
+&
+         \begin{minipage}[t]{0.4\textwidth}
+           \centering
+           Student\\(Helena Graf)
+         \end{minipage}
+     \end{tabular}
+\end{center}
+
+\end{document}
