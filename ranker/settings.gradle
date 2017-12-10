@@ -15,4 +15,6 @@ include 'api'
 include 'services:webservice'
 */
 
+include ':JAICore'
+project(':JAICore').projectDir = new File(settingsDir, '../JAICore')
 rootProject.name = 'ranker'
