@@ -20,7 +20,7 @@ public class Ranker {
 		this.classifierPerformances = classifierPerformances;
 	}
 	
-	public void train () {
+	public void buildRanker () {
 		// TODO Train regression / preference algorithm
 	}
 	
