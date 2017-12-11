@@ -111,6 +111,9 @@ public class Main {
 		classifiers.add(new RandomForest());
 		classifiers.add(new RandomTree());
 		classifiers.add(new REPTree());
+		
+		// TODO this should not be done here but in the datasets getter from OpenML!
+		// data.setClassIndex(data.numAttributes() - 1);
 
 		// Generate Performance Measures
 		// Performance Measure Method has to be changed to accept string instead of
