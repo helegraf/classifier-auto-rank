@@ -42,14 +42,21 @@ dependencies {
     
     // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/LibSVM
 	// api group: 'nz.ac.waikato.cms.weka', name: 'LibSVM', version: '1.0.10'
-	
-	//classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
     
    	
 }
 
-//apply plugin: 'com.github.johnrengelman.shadow'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
 
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
 
 // project kept losing gradle nature so this had to be included
 allprojects {
