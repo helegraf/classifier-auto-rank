@@ -10,6 +10,14 @@
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
 
+
+//
+jar {
+    manifest {
+        attributes 'Main-Class': 'ranker.Main'
+    }
+}
+
 // Enforce usage of Java 8
 sourceCompatibility = 1.8
 
@@ -24,7 +32,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     
     // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable 
-	api group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.1'
+	implementation group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.1'
     
     // https://mvnrepository.com/artifact/org.openml/apiconnector
     implementation group: 'org.openml', name: 'apiconnector', version: '1.0.18'
@@ -33,8 +41,20 @@ dependencies {
     implementation project(':JAICore')
     
     // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/LibSVM
-	api group: 'nz.ac.waikato.cms.weka', name: 'LibSVM', version: '1.0.10'
+	// api group: 'nz.ac.waikato.cms.weka', name: 'LibSVM', version: '1.0.10'
+	
+	//classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
     
    	
+}
+
+//apply plugin: 'com.github.johnrengelman.shadow'
+
+
+// project kept losing gradle nature so this had to be included
+allprojects {
+    eclipse.project {
+        natures 'org.eclipse.buildship.core.gradleprojectnature'
+    }
 }
 
