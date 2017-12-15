@@ -2,53 +2,63 @@ package ranker;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.xml.Data;
-import org.openml.apiconnector.xml.DataSetDescription;
-import org.openml.apiconnector.xml.Data.DataSet;
+import org.openml.apiconnector.settings.Settings;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-
 import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		
-		Util.getDataFromOpenML();
-		Util.generateJobs();
-		
-		Charset charset = Charset.forName("UTF-8");
-		Path path2 = FileSystems.getDefault().getPath("src/main/ressources", "jobs.txt");
-		BufferedReader reader2 = Files.newBufferedReader(path2,charset);
-		String line = null;
-		while((line = reader2.readLine()) != null) {
-			System.out.println(line);
+		Settings.CACHE_DIRECTORY = FileSystems.getDefault().getPath("data").toAbsolutePath().toString();
+
+		// Read input args
+		if (args.length != 2) {
+			throw new IllegalArgumentException("Wrong number of arguments supplied. Usage: Offset NumberOfJobs.");
 		}
-		reader2.close();
-		
-		// TODO this should not be done here but in the datasets getter from OpenML!
-		// data.setClassIndex(data.numAttributes() - 1);
+		int offset = Integer.parseInt(args[0]);
+		int numberOfJobs = Integer.parseInt(args[1]);
 
-		// Generate Performance Measures
-		// Performance Measure Method has to be changed to accept string instead of
-		// datasets
-		// ranker.Util.generatePerformanceMeasures(classifiers, datasets,
-		// predictiveAccuracy, estimproc);
+		// Get jobs
+		HashMap<Classifier, Integer> jobs = new HashMap<Classifier, Integer>();
+		Charset charset = Charset.forName("UTF-8");
+		Path path = FileSystems.getDefault().getPath("jobs.txt");
+		BufferedReader reader = Files.newBufferedReader(path, charset);
+		String line = null;
+		while (offset > 0 && (line = reader.readLine()) != null) {
+			offset--;
+		}
+		while (numberOfJobs > 0 && (line = reader.readLine()) != null) {
+			numberOfJobs--;
+			String[] split = line.split(",");
+			jobs.put(AbstractClassifier.forName(split[0], null), Integer.parseInt(split[1]));
+		}
+		reader.close();
 
-		// TODO break big performance measures table down into many small tables with
-		// attributes as metafeatures; last attribute (target) is performance
+		// Generate Performance Measures & save to files
+		jobs.forEach((classifier, dataId) -> {
+			try {
+				Path dataPath = FileSystems.getDefault().getPath("data",
+						classifier.getClass().getSimpleName() + "_" + dataId + ".txt");
+
+				BufferedWriter writer = Files.newBufferedWriter(dataPath, charset);
+				Instances dataset = Util.getInstancesById(dataId);
+				double result = Util.generatePerformanceMeasure(classifier, dataset);
+				writer.write(Double.toString(result));
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println(e.getMessage());
+			}
+		});
 
 	}
 
