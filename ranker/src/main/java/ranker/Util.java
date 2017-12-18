@@ -6,11 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
@@ -19,6 +23,7 @@ import org.openml.apiconnector.xml.DataFeature;
 import org.openml.apiconnector.xml.DataFeature.Feature;
 import org.openml.apiconnector.xml.DataSetDescription;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
@@ -61,23 +66,56 @@ import weka.core.converters.ConverterUtils.DataSource;
  *
  */
 public class Util {
-	
+
 	public static String apiKey;
+	public static Charset charset = Charset.forName("UTF-8");
+	public static Path apiKeyPath = FileSystems.getDefault().getPath("apikey.txt");
+	public static Path jobsPath = FileSystems.getDefault().getPath("jobs.txt");
+	public static Path dataSetIndexPath = FileSystems.getDefault().getPath("datasets.txt");
+	public static Path resultsPath = FileSystems.getDefault().getPath("data");
+	public static Path cacheDirectory = FileSystems.getDefault().getPath("data");
+	public static Path logsDirectory = FileSystems.getDefault().getPath("logs");
 
 	public static Classifier[] portfolio = { new BayesNet(), new NaiveBayes(), new NaiveBayesMultinomial(),
 			new GaussianProcesses(), new LinearRegression(), new Logistic(), new MultilayerPerceptron(), new SGD(),
 			new SMO(), new SimpleLinearRegression(), new SimpleLogistic(), new VotedPerceptron(), new IBk(),
 			new KStar(), new DecisionTable(), new JRip(), new M5Rules(), new OneR(), new PART(), new ZeroR(),
 			new DecisionStump(), new J48(), new LMT(), new M5P(), new RandomForest(), new RandomTree(), new REPTree() };
+	
+	public static void deleteFileOrFolder(final Path path) throws IOException {
+		  Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
+		    @Override public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
+		      throws IOException {
+		      Files.delete(file);
+		      return FileVisitResult.CONTINUE;
+		    }
+
+		    @Override public FileVisitResult visitFileFailed(final Path file, final IOException e) {
+		      return handleException(e);
+		    }
+
+		    private FileVisitResult handleException(final IOException e) {
+		      e.printStackTrace(); 
+		      return FileVisitResult.TERMINATE;
+		    }
+
+		    @Override public FileVisitResult postVisitDirectory(final Path dir, final IOException e)
+		      throws IOException {
+		      if(e!=null)return handleException(e);
+		      Files.delete(dir);
+		      return FileVisitResult.CONTINUE;
+		    }
+		  });
+		};
 
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
+		// TODO refactor this method
 
 		// Prepare table of results
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i = 0; i < datasets.size(); i++) {
 			// Add index to attribute since they cannot have same names but some datasets do
-			// TODO better solution
 			attributes.add(new Attribute(datasets.get(i).relationName() + " " + i));
 		}
 		Instances results = new Instances("PerformanceMeasures", attributes, 0);
@@ -90,7 +128,6 @@ public class Util {
 					double result = estimProc.estimate(classifier, evalM, datasets.get(i));
 					instance.setValue(i, result);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -103,11 +140,20 @@ public class Util {
 			saver.setFile(new File("./data/test.arff"));
 			saver.writeBatch();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		// return "String";
+	}
+
+	public static void mergePerformanceMeasures() throws IOException {
+		
+		// TODO decide how to parse sensibly
+		// read all generated Files
+		try (Stream<Path> paths = Files.walk(resultsPath)) {
+			paths.filter(Files::isRegularFile)
+			.forEach(System.out::println);
+		}
 	}
 
 	public static double generatePerformanceMeasure(Classifier classifier, Instances dataset) {
@@ -116,7 +162,8 @@ public class Util {
 		try {
 			result = new StratifiedMCCV(5, 0.3).estimate(classifier, new PredictiveAccuary(), dataset);
 		} catch (Exception e) {
-			System.err.println(classifier.getClass().getSimpleName() + " could not be evaluated on " + dataset.relationName());
+			System.err.println(
+					classifier.getClass().getSimpleName() + " could not be evaluated on " + dataset.relationName());
 			System.err.println(e.getMessage());
 			result = 1;
 		}
@@ -125,23 +172,24 @@ public class Util {
 
 	public static Instances getInstancesById(int dataId) throws IOException {
 		Instances dataset = null;
-		
+
 		// Get apiKey if not given
 		if (apiKey == null) {
-			Path path = FileSystems.getDefault().getPath("apikey.txt");
-			Charset charset = Charset.forName("UTF-8");
-			BufferedReader reader = Files.newBufferedReader(path, charset);
+			BufferedReader reader = Files.newBufferedReader(apiKeyPath, charset);
 			apiKey = reader.readLine();
 		}
-		
+
+		// Get dataset from OpenML
 		OpenmlConnector client = new OpenmlConnector();
 		try {
 			DataSetDescription description = client.dataGet(dataId);
 			File file = description.getDataset(apiKey);
+			// Instances convert
 			DataSource source = new DataSource(file.getCanonicalPath());
 			dataset = source.getDataSet();
 			dataset.setClassIndex(dataset.numAttributes() - 1);
-			// TODO shuffle if the last attribute is not the target!!
+			Attribute targetAttribute = dataset.attribute(description.getDefault_target_attribute());
+			dataset.setClassIndex(targetAttribute.index());
 		} catch (Exception e) {
 			// These are IOExceptions anyways in the extended sense of this method
 			throw new IOException(e.getMessage());
@@ -159,9 +207,7 @@ public class Util {
 		int fitForAnalysis = 0;
 
 		// For saving data sets
-		Path path = FileSystems.getDefault().getPath("src","main","ressources", "datasets.txt");
-		Charset charset = Charset.forName("UTF-8");
-		BufferedWriter writer = Files.newBufferedWriter(path, charset);
+		BufferedWriter writer = Files.newBufferedWriter(dataSetIndexPath, charset);
 
 		// OpenML connection
 		OpenmlConnector client = new OpenmlConnector();
@@ -238,10 +284,7 @@ public class Util {
 	}
 
 	public static void generateJobs() throws IOException {
-		Path jobsPath = FileSystems.getDefault().getPath("jobs.txt");
-		Path dataPath = FileSystems.getDefault().getPath("src","main","resources", "datasets.txt");
-		Charset charset = Charset.forName("UTF-8");
-		BufferedReader reader = Files.newBufferedReader(dataPath, charset);
+		BufferedReader reader = Files.newBufferedReader(dataSetIndexPath, charset);
 		BufferedWriter writer = Files.newBufferedWriter(jobsPath, charset);
 
 		String line = null;
@@ -253,5 +296,43 @@ public class Util {
 		}
 		reader.close();
 		writer.close();
+	}
+
+	public static void performanceMeasures(String[] args) throws IOException, Exception {
+		// Read input args
+		if (args.length != 2) {
+			throw new IllegalArgumentException("Wrong number of arguments supplied. Usage: Offset NumberOfJobs.");
+		}
+		int offset = Integer.parseInt(args[0]);
+		int numberOfJobs = Integer.parseInt(args[1]);
+
+		// Get jobs
+		HashMap<Classifier, Integer> jobs = new HashMap<Classifier, Integer>();
+		BufferedReader reader = Files.newBufferedReader(jobsPath, charset);
+		String line = null;
+		while (offset > 0 && (line = reader.readLine()) != null) {
+			offset--;
+		}
+		while (numberOfJobs > 0 && (line = reader.readLine()) != null) {
+			numberOfJobs--;
+			String[] split = line.split(",");
+			jobs.put(AbstractClassifier.forName(split[0], null), Integer.parseInt(split[1]));
+		}
+		reader.close();
+
+		// Generate Performance Measures & save to files
+		jobs.forEach((classifier, dataId) -> {
+			try {
+				Path dataPath = resultsPath.resolve(classifier.getClass().getName() + "_" + dataId + ".txt");
+				BufferedWriter writer = Files.newBufferedWriter(dataPath, charset);
+				Instances dataset = getInstancesById(dataId);
+				double result = generatePerformanceMeasure(classifier, dataset);
+				writer.write(Double.toString(result));
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				System.err.println(e.getMessage());
+			}
+		});
 	}
 }

@@ -7,12 +7,13 @@ import weka.classifiers.Classifier;
 
 public class Ranker {
 
-	private RankingMode rankingMode = RankingMode.REGRESSION;
+	private RankingMode rankingMode;
 	private Map<Classifier,String> classifierPerformances;
 	private List<Classifier> regressionAlgorithms;
 	private Object preferenceLearner;
 
-	public Ranker() {
+	public Ranker(RankingMode rankingMode) {
+		this.rankingMode = rankingMode;
 		// TODO Initialize with pre-computed values: all WEKA classifiers + openML data sets
 	}
 	
