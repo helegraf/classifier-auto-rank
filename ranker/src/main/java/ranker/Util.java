@@ -165,7 +165,7 @@ public class Util {
 			System.err.println(
 					classifier.getClass().getSimpleName() + " could not be evaluated on " + dataset.relationName());
 			System.err.println(e.getMessage());
-			result = 1;
+			result = 0;
 		}
 		return result;
 	}
