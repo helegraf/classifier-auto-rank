@@ -82,31 +82,7 @@ public class Util {
 			new KStar(), new DecisionTable(), new JRip(), new M5Rules(), new OneR(), new PART(), new ZeroR(),
 			new DecisionStump(), new J48(), new LMT(), new M5P(), new RandomForest(), new RandomTree(), new REPTree() };
 	
-	public static void deleteFileOrFolder(final Path path) throws IOException {
-		  Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
-		    @Override public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
-		      throws IOException {
-		      Files.delete(file);
-		      return FileVisitResult.CONTINUE;
-		    }
-
-		    @Override public FileVisitResult visitFileFailed(final Path file, final IOException e) {
-		      return handleException(e);
-		    }
-
-		    private FileVisitResult handleException(final IOException e) {
-		      e.printStackTrace(); 
-		      return FileVisitResult.TERMINATE;
-		    }
-
-		    @Override public FileVisitResult postVisitDirectory(final Path dir, final IOException e)
-		      throws IOException {
-		      if(e!=null)return handleException(e);
-		      Files.delete(dir);
-		      return FileVisitResult.CONTINUE;
-		    }
-		  });
-		};
+	
 
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
