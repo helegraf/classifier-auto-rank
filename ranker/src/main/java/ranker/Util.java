@@ -6,16 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
+import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.Data.DataSet;
@@ -81,8 +80,139 @@ public class Util {
 			new SMO(), new SimpleLinearRegression(), new SimpleLogistic(), new VotedPerceptron(), new IBk(),
 			new KStar(), new DecisionTable(), new JRip(), new M5Rules(), new OneR(), new PART(), new ZeroR(),
 			new DecisionStump(), new J48(), new LMT(), new M5P(), new RandomForest(), new RandomTree(), new REPTree() };
+
+	public static String[] dataQualities;
+
+	public static Map<Integer, double[]> dataQualitiesInstances = new HashMap<Integer, double[]>();
+	public static Map<Classifier, Instances> classifierPerformances = new HashMap<Classifier, Instances>();
+	public static Instances testSet;
+
+	public static double calculateKendallRankCorrelation (Classifier[] predictedOrdering, Classifier[] actualOrdering) {
+		// Convert Ordering given by Ranker into ranking
+		double [] xArray = new double [portfolio.length];
+		double [] yArray = new double [portfolio.length];
+		
+		for (int i = 0; i < portfolio.length; i++) {
+			yArray[i] = i;
+			for (int j = 0; j < portfolio.length; j++) {
+				if (predictedOrdering[i].getClass().getName().equals(actualOrdering[j].getClass().getName())) {
+					xArray[i] = j;
+				}
+			}
+		}
+
+		
+		KendallsCorrelation correlation = new KendallsCorrelation();
+
+		double result = correlation.correlation(xArray, yArray);
+		return result;
+	}
 	
-	
+	public static void makeInstances(List<Integer> holdout) throws IOException {
+		// aggregate for each classifier + add performance values
+		// make new dataset
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		for (int i = 0; i < Util.dataQualities.length; i++) {
+			attributes.add(new Attribute(Util.dataQualities[i]));
+		}
+		attributes.add(new Attribute("Performance"));
+		Instances testset = new Instances ("Testset",attributes,0);
+		for (Classifier classifier : portfolio) {
+			Instances dataset = new Instances(classifier.getClass().getName(), attributes, 0);
+			dataset.setClassIndex(attributes.size()-1);
+			// for each dataset : if result exists, add corresponding instance + performance
+			// to dataset
+			try (Stream<Path> paths = Files.walk(resultsPath)) {
+				paths.filter(Files::isRegularFile)
+						.filter(path -> path.getFileName().toString().contains(classifier.getClass().getName()))
+						.forEach(path -> {
+							try {
+								BufferedReader reader = Files.newBufferedReader(path);
+								String line = reader.readLine();
+								if (line != null) {
+									String element = path.getFileName().toString().split("_")[1];
+									String toAdd = element.substring(0, element.length()-4);
+									int did = Integer.parseInt(toAdd);
+									if (!holdout.contains(did)) {
+										double result = Double.parseDouble(line);
+										// copy instances
+										double[] instanceValues = dataQualitiesInstances.get(did);
+										instanceValues[instanceValues.length-1] = result;
+										Instance instance = new DenseInstance(dataQualities.length+1,instanceValues);
+										dataset.add(instance);
+									} 
+								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						});
+			}
+			classifierPerformances.put(classifier, dataset);
+			ArffSaver saver = new ArffSaver();
+			saver.setInstances(dataset);
+			try {
+				saver.setFile(new File(resultsPath.resolve("Perf").resolve(classifier.getClass().getName() + ".arff").toString()));
+				saver.writeBatch();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		for (int i : holdout) {
+			double[] instanceValues = dataQualitiesInstances.get(i);
+			Instance instance = new DenseInstance(dataQualities.length+1,instanceValues);
+			testset.add(instance);
+		}
+		// save test set
+		ArffSaver saver = new ArffSaver();
+		testset.setClassIndex(testset.numAttributes()-1);
+		saver.setInstances(testset);
+		try {
+			saver.setFile(new File(resultsPath.resolve("Perf").resolve("Test.arff").toString()));
+			saver.writeBatch();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		testSet = testset;
+	}
+
+	public static void getAllDataQualities() throws Exception {
+		// read all datasets from .txt
+		BufferedReader reader = Files.newBufferedReader(dataSetIndexPath,charset);
+		String line = null;
+		while((line = reader.readLine())!= null) {
+			int did = Integer.parseInt(line);
+			dataQualitiesInstances.put(did, getQualities(did));
+		}
+		// ad instance for each
+	}
+
+	public static double[] getQualities(int did) throws Exception {
+		OpenmlConnector client = new OpenmlConnector();
+		if (dataQualities == null) {
+			dataQualities = client.dataQualitiesList().getQualities();
+		}
+		double[] instance = new double[dataQualities.length+1];
+
+		Map<String, String> qualities = client.dataQualities(did).getQualitiesMap();
+		for (int i = 0; i < dataQualities.length; i++) {
+			if (qualities.containsKey(dataQualities[i])) {
+				if (!(qualities.get(dataQualities[i])==null)) {
+					instance[i]=Double.parseDouble(qualities.get(dataQualities[i]));
+				} else {
+					instance[i]=Double.NaN;
+				}
+				
+			} else {
+				instance[i]=Double.NaN;
+			}
+		}
+		return instance;
+		// calculate actual instance values
+		// save in .ARFF for each 
+
+	}
 
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
@@ -123,12 +253,11 @@ public class Util {
 	}
 
 	public static void mergePerformanceMeasures() throws IOException {
-		
+
 		// TODO decide how to parse sensibly
 		// read all generated Files
 		try (Stream<Path> paths = Files.walk(resultsPath)) {
-			paths.filter(Files::isRegularFile)
-			.forEach(System.out::println);
+			paths.filter(Files::isRegularFile).forEach(System.out::println);
 		}
 	}
 

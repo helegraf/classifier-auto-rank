@@ -27,6 +27,9 @@ repositories {
 
 dependencies {
 
+	// OpenmlWebapplication for computing meta-features
+	implementation files ('libs/OpenmlWebapplication.jar')
+
 	// JAICore
 	implementation group: 'com.github.fmohr', name: 'JAICore', version: 'dcc8d337dc'
 
