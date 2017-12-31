@@ -1,4 +1,4 @@
-package ranker;
+package wekaUtil;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;

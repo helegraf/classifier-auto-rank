@@ -1,4 +1,4 @@
-package ranker;
+package wekaUtil;
 
 import java.util.List;
 import java.util.Random;
