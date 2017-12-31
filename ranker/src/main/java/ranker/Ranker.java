@@ -1,55 +1,74 @@
 package ranker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.RandomForest;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class Ranker {
-
-	private final RankingMode rankingMode;
-	// classifier / regression model
-	private Map<Classifier,Classifier> regressionAlgorithms;
-
-	public Ranker(RankingMode rankingMode) {
-		this.rankingMode = rankingMode;
-		// TODO Initialize with pre-computed values: all WEKA classifiers + openML data sets
-	}
+public abstract class Ranker {
 	
-	public void buildRanker (Map<Classifier,Instances> train) {
-		// TODO Train regression / preference algorithm
-		regressionAlgorithms = new HashMap<Classifier,Classifier>();
-		train.forEach((classifier,trainSet)->{
-			RandomForest forest = new RandomForest();
-			try {
-				forest.buildClassifier(trainSet);
-				regressionAlgorithms.put(classifier, forest);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-	}
+	ArrayList<Integer> features;
 	
-	public List<Classifier> rank (Instance instance) throws Exception {
-		TreeMap<Double,Classifier> predictions = new TreeMap<Double,Classifier>();
-		ArrayList<Classifier> results = new ArrayList<Classifier>();
+	/**
+	 * Maps the index of an attribute to the classifier it represents.
+	 */
+	HashMap<Integer,Classifier> classifiersMap;
+	ArrayList<Integer> classifierIndices;
+
+
+	/**
+	 * Generates a ranker. 
+	 * 
+	 * @param data The training data
+	 */
+	public abstract void buildRanker (Instances data) throws Exception;
+	
+	public abstract List<Classifier> predictRankingforInstance (Instance instance) throws Exception;
+	
+	/**
+	 * Collects indices of attributes that represent classifiers or meta features.
+	 * 
+	 * @param data
+	 * @throws Exception
+	 */
+	void getClassifiersAndMetaFeatures(Instances data) throws Exception {
+		classifierIndices = new ArrayList<Integer>();
+		classifiersMap = new HashMap<Integer,Classifier>();
+		features = new ArrayList<Integer>();
 		
-		for (Classifier classifier : regressionAlgorithms.keySet()) {
-			double result = regressionAlgorithms.get(classifier).classifyInstance(instance);
-			predictions.put(result, classifier);
+		// Find the classifiers and meta features
+		int labelIndex = 0;
+		HashSet<String> portfolio = new HashSet<String>();
+		Arrays.asList(Util.portfolio).forEach(classifier->portfolio.add(classifier.getClass().getName()));
+		for (int index = 0; index < data.numAttributes(); index++) {
+			String attributeName = data.attribute(index).name();
+			if (portfolio.contains(attributeName)) {
+				classifierIndices.add(index);
+				classifiersMap.put(labelIndex, AbstractClassifier.forName(attributeName,null));
+				labelIndex++;
+			} else {
+				features.add(index);
+			}
 		}
-		predictions.descendingKeySet().forEach(value->results.add(predictions.get(value)));
-		return results;
+		
+		// Check for sensible input
+		if (classifierIndices.size() < 2) {
+			throw new IllegalArgumentException("Data set given must contain at least two attributes which represent weka classifiers.");
+		}
 	}
 	
-	public RankingMode getRankingMode() {
-		return rankingMode;
+	double[] getFeatureValuesForInstance(Instance instance) {
+		double[] instanceFeatureValues = new double[features.size()];
+		int featureIndex = 0;
+		for (int attributeIndex : features) {
+			instanceFeatureValues[featureIndex++]=instance.value(attributeIndex);
+		}
+		return instanceFeatureValues;
 	}
 }

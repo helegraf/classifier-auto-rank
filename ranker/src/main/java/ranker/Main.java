@@ -1,36 +1,11 @@
 package ranker;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
-import org.openml.apiconnector.io.OpenmlConnector;
-import org.openml.apiconnector.settings.Settings;
-import org.openml.apiconnector.xml.DataQualityList;
-import org.openml.apiconnector.xml.DataSetDescription;
-import org.openml.webapplication.attributeCharacterization.AttributeCharacterizer;
-import org.openml.webapplication.fantail.dc.Characterizer;
-import org.openml.webapplication.fantail.dc.landmarking.GenericLandmarker;
-import org.openml.webapplication.fantail.dc.statistical.AttributeEntropy;
-import org.openml.webapplication.fantail.dc.statistical.Cardinality;
-import org.openml.webapplication.fantail.dc.statistical.NominalAttDistinctValues;
-import org.openml.webapplication.fantail.dc.statistical.SimpleMetaFeatures;
-import org.openml.webapplication.fantail.dc.statistical.Statistical;
-import org.openml.webapplication.features.GlobalMetafeatures;
-
-import de.upb.cs.is.jpl.api.dataset.IInstance;
-import de.upb.cs.is.jpl.api.dataset.defaultdataset.DefaultDataset;
-import de.upb.cs.is.jpl.api.dataset.defaultdataset.DefaultInstance;
-import de.upb.cs.is.jpl.api.dataset.defaultdataset.absolute.DefaultAbsoluteDataset;
-import de.upb.cs.is.jpl.api.math.linearalgebra.DenseDoubleVector;
-import de.upb.cs.is.jpl.api.math.linearalgebra.IVector;
-import weka.classifiers.Classifier;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.core.Utils;
+import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.instancebasedlabelranking.InstanceBasedLabelRankingLearningAlgorithm;
+import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.instancebasedlabelranking.InstanceBasedLabelRankingLearningModel;
+import de.upb.cs.is.jpl.api.dataset.defaultdataset.relative.Ranking;
+import de.upb.cs.is.jpl.api.dataset.labelranking.LabelRankingDataset;
 
 public class Main {
 
@@ -63,11 +38,51 @@ public class Main {
 //		List<Classifier> ranking = ranker.rank(Util.testSet.firstInstance());
 //		ranking.forEach(classifier->System.out.println(classifier.getClass().getName()));
 		
-		GlobalMetafeatures allFeatures = new GlobalMetafeatures(null);
-		List<Characterizer> characterizers = allFeatures.getCharacterizers();
-		List<String> expectedIds = allFeatures.getExpectedIds();
-		int expectedQualities = allFeatures.getExpectedQualities();
+		ArrayList<Integer> labels = new ArrayList<Integer>();
+		labels.add(0);
+		labels.add(1);
+		ArrayList<double[]> features = new ArrayList<double[]>();
+		double [] r1 = {1,0};
+		double [] r2 = {0,1};
+		double [] r3 = {1,1};
+		features.add(r1);
+		features.add(r2);
+		features.add(r3);
+		ArrayList<Ranking> rankings = new ArrayList<Ranking>();
+		int [] objectList = {0,1};
+		int [] compareOperators = {Ranking.COMPARABLE_ENCODING};
+		Ranking ranking = new Ranking(objectList, compareOperators);
+		rankings.add(ranking);
+		int [] objectList1 = {0,1};
+		int [] compareOperators1 = {Ranking.COMPARABLE_ENCODING};
+		Ranking ranking1 = new Ranking(objectList1, compareOperators1);
+		rankings.add(ranking1);
+		int [] objectList2 = {1,0};
+		int [] compareOperators2 = {Ranking.COMPARABLE_ENCODING};
+		Ranking ranking2 = new Ranking(objectList2, compareOperators2);
+		rankings.add(ranking2);
+		LabelRankingDataset test = new LabelRankingDataset(labels, features, rankings);
+		InstanceBasedLabelRankingLearningAlgorithm algo = new InstanceBasedLabelRankingLearningAlgorithm();
 		
+		InstanceBasedLabelRankingLearningModel model = algo.train(test);
+		
+		ArrayList<Integer> labels1 = new ArrayList<Integer>();
+		labels1.add(1);
+		labels1.add(0);
+		ArrayList<double[]> features1 = new ArrayList<double[]>();
+		double [] r4 = {0,0};
+		features1.add(r4);
+		ArrayList<Ranking> rankings2 = new ArrayList<Ranking>();
+		rankings2.add(null);
+		LabelRankingDataset train = new LabelRankingDataset(labels1, features1, rankings2);
+		
+		model.predict(train).forEach(item->System.out.println(item));
+		
+//		LabelRankingInstance arg0 = new LabelRankingInstance();
+//		arg0.setContextFeatureVector(r4);
+//		arg0.setRating(ranking21);
+//		
+//		model.predict(arg0);
 		
 	}
 
