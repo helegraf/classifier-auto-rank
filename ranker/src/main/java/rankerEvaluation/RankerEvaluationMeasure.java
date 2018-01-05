@@ -1,5 +1,6 @@
-package ranker;
+package rankerEvaluation;
 
+import ranker.Ranker;
 import weka.core.Instances;
 
 public interface RankerEvaluationMeasure {
@@ -17,5 +18,5 @@ public interface RankerEvaluationMeasure {
 	 * @return The performance of the classifier on the data set.
 	 * @throws Exception
 	 */
-	public double evaluate(RegressionRanker ranker, Instances train, Instances test) throws Exception;
+	public double evaluate(Ranker ranker, Instances train, Instances test);
 }
