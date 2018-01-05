@@ -7,28 +7,31 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import weka.classifiers.Classifier;
-import weka.classifiers.trees.RandomForest;
 import weka.core.Attribute;
+import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-public class RegressionRanker extends Ranker {
+public abstract class RegressionRanker extends Ranker {
 
-	private Map<Classifier,Classifier> regressionAlgorithms;
+	/**
+	 * Maps that contains a regression model for each classifier (classifier->regressionmodel)
+	 */
+	Map<Classifier,Classifier> regressionModels;
+	HashMap<Classifier,Instances> map;
 	
-	public void buildRanker (Map<Classifier,Instances> train) throws Exception{
-		regressionAlgorithms = new HashMap<Classifier,Classifier>();
-		for (Classifier classifier : train.keySet()) {
-			RandomForest forest = new RandomForest();
-			forest.buildClassifier(train.get(classifier));
-			regressionAlgorithms.put(classifier, forest);
-		}
-	}
+	/**
+	 * Builds a regression model for each classifier. Has to initialize the list of regressionModels
+	 * 
+	 * @param train
+	 * @throws Exception 
+	 */
+	abstract void buildRegressionModels (Map<Classifier,Instances> train) throws Exception;
 
 	@Override
 	public void buildRanker(Instances data) throws Exception {
 		getClassifiersAndMetaFeatures(data);
-		HashMap<Classifier,Instances> map = new HashMap<Classifier,Instances>();
+		map = new HashMap<Classifier,Instances>();
 		ArrayList<Attribute> attributes= new ArrayList<Attribute>();
 		for (int i : features) {
 			attributes.add(new Attribute(data.attribute(i).name()));
@@ -46,9 +49,10 @@ public class RegressionRanker extends Ranker {
 					newFeatureValues[j] = featureValues[j];
 				}
 				newFeatureValues[featureValues.length] = instance.value(i);
+				map.get(classifiersMap.get(i)).add(new DenseInstance(newFeatureValues.length, newFeatureValues));
 			}
 		}
-		buildRanker(map);
+		buildRegressionModels(map);
 	}
 
 	@Override
@@ -56,16 +60,26 @@ public class RegressionRanker extends Ranker {
 		TreeMap<Double,List<Classifier>> predictions = new TreeMap<Double,List<Classifier>>();
 		ArrayList<Classifier> results = new ArrayList<Classifier>();
 		
-		for (Classifier classifier : regressionAlgorithms.keySet()) {
-			double result = regressionAlgorithms.get(classifier).classifyInstance(instance);
+		
+		double[] newFeatures = new double [features.size()+1];
+		for (int i : features) {
+			newFeatures[i] = instance.value(i);
+		}
+		newFeatures[newFeatures.length-1] = Double.NaN;
+		
+		for (Classifier classifier : regressionModels.keySet()) {
+			Instance newInstance = new DenseInstance(newFeatures.length,newFeatures);
+			newInstance.setDataset(map.get(classifier));
+			double result = regressionModels.get(classifier).classifyInstance(newInstance);
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(classifier);
 			} else {
 				ArrayList<Classifier>  classifiers = new ArrayList<Classifier>();
+				classifiers.add(classifier);
 				predictions.put(result, classifiers);
 			}
 		}
-		predictions.descendingKeySet().forEach(value->results.addAll(predictions.get(value)));
+		predictions.forEach((value,classifierList)->results.addAll(classifierList));
 		return results;
 	}
 }

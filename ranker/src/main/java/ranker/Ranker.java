@@ -19,6 +19,9 @@ public abstract class Ranker {
 	 * Maps the index of an attribute to the classifier it represents.
 	 */
 	HashMap<Integer,Classifier> classifiersMap;
+	/**
+	 * Contains index of classifier attributes in given data set
+	 */
 	ArrayList<Integer> classifierIndices;
 
 
@@ -29,6 +32,13 @@ public abstract class Ranker {
 	 */
 	public abstract void buildRanker (Instances data) throws Exception;
 	
+	/**
+	 * Predicts a ranking of classifiers for the given instance; instance must have the same format as (be compatible with) instances given in buildRanker
+	 * 
+	 * @param instance
+	 * @return
+	 * @throws Exception
+	 */
 	public abstract List<Classifier> predictRankingforInstance (Instance instance) throws Exception;
 	
 	/**
@@ -43,15 +53,13 @@ public abstract class Ranker {
 		features = new ArrayList<Integer>();
 		
 		// Find the classifiers and meta features
-		int labelIndex = 0;
 		HashSet<String> portfolio = new HashSet<String>();
 		Arrays.asList(Util.portfolio).forEach(classifier->portfolio.add(classifier.getClass().getName()));
 		for (int index = 0; index < data.numAttributes(); index++) {
 			String attributeName = data.attribute(index).name();
 			if (portfolio.contains(attributeName)) {
 				classifierIndices.add(index);
-				classifiersMap.put(labelIndex, AbstractClassifier.forName(attributeName,null));
-				labelIndex++;
+				classifiersMap.put(index, AbstractClassifier.forName(attributeName,null));
 			} else {
 				features.add(index);
 			}
