@@ -1,0 +1,106 @@
+% !TEX root = ../my-thesis.tex
+%
+\chapter{Fundamentals}
+\label{sec:fundamentals}
+
+This chapter lays out the fundamentals for Firstly,the  
+
+\section{Machine Learning}
+In this section, the aspects of the field of machine learning which are relevant for this thesis are going to be introduced briefly. The core of machine learning are learning algorithms, which are used to induce a general model from a set of data samples. The concept of machine learning will be explained here with the help of an example. % Further what happens exactly here 
+
+Suppose an aspiring gardener wants to learn how to distinguish between different species of iris plants, a genus of ornamental plants with colorful flowers. More specifically, the focus lies on the three species iris versicolor, virginica and setosa. In order to do so, the gardener has observed four different \textit{features}, namely the length and width of their petals and sepals, for a number of different individuals for which he knows the species. The goal of the gardener is then to learn how to distinguish the species based on these features, that is to derive a \textit{model} from the data that will predict which species (out of the considered the three) an unknown iris plant is. The gardener decides to build a decision tree from the data with forks on the basis of feature values, so that they can determine the species of the plant without much calculation. They observe that all iris setosa plants from his sample have a petal width of $\leq 0.6 $ cm, and that of the plants with a petal width of $>0.6$ cm, most plants with a petal width $\leq 1.7$ cm are of the iris versicolor species. The remaining plants with a petal width of $>1.7$ cm are mostly iris virginica plants. While this model will not correctly predict the species of all iris plants, the gardener is settles with the approximation they have found.
+
+\begin{table}[h]
+	\begin{tabularx}{\textwidth}{X X X X X X}
+		%\hline
+		Feature	& Sepal length	& Sepal width	& Petal length	& Petal width 	& Species			\\ \hline
+				& 5.1			& 3.5			& 1.4			& 0.2			& Iris setosa		\\ 
+				& 5.0			& 3.5			& 1.6			& 0.6			& Iris setosa		\\ 
+				& 5.0			& 3.4			& 1.6			& 0.4			& Iris setosa		\\ 
+				& 5.6			& 3.0			& 4.5			& 1.5			& Iris versicolor	\\ 				
+				& 6.7			& 3.1			& 4.4			& 1.4			& Iris versicolor	\\ 	
+				& 5.9			& 3.2			& 4.8			& 1.8			& Iris versicolor	\\ 	
+				& 7.2			& 3.0			& 5.8			& 1.6			& Iris virginica		\\ 	
+				& 5.9			& 3.0			& 5.1			& 1.8			& Iris virginica		\\ 
+				& 6.9			& 3.1			& 5.1			& 2.3			& Iris virginica		\\ 	
+	\end{tabularx}
+	\label{tab:iris}
+	\caption{Example values for the predictive accuracy of classifiers (data set not relevant in this context). The predictive accuracy denotes the percentage of instances for which the classifier correctly perdicted the class membership.}
+\end{table}
+
+In formal terms, the gardener is searching for an unknown \textit{target function} $f:X \rightarrow Y$ from the input space $X$ to the output space $Y$ that represents an ideal way of identifying iris species. $X$ denotes the possible inputs, in this case all combinations of the four features that have been defined, whereas $Y$ are the outputs, here the species of iris plant. The examples that the gardener recorded are samples $(x_1,y_1),\dots,(x_n,y_n)$ from $f$ such that $f(x_i)=y_i$. Together, they form a data set $D$ which is one of all possible data sets $\mathbb{D}$ for the problem. He then chooses a specific approximation $g:X \rightarrow Y,g\approx f$, the decision tree they built, from the hypothesis space $H$, which in this case consists of possible decision trees. The learning algorithm itself thus maps a data set to a hypothesis from the hypothesis space and can be defined as $A:\mathbb{D}\rightarrow H$.
+
+%TODO include picture of the models etc + table + decision tree that is built
+
+\subsection{Supervised Learning}
+The problem described above has some additional properties besides being a machine learning problem in general. Firstly, it falls in the category of supervised machine learning. Supervised learning is one of the three main learning paradigms of machine learning, together with reinforcement learning and unsupervised learning. In the context of this thesis, the latter will be neglected as only supervised learning is used. It is characterized by the fact that the learning algorithm is provided with a set of inputs \textit{together} with the outputs, which could be viewed as a kind of teacher, or supervisor, explaining expected results to the learner. In the other cases, no such detailed feedback is provided to the learner. 
+
+\subsection{Classification and Regression}
+In addition to falling into the category of supervised learning, the problem is a classification problem. The nature of the prediction is to assign one of the three classes, or labels, 'iris setosa', iris virginica' and 'iris versicolor' to a new plant. Formally, this means that the output space $Y$ of the target function consist of a finite set of labels $(y_1,\dots,y_n)$, so in this case $Y=('iris-setosa','iris virginica', 'iris versicolor')$. 
+
+Apart from classification, another important category of machine learning problems is regression problems. In the case of regression, the output space of the target function is no longer finite, but instead consist of real numbers. To reconsider the gardening example, the gardener could want to predict the height of a plant on the basis of the same features as used above. Likewise, they would have to observe a number of plants to gather feature values together with the expected target value, which instead of the species would then be the height of the plant in centimeters, that is $Y=\mathbb{R}$.
+
+\subsection{Preference Learning}
+% Why is label ranking relevant? -> for prediction based on preference
+% Preference learning
+Preference Learning is a relatively new subfield of machine learning\cite{DBLP:books/daglib/0025729}. It is dedicated to the problem of learning how to rank, the precise definition of what this encompasses being defined by which specific task one is engaged in. Out of the three main tasks of preference learning, namely label ranking, instance ranking and object ranking, label ranking is the relevant one in the context of this thesis. But before going into to details of label ranking, it first has to be explained what is meant with a ranking in this context and how it is distinguished from the concept of an ordering.
+
+\subsubsection{Ranking and Ordering}
+
+% Gardener example ranking his favourite plants
+
+\begin{table}[h]
+\centering
+	\begin{tabularx}{.8\textwidth}{>{\hsize=0.9\hsize}X | >{\hsize=.1\hsize}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\raggedleft\arraybackslash} >{\hsize=.1\hsize}X}
+		%\hline
+		Species		& 	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris virginica}	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris versicolor}	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris setosa}	& 	\\ \hline
+		Labels		& [ & 1,									& 2,										& 3 									& ] \\
+		Scores		& [ & 0.17,								& 0.12,									& 0.89 								& ] \\ 
+		Ranking		& [ & 2,									& 3,										& 1 									& ] \\ 
+		Ordering		& [ & 3,									& 1,										& 2 									& ] \\ 		
+	\end{tabularx}
+	\label{tab:ranking_vs_ordering}
+	\caption{Example values for the predictive accuracy of classifiers (data set not relevant in this context). The predictive accuracy denotes the percentage of instances for which the classifier correctly perdicted the class membership.}
+\end{table}
+
+The values in table \ref{tab:ranking_vs_ordering} result in the ranking $[2,3,1]$, whereas the ordering is $[3,1,2]$.
+
+\subsubsection{Label Ranking}
+% could be seen as a generalisation of classification
+Similar to classification, in label ranking there is a finite set of labels $Y=(y_1,\dots,y_n)$, but it is not the output space. Instead, the output space consists of rankings of these labels
+
+\subsection{Meta Learning}
+% Context is meta learning -> what does that mean and what are the consequence
+
+\section{Evaluation}
+
+\subsection{Classifier Evaluation}
+
+\subsection{Kendall Rank Correlation Coefficient}
+% We need to evaluate the ranker quality somehow, ranker predicts rank, so need a 
+To evaluate the quality of the prediction that the ranker will make, a statistic is needed to compare a predicted ranking with other rankings like a baseline or an optimal ranking. 
+
+% Definition of Kendall
+The Kendall Rank Correlation Coefficient is a measure of association between two rankings of the same items also known as Kendall's tau. For two independent variables $X$ and $Y$ and and observations of values $(x_1,...,x_m)$ for $X$ and $(y_1,...,y_n)$ for $Y$ with unique $x_i$ and $y_i$ respectively, the coefficient is based on comparing pairs of observations. If for two pairs $(x_i,y_i)$ and $(x_j,y_j)$ both $x_i < x_j$ and $y_i < y_j$ (or the opposite) holds, they are viewed as concordant. If $x_i < x_j$ but $y_i > y_j$ (or the opposite), they are viewed as discordant. Other cases are not considered. The simplest version of the statistic, called $T_A$ is then defined as 
+
+$$T_A = \frac{n_c - n_d}{n_0},$$
+with \\
+$n_c$, the number of concordant pairs, \\
+$n_d$, the number of discordant pairs, and \\
+$n_0 = n * (n + 1) / 2$.
+
+As we have seen in example above, can also have same rank for items. In order to account for this, a second statistic, $T_B$ has been defined as
+
+$$T_A = \frac{n_c - n_d}{\sqrt{(n_0 - n_1 )(n_0 - n_2 )}},$$
+with \\
+$n_c$, $n_d$, $n_0$ as above, \\
+$n_1=\sum_i{t_i(t_i-1)/2}$, \\
+$n_1=\sum_j{t_j(t_j-1)/2}$, \\
+$t_i,$ the number of ties observed for X in the ith position of the ranking \\
+$u_j,$ the number of ties observed for Y in the ith position of the ranking 
+
+% In theory explanation for Kendall's Tau B because ranking could be tied but not as a result of Label Ranking and unlikely for regression the implementation that is used calculates Tau b!
+\section{Implementation}
+\subsection{jPL}
+
+\subsection{WEKA}

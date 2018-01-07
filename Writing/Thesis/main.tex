@@ -35,7 +35,7 @@
 %\renewcaptionname{ngerman}{\tablename}{Tab.}
 \renewcaptionname{english}{\figurename}{Fig.}
 \renewcaptionname{english}{\tablename}{Tab.}
-
+\newtheorem{defn}{Definition}
 % --------------------------
 % Front matter
 % --------------------------
@@ -63,9 +63,11 @@
 \pagestyle{maincontentstyle} 	% fancy header and footer
 
 \input{content/chapter-introduction}   % INCLUDE: introduction
+\input{content/chapter-fundamentals}   % INCLUDE: fundamentals
+\input{content/chapter-approach}       % INCLUDE: approach
+\input{content/chapter-implementation} % INCLUDE: implementation
+\input{content/chapter-evaluation}     % INCLUDE: evaluation
 \input{content/chapter-related-work}   % INCLUDE: related work
-\input{content/chapter-system}         % INCLUDE: system
-\input{content/chapter-concepts}       % INCLUDE: concepts
 \input{content/chapter-conclusion}     % INCLUDE: conclusion
 
 % --------------------------
