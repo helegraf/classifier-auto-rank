@@ -26,7 +26,7 @@ public class KendallRankCorrelation implements RankerEvaluationMeasure {
 				try {
 					perfectRanking = perfectRanker.predictRankingforInstance(instance);
 					List<Classifier> ranking = ranker.predictRankingforInstance(instance);
-					correlation += calculateKendallRankCorrelation(perfectRanking, ranking);
+					correlation += calculateKendallRankCorrelation(ranking,perfectRanking);
 				} catch (Exception e) {
 					e.printStackTrace();
 					numInstancesCalculated--;

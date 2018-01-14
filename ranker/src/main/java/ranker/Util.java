@@ -187,7 +187,16 @@ public class Util {
 		// Add meta features
 		for (int dataSetId : dids) {
 			Instance instance = new DenseInstance(attributes.size());
-			Map<String, Double> dataQualities = characterizer.characterize(getInstancesById(dataSetId));
+			Instances openMLData = null;
+			try {
+				openMLData = getInstancesById(dataSetId);
+			} catch (IOException e) {
+				// TODO logging maybe / outprint here
+				System.out.println("Couldn't get " + dataSetId);
+				continue;
+			}
+			
+			Map<String, Double> dataQualities = characterizer.characterize(openMLData);
 			dataQualities.forEach((dataQuality, value) -> {
 				if (value != null) {
 					instance.setValue(qualityIndices.get(dataQuality), value);
@@ -271,17 +280,21 @@ public class Util {
 				try {
 					BufferedReader reader = Files.newBufferedReader(file, charset);
 					String line = reader.readLine();
+					String fileName = file.getFileName().toString();
+					fileName = fileName.substring(0, fileName.length() - 4);
+					String[] parts = fileName.split("_");
+					String classifierName = parts[0];
+					int dataSetId = Integer.parseInt(parts[1]);
+					Instance instance = metaFeaturesForDataSets.get(dataSetId);
+					int attIndex = classifierIndices.get(classifierName);
+					double value;
 					if (line != null) {
-						String fileName = file.getFileName().toString();
-						fileName = fileName.substring(0, fileName.length() - 4);
-						String[] parts = fileName.split("_");
-						String classifierName = parts[0];
-						int dataSetId = Integer.parseInt(parts[1]);
-						Instance instance = metaFeaturesForDataSets.get(dataSetId);
-						int attIndex = classifierIndices.get(classifierName);
-						double value = Double.parseDouble(line);
-						instance.setValue(attIndex, value);
+						value = Double.parseDouble(line);
+					} else {
+						// TODO hack to avoid NaNs actually has to be worst value for performance measure used!
+						value = 0;
 					}
+					instance.setValue(attIndex, value);
 
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -382,7 +395,8 @@ public class Util {
 		return dataset;
 	}
 
-	public static void getDataFromOpenML() throws Exception {
+	public static void getDataFromOpenML(int numFeatures, int numInstances) throws Exception {
+		// TODO more elaborate filters maybe? / be clear in passing options
 		// For statistics
 		int unfiltered;
 		int filteredBNG = 0;
@@ -392,7 +406,7 @@ public class Util {
 		int fitForAnalysis = 0;
 
 		// For saving data sets
-		BufferedWriter writer = Files.newBufferedWriter(dataSetIndexPath, charset);
+		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath("datasets_"+numFeatures+"_"+numInstances), charset);
 
 		// OpenML connection
 		OpenmlConnector client = new OpenmlConnector();
@@ -424,6 +438,10 @@ public class Util {
 			// Analyze features
 			DataFeature dataFeature = client.dataFeatures(data_raw[i].getDid());
 			Feature[] features = dataFeature.getFeatures();
+			if (numFeatures>0 && features.length > numFeatures) {
+				continue;
+			}
+			
 			boolean noTarget = true;
 			boolean numericTarget = true;
 			for (int j = features.length - 1; j >= 0; j--) {
@@ -433,6 +451,16 @@ public class Util {
 						numericTarget = false;
 					}
 					break;
+				}
+			}
+			
+			// Analyze instances
+			String numInst = data_raw[i].getQualityMap().get("NumberOfInstances");
+			if (numInst==null) {
+				System.out.println("Couldn't get num inst");
+			} else {
+				if (Double.parseDouble(numInst) > numInstances) {
+					continue;
 				}
 			}
 
@@ -464,9 +492,8 @@ public class Util {
 		System.out.println("No target: " + filteredTarget);
 		System.out.println("Numeric target: " + filteredNumeric);
 		System.out.println("Fit for analysis: " + fitForAnalysis);
-		System.out.println("Adds up: " + ((unfiltered
-				- (filteredBNG + filteredARFF + filteredTarget + filteredNumeric + fitForAnalysis)) == 0));
 	}
+	
 
 	public static void generateJobs() throws IOException {
 		BufferedReader reader = Files.newBufferedReader(dataSetIndexPath, charset);

@@ -14,6 +14,8 @@ import de.upb.cs.is.jpl.api.exception.algorithm.PredictionFailedException;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public abstract class PreferenceRanker extends Ranker {
 
@@ -43,19 +45,12 @@ public abstract class PreferenceRanker extends Ranker {
 		labelRankingInstance.setContextId(0);
 		labelRankingInstance.setTotalNumberOfLabels(labels.size());
 		Ranking ranking = learningModel.predict(labelRankingInstance);
-		System.out.println(ranking);
 		int[] rankingResult = ranking.getObjectList();
-		for (int i : rankingResult) {
-			System.out.println(i);
-		}
 		List<Classifier> result = new ArrayList<Classifier>();
 		for (int classifier : rankingResult) {
 			result.add(classifiersMap.get(reverseIndicesMap.get(classifier)));
 		}
 		int[] stuff = ranking.getOrderingForRanking();
-		for (int i : stuff) {
-			System.out.println(i);
-		}
 		return result;
 	}
 
@@ -65,8 +60,21 @@ public abstract class PreferenceRanker extends Ranker {
 		labels = new ArrayList<Integer>();
 		indicesMap = new HashMap<Integer, Integer>();
 		reverseIndicesMap = new HashMap<Integer, Integer>();
+		
+		// Ensure no missing vaules
+		ReplaceMissingValues filter = new ReplaceMissingValues();
+		filter.setInputFormat(data);
+		for (int i = 0; i < data.numInstances(); i++) {
+			filter.input(data.instance(i));
+		}
+		filter.batchFinished();
+		Instances newData = filter.getOutputFormat();
+		Instance processed;
+		while  ((processed=filter.output())!=null) {
+			newData.add(processed);
+		}
 
-		getClassifiersAndMetaFeatures(data);
+		getClassifiersAndMetaFeatures(newData);
 		for (int i = 0; i < classifierIndices.size(); i++) {
 			labels.add(i);
 			indicesMap.put(classifierIndices.get(i), i);
@@ -74,23 +82,19 @@ public abstract class PreferenceRanker extends Ranker {
 		}
 
 		// Convert data given to ranking information
-		data.forEach(instance -> {
+		newData.forEach(instance -> {
 			// Feature information
 			double[] featureValuesForInstance = getFeatureValuesForInstance(instance);
 			featureValues.add(featureValuesForInstance);
 
 			// Ranking
 			Ranking result = getRankingForInstance(instance);
-			
+
 			rankings.add(result);
 		});
 
 		// Create LabelRankingDataset
 		LabelRankingDataset dataset = new LabelRankingDataset(labels, featureValues, rankings);
-		System.out.println(dataset);
-		for (int instance = 0; instance < dataset.getNumberOfInstances(); instance++) {
-			System.out.println(dataset.getInstance(instance));
-		}
 		return dataset;
 	}
 
@@ -101,6 +105,8 @@ public abstract class PreferenceRanker extends Ranker {
 			compareOperators[i] = Ranking.COMPARABLE_ENCODING;
 		}
 
+		// For the instance, save different performance values together with classifiers
+		// that have this value
 		TreeMap<Double, ArrayList<Integer>> classifierPerformances = new TreeMap<Double, ArrayList<Integer>>();
 		for (int attributeIndex : classifierIndices) {
 			double attributeValue = instance.value(attributeIndex);
@@ -119,23 +125,23 @@ public abstract class PreferenceRanker extends Ranker {
 		}
 
 		// For giving ranking
-		List<Integer> ranking = getRankingFromOrdering(ordering);
+		// List<Integer> ranking = getRankingFromOrdering(ordering);
+		// for (int i = 0; i < ranking.size(); i++) {
+		// objectList[i] = ranking.get(i);
+		// }
+
+		// For giving ordering
+		List<Integer> ranking = ordering;
 		for (int i = 0; i < ranking.size(); i++) {
 			objectList[i] = ranking.get(i);
 		}
-		
-//			// For giving ordering
-//			List<Integer> ranking = ordering;
-//			for (int i = 0; i < ranking.size(); i++) {
-//				objectList[i] = ranking.get(i);
-//			}
-		
+
 		Ranking result = new Ranking(objectList, compareOperators);
 		return result;
 	}
 
 	List<Integer> getRankingFromOrdering(List<Integer> ordering) {
-		Integer [] ranking = new Integer [ordering.size()];
+		Integer[] ranking = new Integer[ordering.size()];
 		for (int i = 0; i < ordering.size(); i++) {
 			ranking[ordering.get(i)] = i;
 		}

@@ -10,6 +10,8 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public abstract class Ranker {
 	
@@ -75,7 +77,15 @@ public abstract class Ranker {
 		double[] instanceFeatureValues = new double[features.size()];
 		int featureIndex = 0;
 		for (int attributeIndex : features) {
-			instanceFeatureValues[featureIndex++]=instance.value(attributeIndex);
+			double value = instance.value(attributeIndex);
+			if (value != Double.NaN) {
+				instanceFeatureValues[featureIndex++]= value;				
+			} else {
+				// TODO remove if worked
+				instanceFeatureValues[featureIndex++]= value;
+				System.out.println("Found NaN");
+			}
+			
 		}
 		return instanceFeatureValues;
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ranker.Ranker;
 import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 
 public class LeaveOneOut implements RankerEstimationProcedure {
@@ -14,13 +15,13 @@ public class LeaveOneOut implements RankerEstimationProcedure {
 		double result = 0;
 		for (int i = 0; i < instances.numInstances(); i++) {
 			Instances train = new Instances(instances);
-			train.remove(i);
+			Instance remove = train.remove(i);
 			ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 			for (int attribute = 0; attribute < instances.numAttributes(); attribute++) {
 				attributes.add(instances.attribute(attribute));
 			}
 			Instances test = new Instances("Test", attributes, 0);
-			test.add(instances.get(i));
+			test.add(remove);
 
 			result += evaluationProcedure.evaluate(ranker, train, test);
 		}
