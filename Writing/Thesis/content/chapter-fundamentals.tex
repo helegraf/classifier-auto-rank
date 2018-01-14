@@ -36,26 +36,36 @@ In formal terms, the gardener is searching for an unknown \textit{target functio
 The problem described above has some additional properties besides being a machine learning problem in general. Firstly, it falls in the category of supervised machine learning. Supervised learning is one of the three main learning paradigms of machine learning, together with reinforcement learning and unsupervised learning. In the context of this thesis, the latter will be neglected as only supervised learning is used. It is characterized by the fact that the learning algorithm is provided with a set of inputs \textit{together} with the outputs, which could be viewed as a kind of teacher, or supervisor, explaining expected results to the learner. In the other cases, no such detailed feedback is provided to the learner. 
 
 \subsection{Classification and Regression}
-In addition to falling into the category of supervised learning, the problem is a classification problem. The nature of the prediction is to assign one of the three classes, or labels, 'iris setosa', iris virginica' and 'iris versicolor' to a new plant. Formally, this means that the output space $Y$ of the target function consist of a finite set of labels $(y_1,\dots,y_n)$, so in this case $Y=('iris-setosa','iris virginica', 'iris versicolor')$. 
+%TODO instance explained before here?
+In addition to falling into the category of supervised learning, the problem is a classification problem. The nature of the prediction is to assign one of the three classes, or labels, 'iris setosa', iris virginica' and 'iris versicolor' to a new plant. Formally, this means that the output space $Y$ of the target function consist of a finite set of labels $\lbrace y_1,\dots,y_n\rbrace$, so that each instance is associated with a label $y_i \in Y$, in this case $Y=\lbrace 'iris-setosa','iris virginica', 'iris versicolor' \rbrace $. 
 
 Apart from classification, another important category of machine learning problems is regression problems. In the case of regression, the output space of the target function is no longer finite, but instead consist of real numbers. To reconsider the gardening example, the gardener could want to predict the height of a plant on the basis of the same features as used above. Likewise, they would have to observe a number of plants to gather feature values together with the expected target value, which instead of the species would then be the height of the plant in centimeters, that is $Y=\mathbb{R}$.
 
 \subsection{Preference Learning}
 % Why is label ranking relevant? -> for prediction based on preference
 % Preference learning
-Preference Learning is a relatively new subfield of machine learning\cite{DBLP:books/daglib/0025729}. It is dedicated to the problem of learning how to rank, the precise definition of what this encompasses being defined by which specific task one is engaged in. Out of the three main tasks of preference learning, namely label ranking, instance ranking and object ranking, label ranking is the relevant one in the context of this thesis. But before going into to details of label ranking, it first has to be explained what is meant with a ranking in this context and how it is distinguished from the concept of an ordering.
+Preference Learning is a relatively new subfield of machine learning\cite{DBLP:books/daglib/0025729}. It is dedicated to the problem of learning how to rank, the precise definition of what this encompasses being defined by the specific task. Out of the three main tasks of preference learning, namely label ranking, instance ranking and object ranking, label ranking is the relevant one in the context of this thesis. But before going into to details of label ranking, it first has to be explained what is meant with a ranking in this context and how it is distinguished from the concept of an ordering.
 
 \subsubsection{Ranking and Ordering}
+To clarify the meaning of ranking and ordering, we return to the gardening example. After spending some time studying the different flowers, the gardener has realized he prefers certain iris species to others. 
+
+Ranking = Permutation of the actual labels!
+Ordering =
+
+A ranking for a set of items defines a strict total order 
 
 % Gardener example ranking his favourite plants
+The ordering sorts the labels according to their given score. It thus may also implicitly be given by ordering the items themselves, as the labels are aliases for them. Therefore, an ordering for a set of labels $\lbrace 1\dots k\rbrace$ is a permutation $\pi$ of the labels where $\pi(i)$ is the 
+
+It must be noted that the definitions given here are not transferable to the general case of a ranking or ordering problems, since a strict total order is not required in all contexts for either ranking or ordering.
 
 \begin{table}[h]
 \centering
 	\begin{tabularx}{.8\textwidth}{>{\hsize=0.9\hsize}X | >{\hsize=.1\hsize}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\hsize=1.6\hsize\raggedleft\arraybackslash}X >{\raggedleft\arraybackslash} >{\hsize=.1\hsize}X}
 		%\hline
 		Species		& 	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris virginica}	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris versicolor}	& \multicolumn{1}{>{\hsize=1.6\hsize\centering\arraybackslash}X}{iris setosa}	& 	\\ \hline
-		Labels		& [ & 1,									& 2,										& 3 									& ] \\
-		Scores		& [ & 0.17,								& 0.12,									& 0.89 								& ] \\ 
+		Label		& [ & 1,									& 2,										& 3 									& ] \\ 
+		Score		& [ & 0.17,								& 0.12,									& 0.89 								& ] \\ 
 		Ranking		& [ & 2,									& 3,										& 1 									& ] \\ 
 		Ordering		& [ & 3,									& 1,										& 2 									& ] \\ 		
 	\end{tabularx}
@@ -67,7 +77,9 @@ The values in table \ref{tab:ranking_vs_ordering} result in the ranking $[2,3,1]
 
 \subsubsection{Label Ranking}
 % could be seen as a generalisation of classification
-Similar to classification, in label ranking there is a finite set of labels $Y=(y_1,\dots,y_n)$, but it is not the output space. Instead, the output space consists of rankings of these labels
+Similar to classification, in label ranking there is a finite set of labels $Y=\lbrace y_1,\dots,y_n \rbrace$, but it is not the output space. Instead, \citeauthor{DBLP:books/daglib/0025729} define the target function for label ranking as $X\rightarrow S_Y$ where the output space $S_Y$ contains all permutations over the set of labels $Y$ \cite{DBLP:books/daglib/0025729}. An instance $x \in X$ therefore is assigned a permutation $y_{\pi_x^i}$
+
+Although called label ranking actually label ordering!
 
 \subsection{Meta Learning}
 % Context is meta learning -> what does that mean and what are the consequence
@@ -100,7 +112,3 @@ $t_i,$ the number of ties observed for X in the ith position of the ranking \\
 $u_j,$ the number of ties observed for Y in the ith position of the ranking 
 
 % In theory explanation for Kendall's Tau B because ranking could be tied but not as a result of Label Ranking and unlikely for regression the implementation that is used calculates Tau b!
-\section{Implementation}
-\subsection{jPL}
-
-\subsection{WEKA}
