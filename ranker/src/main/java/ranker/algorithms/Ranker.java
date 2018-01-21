@@ -1,92 +1,105 @@
 package ranker.algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
-import ranker.Util;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 public abstract class Ranker {
-	
-	ArrayList<Integer> features;
-	
+
+	/**
+	 * Data set the ranker is built with.
+	 */
+	protected Instances data;
+
+	/**
+	 * Indices of target attributes in {@link #data}.
+	 */
+	protected List<Integer> targetAttributes;
+
+	/**
+	 * Indices of meta feature attributes in {@link #data}.
+	 */
+	protected List<Integer> features;
+
 	/**
 	 * Maps the index of an attribute to the classifier it represents.
 	 */
-	HashMap<Integer,Classifier> classifiersMap;
-	/**
-	 * Contains index of classifier attributes in given data set
-	 */
-	ArrayList<Integer> classifierIndices;
-
+	Map<Integer, Classifier> classifiersMap;
 
 	/**
-	 * Generates a ranker. 
-	 * 
-	 * @param data The training data
-	 */
-	public abstract void buildRanker (Instances data) throws Exception;
-	
-	/**
-	 * Predicts a ranking of classifiers for the given instance; instance must have the same format as (be compatible with) instances given in buildRanker
-	 * 
-	 * @param instance
-	 * @return
-	 * @throws Exception
-	 */
-	public abstract List<Classifier> predictRankingforInstance (Instance instance) throws Exception;
-	
-	/**
-	 * Collects indices of attributes that represent classifiers or meta features.
+	 * Generates a ranker.
 	 * 
 	 * @param data
-	 * @throws Exception
+	 *            The training data
+	 * @param targetAttributes
+	 *            TODO
 	 */
-	void getClassifiersAndMetaFeatures(Instances data) throws Exception {
-		classifierIndices = new ArrayList<Integer>();
-		classifiersMap = new HashMap<Integer,Classifier>();
+	public void buildRanker(Instances data, List<Integer> targetAttributes) throws Exception {
+		// Check for sensible input
+		if (targetAttributes.size() < 2) {
+			throw new IllegalArgumentException(
+					"Data set given must contain at least two attributes which represent weka classifiers.");
+		}
+
+		// Initialize variables
+		this.data = data;
+		this.targetAttributes = targetAttributes;
+		classifiersMap = new HashMap<Integer, Classifier>();
 		features = new ArrayList<Integer>();
-		
-		// Find the classifiers and meta features
-		HashSet<String> portfolio = new HashSet<String>();
-		Arrays.asList(Util.portfolio).forEach(classifier->portfolio.add(classifier.getClass().getName()));
-		for (int index = 0; index < data.numAttributes(); index++) {
-			String attributeName = data.attribute(index).name();
-			if (portfolio.contains(attributeName)) {
-				classifierIndices.add(index);
-				classifiersMap.put(index, AbstractClassifier.forName(attributeName,null));
+
+		for (int i = 0; i < data.numAttributes(); i++) {
+			String attributeName = data.attribute(i).name();
+			if (targetAttributes.contains(i)) {
+				classifiersMap.put(i, AbstractClassifier.forName(attributeName, null));
 			} else {
-				features.add(index);
+				features.add(i);
 			}
 		}
-		
-		// Check for sensible input
-		if (classifierIndices.size() < 2) {
-			throw new IllegalArgumentException("Data set given must contain at least two attributes which represent weka classifiers.");
-		}
+
+		initialize();
 	}
 	
-	double[] getFeatureValuesForInstance(Instance instance) {
+	/**
+	 * Predicts a ranking of classifiers for the given instance. Instance must have
+	 * the same format as (be compatible with) instances given in buildRanker, i.e.
+	 * contain the same attributes in the same order. Target attributes need not
+	 * have values but must exist.
+	 * 
+	 * @param instance The instance for which to predict a ranking
+	 * @return A ranking of learning algorithms 
+	 * @throws Exception If a prediction cannot be made
+	 */
+	public abstract List<Classifier> predictRankingforInstance(Instance instance) throws Exception;
+
+	/**
+	 * Has to initialize the ranker so that it is able to return predictions for a
+	 * new instance.
+	 * 
+	 * @throws Exception
+	 *             If building the ranker failed
+	 */
+	protected abstract void initialize() throws Exception;
+
+	/**
+	 * Compiles the feature values for that instance to a double array. Assumes that
+	 * the instance contains both the meta feature and target attributes still.
+	 * 
+	 * @param instance
+	 *            The instance of which to get the features
+	 * @return The feature values of the instance
+	 */
+	protected double[] getFeatureValuesForInstance(Instance instance) {
 		double[] instanceFeatureValues = new double[features.size()];
 		int featureIndex = 0;
 		for (int attributeIndex : features) {
 			double value = instance.value(attributeIndex);
-			if (value != Double.NaN) {
-				instanceFeatureValues[featureIndex++]= value;				
-			} else {
-				// TODO remove if worked
-				instanceFeatureValues[featureIndex++]= value;
-				System.out.println("Found NaN");
-			}
-			
+			instanceFeatureValues[featureIndex++] = value;
 		}
 		return instanceFeatureValues;
 	}

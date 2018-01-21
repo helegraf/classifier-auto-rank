@@ -18,8 +18,8 @@ public class KendallRankCorrelation implements RankerEvaluationMeasure {
 		double numInstancesCalculated = test.numInstances();
 		Ranker perfectRanker = new PerfectRanker();
 		try {
-			perfectRanker.buildRanker(train);
-			ranker.buildRanker(train);
+			perfectRanker.buildRanker(train, null);
+			ranker.buildRanker(train, null);
 
 			for (Instance instance : test) {
 				List<Classifier> perfectRanking;

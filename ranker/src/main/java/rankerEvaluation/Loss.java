@@ -15,8 +15,8 @@ public class Loss implements RankerEvaluationMeasure {
 		// TODO Auto-generated method stub
 		try {
 			Ranker oracle = new PerfectRanker();
-			oracle.buildRanker(train);
-			ranker.buildRanker(train);
+			oracle.buildRanker(train, null);
+			ranker.buildRanker(train, null);
 			
 			for (Instance instance : test) {
 				List<Classifier> perfectRanking = oracle.predictRankingforInstance(instance);

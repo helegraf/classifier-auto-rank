@@ -16,61 +16,35 @@ public abstract class RegressionRanker extends Ranker {
 
 	/**
 	 * Maps that contains a regression model for each classifier
-	 * (classifier->regressionmodel)
+	 * (classifier -> regression model)
 	 */
-	Map<Classifier, Classifier> regressionModels;
-	HashMap<Classifier, Instances> map;
+	protected Map<Classifier, Classifier> regressionModels;
 
 	/**
-	 * Builds a regression model for each classifier. Has to initialize the list of
-	 * regressionModels
-	 * 
-	 * @param train
-	 * @throws Exception
+	 * Map that contains a training data set for each regression model.
 	 */
-	abstract void buildRegressionModels(Map<Classifier, Instances> train) throws Exception;
+	protected HashMap<Classifier, Instances> map;
 
-	List<Double> estimates;
-
-	@Override
-	public void buildRanker(Instances data) throws Exception {
-		getClassifiersAndMetaFeatures(data);
-		map = new HashMap<Classifier, Instances>();
-		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
-		for (int i : features) {
-			attributes.add(new Attribute(data.attribute(i).name()));
-		}
-		attributes.add(new Attribute("Performance"));
-		for (int i : classifierIndices) {
-			map.put(classifiersMap.get(i), new Instances(classifiersMap.get(i).getClass().getName(), attributes, 0));
-			map.get(classifiersMap.get(i)).setClassIndex(features.size());
-		}
-		for (Instance instance : data) {
-			double[] featureValues = getFeatureValuesForInstance(instance);
-			for (int i : classifierIndices) {
-				double[] newFeatureValues = new double[featureValues.length + 1];
-				for (int j = 0; j < featureValues.length; j++) {
-					newFeatureValues[j] = featureValues[j];
-				}
-				newFeatureValues[featureValues.length] = instance.value(i);
-				map.get(classifiersMap.get(i)).add(new DenseInstance(newFeatureValues.length, newFeatureValues));
-			}
-		}
-		buildRegressionModels(map);
-	}
+	/**
+	 * List with estimates of learning algorithm performances for last predicted
+	 * ranking.
+	 */
+	protected List<Double> estimates;
 
 	@Override
 	public List<Classifier> predictRankingforInstance(Instance instance) throws Exception {
-		// TODO calculate MetaFeatures!
+		// Initialize data structures to save results
 		TreeMap<Double, List<Classifier>> predictions = new TreeMap<Double, List<Classifier>>();
 		ArrayList<Classifier> results = new ArrayList<Classifier>();
 
+		// Construct querying instance
 		double[] newFeatures = new double[features.size() + 1];
 		for (int i : features) {
 			newFeatures[i] = instance.value(i);
 		}
 		newFeatures[newFeatures.length - 1] = Double.NaN;
 
+		// Calculate results
 		for (Classifier classifier : regressionModels.keySet()) {
 			Instance newInstance = new DenseInstance(newFeatures.length, newFeatures);
 			newInstance.setDataset(map.get(classifier));
@@ -83,7 +57,7 @@ public abstract class RegressionRanker extends Ranker {
 				predictions.put(result, classifiers);
 			}
 		}
-		
+
 		// Build list of results
 		estimates = new ArrayList<Double>();
 		predictions.descendingMap().forEach((value, classifierList) -> {
@@ -103,5 +77,49 @@ public abstract class RegressionRanker extends Ranker {
 	 */
 	public List<Double> getEstimatesForRanking() {
 		return estimates;
+	}
+
+	/**
+	 * Builds a regression model for each classifier. Has to initialize the list of
+	 * regressionModels
+	 * 
+	 * @param train
+	 * @throws Exception
+	 */
+	protected abstract void buildRegressionModels(Map<Classifier, Instances> train) throws Exception;
+
+	@Override
+	protected void initialize() throws Exception {
+		// Initialize variable
+		map = new HashMap<Classifier, Instances>();
+
+		// Get all attributes
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		for (int i : features) {
+			attributes.add(new Attribute(data.attribute(i).name()));
+		}
+		attributes.add(new Attribute("Performance"));
+
+		// Create new Instances for each target attribute
+		for (int i : targetAttributes) {
+			map.put(classifiersMap.get(i), new Instances(classifiersMap.get(i).getClass().getName(), attributes, 0));
+			map.get(classifiersMap.get(i)).setClassIndex(features.size());
+		}
+
+		// Add each Instance of given train set to each of the individual train set with
+		// corresponding learning algorithm predictions
+		for (Instance instance : data) {
+			double[] featureValues = getFeatureValuesForInstance(instance);
+			for (int i : targetAttributes) {
+				double[] newFeatureValues = new double[featureValues.length + 1];
+				for (int j = 0; j < featureValues.length; j++) {
+					newFeatureValues[j] = featureValues[j];
+				}
+				newFeatureValues[featureValues.length] = instance.value(i);
+				map.get(classifiersMap.get(i)).add(new DenseInstance(newFeatureValues.length, newFeatureValues));
+			}
+		}
+
+		buildRegressionModels(map);
 	}
 }
