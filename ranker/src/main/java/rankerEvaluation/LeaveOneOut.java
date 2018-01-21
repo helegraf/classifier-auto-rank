@@ -2,7 +2,7 @@ package rankerEvaluation;
 
 import java.util.ArrayList;
 
-import ranker.Ranker;
+import ranker.algorithms.Ranker;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;

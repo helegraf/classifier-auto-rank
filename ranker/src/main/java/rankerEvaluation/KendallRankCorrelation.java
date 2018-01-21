@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 
-import ranker.PerfectRanker;
-import ranker.Ranker;
+import ranker.algorithms.PerfectRanker;
+import ranker.algorithms.Ranker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;

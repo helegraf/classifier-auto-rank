@@ -1,6 +1,6 @@
 package rankerEvaluation;
 
-import ranker.Ranker;
+import ranker.algorithms.Ranker;
 import weka.core.Instances;
 
 public interface RankerEstimationProcedure {

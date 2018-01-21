@@ -1,4 +1,4 @@
-package ranker;
+package ranker.algorithms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,24 +15,28 @@ import weka.core.Instances;
 public abstract class RegressionRanker extends Ranker {
 
 	/**
-	 * Maps that contains a regression model for each classifier (classifier->regressionmodel)
+	 * Maps that contains a regression model for each classifier
+	 * (classifier->regressionmodel)
 	 */
-	Map<Classifier,Classifier> regressionModels;
-	HashMap<Classifier,Instances> map;
-	
+	Map<Classifier, Classifier> regressionModels;
+	HashMap<Classifier, Instances> map;
+
 	/**
-	 * Builds a regression model for each classifier. Has to initialize the list of regressionModels
+	 * Builds a regression model for each classifier. Has to initialize the list of
+	 * regressionModels
 	 * 
 	 * @param train
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	abstract void buildRegressionModels (Map<Classifier,Instances> train) throws Exception;
+	abstract void buildRegressionModels(Map<Classifier, Instances> train) throws Exception;
+
+	List<Double> estimates;
 
 	@Override
 	public void buildRanker(Instances data) throws Exception {
 		getClassifiersAndMetaFeatures(data);
-		map = new HashMap<Classifier,Instances>();
-		ArrayList<Attribute> attributes= new ArrayList<Attribute>();
+		map = new HashMap<Classifier, Instances>();
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i : features) {
 			attributes.add(new Attribute(data.attribute(i).name()));
 		}
@@ -42,10 +46,10 @@ public abstract class RegressionRanker extends Ranker {
 			map.get(classifiersMap.get(i)).setClassIndex(features.size());
 		}
 		for (Instance instance : data) {
-			double [] featureValues = getFeatureValuesForInstance(instance);
+			double[] featureValues = getFeatureValuesForInstance(instance);
 			for (int i : classifierIndices) {
-				double[] newFeatureValues = new double[featureValues.length+1];
-				for (int j = 0; j < featureValues.length;j++) {
+				double[] newFeatureValues = new double[featureValues.length + 1];
+				for (int j = 0; j < featureValues.length; j++) {
 					newFeatureValues[j] = featureValues[j];
 				}
 				newFeatureValues[featureValues.length] = instance.value(i);
@@ -57,29 +61,47 @@ public abstract class RegressionRanker extends Ranker {
 
 	@Override
 	public List<Classifier> predictRankingforInstance(Instance instance) throws Exception {
-		TreeMap<Double,List<Classifier>> predictions = new TreeMap<Double,List<Classifier>>();
+		// TODO calculate MetaFeatures!
+		TreeMap<Double, List<Classifier>> predictions = new TreeMap<Double, List<Classifier>>();
 		ArrayList<Classifier> results = new ArrayList<Classifier>();
-		
-		
-		double[] newFeatures = new double [features.size()+1];
+
+		double[] newFeatures = new double[features.size() + 1];
 		for (int i : features) {
 			newFeatures[i] = instance.value(i);
 		}
-		newFeatures[newFeatures.length-1] = Double.NaN;
-		
+		newFeatures[newFeatures.length - 1] = Double.NaN;
+
 		for (Classifier classifier : regressionModels.keySet()) {
-			Instance newInstance = new DenseInstance(newFeatures.length,newFeatures);
+			Instance newInstance = new DenseInstance(newFeatures.length, newFeatures);
 			newInstance.setDataset(map.get(classifier));
 			double result = regressionModels.get(classifier).classifyInstance(newInstance);
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(classifier);
 			} else {
-				ArrayList<Classifier>  classifiers = new ArrayList<Classifier>();
+				ArrayList<Classifier> classifiers = new ArrayList<Classifier>();
 				classifiers.add(classifier);
 				predictions.put(result, classifiers);
 			}
 		}
-		predictions.forEach((value,classifierList)->results.addAll(classifierList));
+		
+		// Build list of results
+		estimates = new ArrayList<Double>();
+		predictions.descendingMap().forEach((value, classifierList) -> {
+			results.addAll(classifierList);
+			classifierList.forEach(classifier -> estimates.add(value));
+		});
 		return results;
+	}
+
+	/**
+	 * Returns a list with the exact values predicted by the regression models for
+	 * each algorithm. The value at position i in the list is the predicted value
+	 * for the model at position i in the returned ranking.
+	 * 
+	 * @return The estimated values for the models, null if no prediction has been
+	 *         made so far.
+	 */
+	public List<Double> getEstimatesForRanking() {
+		return estimates;
 	}
 }

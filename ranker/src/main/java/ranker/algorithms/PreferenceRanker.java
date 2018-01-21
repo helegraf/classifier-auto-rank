@@ -1,4 +1,4 @@
-package ranker;
+package ranker.algorithms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +62,7 @@ public abstract class PreferenceRanker extends Ranker {
 		reverseIndicesMap = new HashMap<Integer, Integer>();
 		
 		// Ensure no missing vaules
+		// TODO extract method
 		ReplaceMissingValues filter = new ReplaceMissingValues();
 		filter.setInputFormat(data);
 		for (int i = 0; i < data.numInstances(); i++) {
@@ -75,6 +76,7 @@ public abstract class PreferenceRanker extends Ranker {
 		}
 
 		getClassifiersAndMetaFeatures(newData);
+		
 		for (int i = 0; i < classifierIndices.size(); i++) {
 			labels.add(i);
 			indicesMap.put(classifierIndices.get(i), i);

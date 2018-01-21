@@ -1,4 +1,4 @@
-package ranker;
+package openMLUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
