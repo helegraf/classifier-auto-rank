@@ -68,7 +68,7 @@ public abstract class PreferenceRanker extends Ranker {
 	}
 
 	/**
-	 * Map labels to corresponding learning algorithms
+	 * Map labels to corresponding learning algorithms.
 	 * 
 	 * @param ranking
 	 *            The ranking of labels
