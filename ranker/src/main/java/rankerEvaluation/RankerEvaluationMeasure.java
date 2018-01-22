@@ -1,5 +1,7 @@
 package rankerEvaluation;
 
+import java.util.List;
+
 import ranker.algorithms.Ranker;
 import weka.core.Instances;
 
@@ -15,8 +17,9 @@ public interface RankerEvaluationMeasure {
 	 *            The Data set for training the ranker.
 	 * @param test
 	 *            The Data set for testing the ranker.
+	 * @param targetAttributes TODO
 	 * @return The performance of the classifier on the data set.
 	 * @throws Exception
 	 */
-	public double evaluate(Ranker ranker, Instances train, Instances test);
+	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes);
 }

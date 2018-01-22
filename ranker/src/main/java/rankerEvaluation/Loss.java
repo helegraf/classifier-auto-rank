@@ -11,19 +11,19 @@ import weka.core.Instances;
 public class Loss implements RankerEvaluationMeasure {
 
 	@Override
-	public double evaluate(Ranker ranker, Instances train, Instances test) {
+	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes) {
 		// TODO Auto-generated method stub
 		try {
 			Ranker oracle = new PerfectRanker();
-			oracle.buildRanker(train, null);
-			ranker.buildRanker(train, null);
+			oracle.buildRanker(train, targetAttributes);
+			ranker.buildRanker(train, targetAttributes);
 			
 			for (Instance instance : test) {
 				List<Classifier> perfectRanking = oracle.predictRankingforInstance(instance);
 				List<Classifier> predictedRanking = ranker.predictRankingforInstance(instance);
 				
 				for (int i = 0; i < perfectRanking.size(); i++) {
-					if (perfectRanking.get(i).getClass().getName().equals(predictedRanking.get(0).getClass().getName())) {
+					if (perfectRanking.get(0).getClass().getName().equals(predictedRanking.get(i).getClass().getName())) {
 						
 						break;
 					}

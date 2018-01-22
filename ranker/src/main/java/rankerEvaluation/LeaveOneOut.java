@@ -1,6 +1,7 @@
 package rankerEvaluation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ranker.algorithms.Ranker;
 import weka.core.Attribute;
@@ -10,7 +11,7 @@ import weka.core.Instances;
 public class LeaveOneOut implements RankerEstimationProcedure {
 
 	@Override
-	public double estimate(Ranker ranker, RankerEvaluationMeasure evaluationProcedure, Instances instances) {
+	public double estimate(Ranker ranker, RankerEvaluationMeasure evaluationProcedure, Instances instances, List<Integer> targetAttributes) {
 		
 		double result = 0;
 		for (int i = 0; i < instances.numInstances(); i++) {
@@ -23,7 +24,7 @@ public class LeaveOneOut implements RankerEstimationProcedure {
 			Instances test = new Instances("Test", attributes, 0);
 			test.add(remove);
 
-			result += evaluationProcedure.evaluate(ranker, train, test);
+			result += evaluationProcedure.evaluate(ranker, train, test, targetAttributes);
 		}
 		
 		result /= instances.numInstances();

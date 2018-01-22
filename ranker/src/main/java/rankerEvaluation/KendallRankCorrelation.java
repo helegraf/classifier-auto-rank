@@ -13,13 +13,13 @@ import weka.core.Instances;
 public class KendallRankCorrelation implements RankerEvaluationMeasure {
 
 	@Override
-	public double evaluate(Ranker ranker, Instances train, Instances test) {
+	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes) {
 		double correlation = 0;
 		double numInstancesCalculated = test.numInstances();
 		Ranker perfectRanker = new PerfectRanker();
 		try {
-			perfectRanker.buildRanker(train, null);
-			ranker.buildRanker(train, null);
+			perfectRanker.buildRanker(train, targetAttributes);
+			ranker.buildRanker(train, targetAttributes);
 
 			for (Instance instance : test) {
 				List<Classifier> perfectRanking;
