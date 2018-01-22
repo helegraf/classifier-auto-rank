@@ -56,6 +56,7 @@ public class KendallRankCorrelation implements RankerEvaluationMeasure {
 			}
 		}
 
+		// TODO remove print / better loggin
 		System.out.println("\n Predicted Ranking:");
 		for (double d : xArray) {
 			System.out.print(d + ", ");
