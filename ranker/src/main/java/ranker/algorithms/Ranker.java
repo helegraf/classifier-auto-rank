@@ -30,7 +30,7 @@ public abstract class Ranker {
 	/**
 	 * Maps the index of an attribute to the classifier it represents.
 	 */
-	Map<Integer, Classifier> classifiersMap;
+	protected Map<Integer, Classifier> classifiersMap;
 
 	/**
 	 * Generates a ranker.
