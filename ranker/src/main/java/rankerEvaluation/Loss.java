@@ -12,7 +12,7 @@ public class Loss implements RankerEvaluationMeasure {
 
 	@Override
 	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes) {
-		int result = 0;
+		double result = 0;
 		int numInstancesCalculated = test.numInstances();
 
 		try {
@@ -50,7 +50,7 @@ public class Loss implements RankerEvaluationMeasure {
 
 		// TODO maybe better solution than this (+ also for Kendall)
 		if (numInstancesCalculated != 0) {
-			result = result/numInstancesCalculated;
+			result /= numInstancesCalculated;
 		}
 		
 		return result;
