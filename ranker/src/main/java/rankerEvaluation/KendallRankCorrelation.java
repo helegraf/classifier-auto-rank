@@ -52,11 +52,12 @@ public class KendallRankCorrelation implements RankerEvaluationMeasure {
 			for (int j = 0; j < actualOrdering.size(); j++) {
 				if (predictedOrdering.get(i).getClass().getName().equals(actualOrdering.get(j).getClass().getName())) {
 					xArray[j] = i;
+					break;
 				}
 			}
 		}
 
-		// TODO remove print / better loggin
+		// TODO remove print / better logging
 		System.out.println("\n Predicted Ranking:");
 		for (double d : xArray) {
 			System.out.print(d + ", ");
