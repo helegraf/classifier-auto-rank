@@ -2,12 +2,7 @@ package rankerEvaluation;
 
 import java.util.List;
 
-import ranker.algorithms.PerfectRanker;
-import ranker.algorithms.Ranker;
-import ranker.algorithms.RegressionRanker;
 import weka.classifiers.Classifier;
-import weka.core.Instance;
-import weka.core.Instances;
 
 /**
  * Calculated the difference between the predicted performance value of the
@@ -18,58 +13,43 @@ import weka.core.Instances;
  * @author Helena Graf
  *
  */
-public class RootMeanSquaredError implements RankerEvaluationMeasure {
+public class RootMeanSquaredError extends RankerEvaluationMeasure {
 
 	@Override
-	public double evaluate(Ranker regressionRanker, Instances train, Instances test, List<Integer> targetAttributes) {
-		// TODO maybe something better than causing an exception here?
-		RegressionRanker ranker = (RegressionRanker) regressionRanker;
-
+	public double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates,
+			List<Double> performanceMeasures) {
+		System.out.print("RMSE ");
+		// Initialize result, catch NaNs
 		double result = 0;
-		int numInstancesCalculated = test.numInstances();
+		int numCalculated = predictedRanking.size();
+		
+		// Find corresponding classifier values and compare
+		for (int i = 0; i < predictedRanking.size(); i++) {
+			for (int j = 0; j < perfectRanking.size(); j++) {
+				if (predictedRanking.get(i).getClass().getName()
+						.equals(perfectRanking.get(j).getClass().getName())) {
+					// Have found position, now compare predicted value with actual Value
+					double difference = estimates.get(i) - performanceMeasures.get(j);
+					double squared =  Math.pow(difference, 2);
 
-		try {
-			PerfectRanker oracle = new PerfectRanker();
-			oracle.buildRanker(train, targetAttributes);
-			ranker.buildRanker(train, targetAttributes);
-
-			for (Instance instance : test) {
-				try {
-					List<Classifier> perfectRanking = oracle.predictRankingforInstance(instance);
-					List<Classifier> predictedRanking = ranker.predictRankingforInstance(instance);
-					
-					List<Double> performanceValues = oracle.getPerformanceMeasuresForRanking();
-					List<Double> predictedPerformances = ranker.getEstimatesForRanking();
-
-					// Find corresponding classifier values and compare
-					for (int i = 0; i < predictedRanking.size(); i++) {
-						for (int j = 0; j < perfectRanking.size(); j++) {
-							if (predictedRanking.get(i).getClass().getName()
-									.equals(perfectRanking.get(j).getClass().getName())) {
-								// Have found position, now compare predicted value with actual Value
-								double difference = predictedPerformances.get(i) - performanceValues.get(j);
-								result += Math.pow(difference, 2);
-								break;
-							}
-						}
-					}
-
-				} catch (Exception e) {
-					// TODO log
-					numInstancesCalculated--;
+					if (!Double.isNaN(squared)) {
+						result += squared;
+					} else {
+						numCalculated--;
+					}					
+					break;
 				}
 			}
-
-		} catch (Exception e) {
-			// TODO log
 		}
-
-		// TODO maybe better solution than this (+ also for Kendall)
-		if (numInstancesCalculated != 0) {
-			result /= numInstancesCalculated;
-			result = Math.sqrt(result);
+		
+		if (numCalculated == 0) {
+			result = Double.NaN;
+		} else {
+			result /= numCalculated;
 		}
-
+		
+		result =  Math.sqrt(result);
+		System.out.println(result);
 		return result;
 	}
 

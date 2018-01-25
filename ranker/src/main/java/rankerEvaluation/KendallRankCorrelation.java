@@ -4,70 +4,32 @@ import java.util.List;
 
 import org.apache.commons.math3.stat.correlation.KendallsCorrelation;
 
-import ranker.algorithms.PerfectRanker;
-import ranker.algorithms.Ranker;
 import weka.classifiers.Classifier;
-import weka.core.Instance;
-import weka.core.Instances;
 
-public class KendallRankCorrelation implements RankerEvaluationMeasure {
+public class KendallRankCorrelation extends RankerEvaluationMeasure {
 
 	@Override
-	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes) {
-		double correlation = 0;
-		double numInstancesCalculated = test.numInstances();
-		Ranker perfectRanker = new PerfectRanker();
-		try {
-			perfectRanker.buildRanker(train, targetAttributes);
-			ranker.buildRanker(train, targetAttributes);
+	public double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates,
+			List<Double> performanceMeasures) {
+		System.out.print("Kendall ");
+		// Initialize temporary variables
+		double[] xArray = new double[predictedRanking.size()];
+		double[] yArray = new double[perfectRanking.size()];
 
-			for (Instance instance : test) {
-				List<Classifier> perfectRanking;
-				try {
-					perfectRanking = perfectRanker.predictRankingforInstance(instance);
-					List<Classifier> ranking = ranker.predictRankingforInstance(instance);
-					correlation += calculateKendallRankCorrelation(ranking,perfectRanking);
-				} catch (Exception e) {
-					e.printStackTrace();
-					numInstancesCalculated--;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		if (numInstancesCalculated != 0) {
-			correlation /= numInstancesCalculated;
-		}
-		return correlation;
-	}
-
-	public static double calculateKendallRankCorrelation(List<Classifier> predictedOrdering,
-			List<Classifier> actualOrdering) {
-		double[] xArray = new double[predictedOrdering.size()];
-		double[] yArray = new double[actualOrdering.size()];
-
+		// Prepare computation of correlation
 		for (int i = 0; i < yArray.length; i++) {
 			yArray[i] = i;
-			for (int j = 0; j < actualOrdering.size(); j++) {
-				if (predictedOrdering.get(i).getClass().getName().equals(actualOrdering.get(j).getClass().getName())) {
+			for (int j = 0; j < perfectRanking.size(); j++) {
+				if (predictedRanking.get(i).getClass().getName().equals(perfectRanking.get(j).getClass().getName())) {
 					xArray[j] = i;
 					break;
 				}
 			}
 		}
 
-		// TODO remove print / better logging
-		System.out.println("\n Predicted Ranking:");
-		for (double d : xArray) {
-			System.out.print(d + ", ");
-		}
-		
 		KendallsCorrelation correlation = new KendallsCorrelation();
-	
-
 		double result = correlation.correlation(xArray, yArray);
-		System.out.println("Correlation: " + result);
+		System.out.println(result);
 		return result;
 	}
 

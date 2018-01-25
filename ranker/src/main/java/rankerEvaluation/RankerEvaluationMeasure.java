@@ -2,24 +2,26 @@ package rankerEvaluation;
 
 import java.util.List;
 
-import ranker.algorithms.Ranker;
-import weka.core.Instances;
+import weka.classifiers.Classifier;
 
-public interface RankerEvaluationMeasure {
+public abstract class RankerEvaluationMeasure {
+	
+	protected StringBuilder summaryString = new StringBuilder();
+	
 	/**
 	 * Trains the Ranker on the training data set and evaluates its performance
 	 * on the test data set according to the implemented measure, e.g. predictive
 	 * accuracy or the area under the ROC curve.
 	 * 
-	 * @param ranker
-	 *            The Ranker to be used for evaluation.
-	 * @param train
-	 *            The Data set for training the ranker.
-	 * @param test
-	 *            The Data set for testing the ranker.
-	 * @param targetAttributes TODO
-	 * @return The performance of the classifier on the data set.
-	 * @throws Exception
+	 * @param predictedRanking
+	 * @param perfectRanking
+	 * @param estimates
+	 * @param performanceMeasures
+	 * @return
 	 */
-	public double evaluate(Ranker ranker, Instances train, Instances test, List<Integer> targetAttributes);
+	public abstract double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates, List<Double> performanceMeasures);
+	
+	public String getSummary() {
+		return summaryString.toString();
+	}
 }
