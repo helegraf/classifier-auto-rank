@@ -11,7 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ranker.algorithms.RandomForestRanker;
+import ranker.algorithms.RegressionRanker;
+import rankerEvaluation.KendallRankCorrelation;
+import rankerEvaluation.LeaveOneOut;
+import rankerEvaluation.Loss;
+import rankerEvaluation.RankerEvaluationMeasure;
 import weka.classifiers.trees.RandomForest;
+import weka.core.Attribute;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
@@ -62,28 +70,47 @@ public class Main {
 		// }
 
 		// Trying to save a .csv
-		Path path = FileSystems.getDefault().getPath("datatest.csv");
-		String seperator = ";";
-		BufferedWriter writer = Files.newBufferedWriter(path, Util.charset);
-		
-		writer.write("1");
-		writer.write(seperator);
-		writer.write("2");
-		writer.write(seperator);
-		writer.write("3");
-		writer.write(seperator);
-		
-		writer.newLine();
-		
-		writer.write("1");
-		writer.write(seperator);
-		writer.write("2");
-		writer.write(seperator);
-		writer.write("3");
-		writer.write(seperator);
-		
-		writer.flush();
-		writer.close();
+		 Path path = FileSystems.getDefault().getPath("datatest.csv");
+		 BufferedWriter writer = Files.newBufferedWriter(path, Util.charset);
+		//
+		// writer.write("1");
+		// writer.write(seperator);
+		// writer.write("2");
+		// writer.write(seperator);
+		// writer.write("3");
+		// writer.write(seperator);
+		//
+		// writer.newLine();
+		//
+		// writer.write("1");
+		// writer.write(seperator);
+		// writer.write("2");
+		// writer.write(seperator);
+		// writer.write("3");
+		// writer.write(seperator);
+		//
+		// writer.flush();
+		// writer.close();
 
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("meta_computed.arff"),
+				Util.charset);
+
+		Instances instances = new Instances(reader);
+		List<Instance> test = instances.subList(1,100);
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		for (int attribute = 0; attribute < instances.numAttributes(); attribute++) {
+			attributes.add(instances.attribute(attribute));
+		}
+		Instances testInst = new Instances(instances.relationName(), attributes, 0);
+		test.forEach(instance -> testInst.add(instance));
+
+		RegressionRanker ranker = new RandomForestRanker();
+		
+		List<Integer> targetAttributes = new ArrayList<Integer>();
+		for (int i = 104; i < 131; i++) {
+			targetAttributes.add(i);
+		}
+		
+		System.out.println(Util.testRanker(ranker, testInst, targetAttributes));
 	}
 }

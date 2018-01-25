@@ -31,9 +31,14 @@ import de.upb.cs.is.jpl.api.exception.algorithm.PredictionFailedException;
 import de.upb.cs.is.jpl.api.exception.algorithm.TrainModelsFailedException;
 import openMLUtil.GlobalCharacterizer;
 import ranker.algorithms.Ranker;
+import rankerEvaluation.BestThreeLoss;
 import rankerEvaluation.KendallRankCorrelation;
 import rankerEvaluation.LeaveOneOut;
+import rankerEvaluation.Loss;
+import rankerEvaluation.PerformanceOrder;
 import rankerEvaluation.RankerEstimationProcedure;
+import rankerEvaluation.RankerEvaluationMeasure;
+import rankerEvaluation.RootMeanSquaredError;
 
 import org.openml.apiconnector.xml.DataSetDescription;
 
@@ -106,12 +111,22 @@ public class Util {
 	public static Map<Classifier, Instances> classifierPerformances = new HashMap<Classifier, Instances>();
 	public static Instances testSet;
 	
-	public static double testRanker (Ranker ranker, Instances instances) {
+	public static List<Double> testRanker (Ranker ranker, Instances instances, List<Integer> targetAttributes) throws Exception {
 		// RegressionRanker ranker = new RegressionRanker();
 		// ranker.buildRanker(instances);
 		// ranker.predictRankingforInstance(instances.get(0)).forEach(action->System.out.println(action.getClass().getName()));
 		RankerEstimationProcedure estim = new LeaveOneOut();
-		double result = estim.estimate(ranker, new KendallRankCorrelation(), instances);
+		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
+		measures.add(new KendallRankCorrelation());
+		measures.add(new RootMeanSquaredError());
+		Loss loss = new Loss();
+		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
+		measures.add(loss);
+		BestThreeLoss bestLoss = new BestThreeLoss();
+		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
+		measures.add(bestLoss);
+		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
+		System.out.println(estim.getDetailedEvaluationResults());
 		return result;
 	}
 
