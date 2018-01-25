@@ -24,7 +24,7 @@ public abstract class RegressionRanker extends Ranker {
 	 * Map that contains a training data set for each regression model.
 	 */
 	protected HashMap<Classifier, Instances> map;
-
+	
 	/**
 	 * List with estimates of learning algorithm performances for last predicted
 	 * ranking.
@@ -67,15 +67,8 @@ public abstract class RegressionRanker extends Ranker {
 		return results;
 	}
 
-	/**
-	 * Returns a list with the exact values predicted by the regression models for
-	 * each algorithm. The value at position i in the list is the predicted value
-	 * for the model at position i in the returned ranking.
-	 * 
-	 * @return The estimated values for the models, null if no prediction has been
-	 *         made so far.
-	 */
-	public List<Double> getEstimatesForRanking() {
+	@Override
+	public List<Double> getEstimates() {
 		return estimates;
 	}
 

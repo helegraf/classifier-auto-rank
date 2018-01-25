@@ -52,6 +52,11 @@ public abstract class PreferenceRanker extends Ranker {
 		List<Classifier> result = mapToOrdering(ranking);
 		return result;
 	}
+	
+	@Override
+	public List<Double> getEstimates() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * Initialize labels and mappings for labels

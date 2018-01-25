@@ -64,18 +64,33 @@ public abstract class Ranker {
 
 		initialize();
 	}
-	
+
 	/**
 	 * Predicts a ranking of classifiers for the given instance. Instance must have
 	 * the same format as (be compatible with) instances given in buildRanker, i.e.
 	 * contain the same attributes in the same order. Target attributes need not
 	 * have values but must exist.
 	 * 
-	 * @param instance The instance for which to predict a ranking
-	 * @return A ranking of learning algorithms 
-	 * @throws Exception If a prediction cannot be made
+	 * @param instance
+	 *            The instance for which to predict a ranking
+	 * @return A ranking of learning algorithms
+	 * @throws Exception
+	 *             If a prediction cannot be made
 	 */
 	public abstract List<Classifier> predictRankingforInstance(Instance instance) throws Exception;
+
+	/**
+	 * Returns a list with the exact performance values predicted for each
+	 * algorithm. The value at position i in the list is the predicted value for the
+	 * model at position i in the returned ranking. May cause an
+	 * {@link java.lang.UnsupportedOperationException#UnsupportedOperationException}
+	 * if the implementation of the Ranker does not internally try to predict
+	 * performance values for the learning algorithms.
+	 * 
+	 * @return The estimated values for the models, null if no prediction has been
+	 *         made so far.
+	 */
+	public abstract List<Double> getEstimates();
 
 	/**
 	 * Has to initialize the ranker so that it is able to return predictions for a
