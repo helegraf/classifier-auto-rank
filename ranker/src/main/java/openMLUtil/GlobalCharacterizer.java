@@ -96,3 +96,5 @@ public class GlobalCharacterizer extends Characterizer {
 	}
 
 }
+
+//TODO credit !
