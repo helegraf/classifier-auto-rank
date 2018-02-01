@@ -23,7 +23,7 @@ public class BestThreeLoss extends RankerEvaluationMeasure {
 
 		// Remove the first learning algorithm from both lists & calculate second loss
 		List<Classifier> newPredictedRanking = predictedRanking.subList(1, predictedRanking.size());
-		List<Double> newEstimates = estimates.subList(1, estimates.size());
+		//List<Double> newEstimates = estimates.subList(1, estimates.size());
 		List<Classifier> newPerfectRanking = new ArrayList<Classifier>();
 		List<Double> newPerformanceMeasures = new ArrayList<Double>();
 		for (int i = 0; i < perfectRanking.size(); i++) {
@@ -35,15 +35,15 @@ public class BestThreeLoss extends RankerEvaluationMeasure {
 				}
 			}
 		}
-		double secondLoss = lossEvaluation.evaluate(newPredictedRanking, newPerfectRanking, newEstimates,
+		double secondLoss = lossEvaluation.evaluate(newPredictedRanking, newPerfectRanking, estimates,
 				newPerformanceMeasures);
-		if (!Double.isNaN(secondLoss) && secondLoss < loss) {
+		if (!Double.isNaN(secondLoss) && ((!Double.isNaN(loss) && secondLoss < loss) || Double.isNaN(loss))) {
 			loss = secondLoss;
 		}
 
 		// Remove the first learning algorithm from both lists & calculate second loss
 		newPredictedRanking = newPredictedRanking.subList(1, newPredictedRanking.size());
-		newEstimates = newEstimates.subList(1, newEstimates.size());
+		//newEstimates = newEstimates.subList(1, newEstimates.size());
 		newPerfectRanking = new ArrayList<Classifier>();
 		newPerformanceMeasures = new ArrayList<Double>();
 		for (int i = 0; i < perfectRanking.size(); i++) {
@@ -57,7 +57,7 @@ public class BestThreeLoss extends RankerEvaluationMeasure {
 		}
 		double thirdLoss = lossEvaluation.evaluate(newPredictedRanking, newPerfectRanking, estimates,
 				performanceMeasures);
-		if (!Double.isNaN(thirdLoss) && thirdLoss < loss) {
+		if (!Double.isNaN(thirdLoss) && ((!Double.isNaN(loss) && thirdLoss < loss) || Double.isNaN(loss))) {
 			loss = thirdLoss;
 		}
 		
