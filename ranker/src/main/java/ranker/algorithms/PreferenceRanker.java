@@ -55,7 +55,8 @@ public abstract class PreferenceRanker extends Ranker {
 	
 	@Override
 	public List<Double> getEstimates() {
-		throw new UnsupportedOperationException();
+		return null;
+		//throw new UnsupportedOperationException();
 	}
 
 	/**
