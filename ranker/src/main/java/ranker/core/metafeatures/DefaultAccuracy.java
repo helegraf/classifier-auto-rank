@@ -1,4 +1,4 @@
-package openMLUtil;
+package ranker.core.metafeatures;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package rankerEvaluation;
+package ranker.core.evaluation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ranker.algorithms.Ranker;
+import ranker.core.algorithms.Ranker;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;

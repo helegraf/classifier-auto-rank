@@ -1,12 +1,12 @@
-package rankerEvaluation;
+package ranker.core.evaluation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ranker.algorithms.PerfectRanker;
-import ranker.algorithms.Ranker;
+import ranker.core.algorithms.PerfectRanker;
+import ranker.core.algorithms.Ranker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;

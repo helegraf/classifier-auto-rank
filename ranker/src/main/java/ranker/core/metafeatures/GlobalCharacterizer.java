@@ -1,10 +1,13 @@
-package openMLUtil;
+package ranker.core.metafeatures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.apache.commons.lang.time.StopWatch;
 
 import org.openml.webapplication.fantail.dc.Characterizer;
 import org.openml.webapplication.fantail.dc.landmarking.GenericLandmarker;
@@ -30,6 +33,8 @@ public class GlobalCharacterizer extends Characterizer {
 	private final String cpNB = "weka.classifiers.bayes.NaiveBayes";
 	private final String cpASC = "weka.classifiers.meta.AttributeSelectedClassifier";
 	private final String cpDS = "weka.classifiers.trees.DecisionStump";
+
+	private Map<String, Double> computationTimes = new HashMap<String, Double>();
 
 	public GlobalCharacterizer() throws Exception {
 		Characterizer[] characterizers = { new SimpleMetaFeatures(), // done before, but necessary for streams
@@ -85,16 +90,34 @@ public class GlobalCharacterizer extends Characterizer {
 		TreeMap<String, Double> metaFeatures = new TreeMap<String, Double>();
 		batchCharacterizers.forEach(characterizer -> {
 			 try {
+				 StopWatch watch = new StopWatch();
+				 watch.start();
 				 metaFeatures.putAll(characterizer.characterize(instances));
+				 watch.stop();
+				 computationTimes.put(characterizer.toString(), (double) watch.getTime());
 			 } catch (Exception e) {
+				 // Put NaN as result and computation time
 				 for (String metaFeature : characterizer.getIDs()) {
 					 metaFeatures.put(metaFeature, Double.NaN);
 				 }
+				 computationTimes.put(characterizer.toString(), Double.NaN);
 			 }
 		});
 		return metaFeatures;
 	}
 
+	public Map<String,Double> getMetaFeatureComputationTimes () {
+		return computationTimes;
+	}
+	
+	public List<String> getCharacterizerNames() {
+		List<String> result = new ArrayList<String>();
+		for (Characterizer chara : batchCharacterizers) {
+			result.add(chara.toString());
+		}
+		return result;
+	}
+
 }
 
-//TODO credit !
+// TODO credit !
