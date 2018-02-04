@@ -2,28 +2,31 @@
 %
 \chapter{Introduction}
 \label{sec:intro}
-
+%TODO does this introduction really follow the three-moves structure?
+%% Introduction to introduction
 This introduction emphasizes why there is a need for automation in machine learning, and how this thesis relates to that problem. 
 
 \section{Motivation and Problem Statement}
 \label{sec:intro:motivation}
+%% Context
 % Need more automated analysis of data
 The potential of big data is evident, and an increasing amount of information is collected and available for analysis - but this potential is not utilized. In a white paper, the International Data Corporation claims that in 2012, out of the 2.8 zettabytes (ZB) of available data only 3\% were tagged as to enable further processing, and only 0.5\% were analyzed \cite{gantz2012the}. A follow-up paper in 2017 projects that in 2025, 15\% of the estimated 163ZB of global data will be tagged, and approximately 3\% analyzed \cite{gantz2017data}. While this is more optimistic, it still shows that there is a huge gap between the amount of data that could potentially be used and the amount of data actually available. This indicates that the demand of data to be analyzed cannot be covered by data scientists alone, and thus calls for automation of the process in a way that not much expertise in the field of machine learning is needed to gain insights about the collected data.
+
+% Have much data tp analyze + GOOD ML ALGORITHS TO DO - RECENT ADVANCEMENTS IN ML ALGOS
 
 % Of ML, tasks, classification is important & classifier performances vary across data sets, so it is not easy to just pick one
 One of the most prominent machine learning tasks is classification: A class is assigned to an instance, for example clients of a bank may be either deemed creditworthy or not, based on factors like other existing credits or the job of the client. But selecting a fitting classifier for a new data set is difficult, since algorithm performances can vary substantially among data sets, and it is not feasible to simply apply a large number of them to empirically find a good match. For example, on a data set about the electricity prices in the Australian state New South Wales \cite{harris1999splice}, the predictive accuracy for the Multilayer Perceptron\footnote{With standart hyperparameters (L:0.3,M:0.2,N:500,V:0,S:0,E:20,H:a).} is 0.7887 \cite{cachada2017run3}. The predictive accuracy of the Random Forest\footnote{With standart hyperparameters (P:100,I:100,num-slots:1,K:0,M:1.0,V:0.001,S:1).} algorithm on the same data set is 0.9236 \cite{cachada2017run}, a much higher value. On a different data set, with the topic of vehicle silhouettes \cite{siebert1987vehicle}, we get a predictive accuracy of 0.7979 for the Multilayer Perceptron \cite{cachada2017run4}, and 0.7518 for Random Forests \cite{cachada2017run2}, showing an advantage of the former on this data set\footnote{Hyperparameters as above.}. So in each case, one would have picked a different algorithm in order to achieve the best results. In general, this means that for a different data set, a different algorithm might yield the best performance.
 
+%% Problem + Significance
 % Together this means that classifier selection is area where one can automate -> area of problem is suggesting classifiers
 Since there is no one best classifier for all data sets, it is likely that how well a classifier performs on a given data set is dependent on properties of the data set, at least to some degree. Combined with the need for automated machine learning, this calls for an approach that considers past performances of classifiers for data sets in relation to properties of these data sets to automatically suggest well-performing classifiers for a new problem.
 
+%% Response
 % Therefore the goal is the development of a tool that does this
-
-\section{Results}
-\label{sec:intro:results}
 
 \section{Thesis Structure}
 \label{sec:intro:structure}
-% These are sort of abstracts for each chapter
+%% Roadmap
 
 \textbf{Chapter \ref{sec:fundamentals}} \\[0.2em]
 % Begin with fundamentals to give a brief overview of the field of ML relevant to this thesis
