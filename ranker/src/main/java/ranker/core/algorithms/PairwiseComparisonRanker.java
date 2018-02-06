@@ -19,8 +19,6 @@ public class PairwiseComparisonRanker extends PreferenceRanker {
 		RandomGenerator.initializeRNG(1234);
 		LabelRankingDataset dataset = convertToLabelRankingDataSet(data);
 		LabelRankingByPairwiseComparisonLearningAlgorithm learningAlgorithm = new LabelRankingByPairwiseComparisonLearningAlgorithm();
-		LabelRankingByPairwiseComparisonConfiguration config = learningAlgorithm.getAlgorithmConfiguration();
-		//config.setBaseLearnerAlgorithm(new LinearRegression());
 		learningModel = learningAlgorithm.train(dataset);
 	}
 

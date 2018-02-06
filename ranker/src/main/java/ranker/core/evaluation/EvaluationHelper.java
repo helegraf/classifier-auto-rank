@@ -59,6 +59,8 @@ public class EvaluationHelper {
 	 * Path for saving the generated jobs
 	 */
 	public static Path jobsPath = FileSystems.getDefault().getPath("jobs.txt");
+	
+
 
 	/**
 	 * Evaluates all currently available measures for this type of ranker by means
@@ -90,6 +92,8 @@ public class EvaluationHelper {
 		System.out.println(estim.getDetailedEvaluationResults());
 		return result;
 	}
+	
+
 
 	/**
 	 * Evaluates the predictive accuracy of the classifier on the data set by means

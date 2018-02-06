@@ -41,7 +41,7 @@ public class MetaFeatureHelper {
 		attributes.add(new Attribute("OpenML Data Set ID"));
 	
 		// Qualities
-		GlobalCharacterizer characterizer = new GlobalCharacterizer();
+		NoProbingCharacterizer characterizer = new NoProbingCharacterizer();
 		String[] allDataQualities = characterizer.getIDs();
 		Map<String, Integer> qualityIndices = new HashMap<String, Integer>();
 		for (int i = 0; i < allDataQualities.length; i++) {
@@ -65,7 +65,7 @@ public class MetaFeatureHelper {
 		}
 	
 		// Prepare instances
-		Instances instances = new Instances("metaData_small_allPerformanceValues", attributes, 0);
+		Instances instances = new Instances("metaData_all_noProbing", attributes, 0);
 		HashMap<Integer, Instance> metaFeaturesForDataSets = new HashMap<Integer, Instance>();
 	
 		// Add meta features
@@ -130,7 +130,7 @@ public class MetaFeatureHelper {
 		}
 		
 		//TODO make this more efficient
-		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath("MetaStats.txt"), Util.charset);
+		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath("MetaStats_new.txt"), Util.charset);
 		for (String chara : computationTimes.keySet()) {
 			List<Double> values = computationTimes.get(chara);
 			writer.newLine();

@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.time.StopWatch;
+
 import ranker.core.algorithms.PerfectRanker;
 import ranker.core.algorithms.Ranker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
+
+import ranker.Util;
 
 public abstract class RankerEstimationProcedure {
 
@@ -17,11 +21,12 @@ public abstract class RankerEstimationProcedure {
 
 	protected Ranker perfectRanker = new PerfectRanker();
 
-	protected Map<RankerEvaluationMeasure,List<Double>> detailedEvaluationResults = new HashMap<RankerEvaluationMeasure,List<Double>>();
+	protected Map<String ,List<Double>> detailedEvaluationResults = new HashMap<String,List<Double>>();
 	protected List<List<Classifier>> predictedRankings = new ArrayList<List<Classifier>>();
 	protected List<List<Classifier>> actualRankings = new ArrayList<List<Classifier>>();
 	protected List<List<Double>> estimates = new ArrayList<List<Double>>();
 	protected List<List<Double>> performanceValues = new ArrayList<List<Double>>();
+	private  StopWatch watch = new StopWatch();
 
 	/**
 	 * Has to divide data given into chunks of train/test splits & evaluate those on the evaluationProcedures
@@ -36,7 +41,7 @@ public abstract class RankerEstimationProcedure {
 	public abstract List<Double> estimate(Ranker ranker, List<RankerEvaluationMeasure> evaluationProcedures, Instances data,
 			List<Integer> targetAttributes) throws Exception;
 
-	public Map<RankerEvaluationMeasure,List<Double>> getDetailedEvaluationResults() {
+	public Map<String,List<Double>> getDetailedEvaluationResults() {
 		return detailedEvaluationResults;
 	}
 
@@ -76,7 +81,12 @@ public abstract class RankerEstimationProcedure {
 	protected void evaluateChunk(Ranker ranker, Instances train, Instances test,
 			List<RankerEvaluationMeasure> measures, List<Integer> targetAttributes) throws Exception {
 		// Build rankers
+		
+		//Stop times of ranking
+		watch.reset();
+		watch.start();
 		ranker.buildRanker(train, targetAttributes);
+		watch.stop();
 		perfectRanker.buildRanker(train, targetAttributes);
 
 		// Evaluate on each instance and get result from evaluationMeasure
@@ -95,8 +105,11 @@ public abstract class RankerEstimationProcedure {
 				// Evaluate on each measure & save results
 				for (RankerEvaluationMeasure measure : measures) {
 					double result = measure.evaluate(predictedRanking, perfectRanking, estimatedValues, performanceMeasures);
-					detailedEvaluationResults.get(measure).add(result);
+					detailedEvaluationResults.get(measure.getClass().getSimpleName()).add(result);
 				}
+				//save time of ranker building
+				double buildTime = (double) watch.getTime();
+				detailedEvaluationResults.get(Util.RANKER_BUILD_TIMES).add(buildTime);
 			} catch (Exception e) {
 				throw(e);
 			}

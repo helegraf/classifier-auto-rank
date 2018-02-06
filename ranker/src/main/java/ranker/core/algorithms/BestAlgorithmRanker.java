@@ -18,6 +18,7 @@ import weka.core.Instance;
 public class BestAlgorithmRanker extends PreferenceRanker {
 
 	protected List<Classifier> bestRanking;
+	protected List<Integer> classifierStats;
 
 	@Override
 	protected void initialize() throws Exception {
@@ -29,6 +30,7 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 
 		// Initialize variables
 		bestRanking = new ArrayList<Classifier>();
+		classifierStats = new ArrayList<Integer>();
 		List<Classifier> remaining = new ArrayList<Classifier>();
 		classifiersMap.values().forEach(classifier -> remaining.add(classifier));
 
@@ -51,7 +53,7 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 						for (Classifier cl : scores.keySet()) {
 							if (ranking.get(k).getClass().getName().equals(cl.getClass().getName())) {
 								int previousScore = scores.get(cl);
-								int newScore = previousScore++;
+								int newScore = previousScore + 1;
 								scores.put(ranking.get(k), newScore);
 								break;
 							}
@@ -75,6 +77,7 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 
 			// Remove algorithm from remaining list and add to ranking
 			bestRanking.add(bestClassifier);
+			classifierStats.add(new Integer(highScore));
 			remaining.remove(bestClassifier);
 		}
 
@@ -83,6 +86,10 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 	@Override
 	public List<Classifier> predictRankingforInstance(Instance instance) {
 		return bestRanking;
+	}
+	
+	public List<Integer> getClassifierStats() {
+		return classifierStats;
 	}
 
 }

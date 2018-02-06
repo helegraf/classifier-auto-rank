@@ -64,22 +64,22 @@ public class Main {
 		// ranker.predictRankingforInstance(instances.get(388));
 		// System.out.println(ranker.getEstimatesForRanking());
 
-		 ArrayList<Integer> dataIds = new ArrayList<Integer>();
-		 BufferedReader reader =
-		 Files.newBufferedReader(FileSystems.getDefault().getPath("datasets.txt"));
-		 String line = null;
-		 while ((line=reader.readLine())!=null) {
-		 dataIds.add(Integer.parseInt(line));
-		 }
-		 Instances results = MetaFeatureHelper.computeMetaFeatures(dataIds);
-		 ArffSaver saver = new ArffSaver();
-		 saver.setInstances(results);
-		 try {
-		 saver.setFile(new File("meta_computed.arff"));
-		 saver.writeBatch();
-		 } catch (IOException e) {
-		 e.printStackTrace();
-		 }
+		// ArrayList<Integer> dataIds = new ArrayList<Integer>();
+		// BufferedReader reader =
+		// Files.newBufferedReader(FileSystems.getDefault().getPath("datasets_100_1000"));
+		// String line = null;
+		// while ((line=reader.readLine())!=null) {
+		// dataIds.add(Integer.parseInt(line));
+		// }
+		// Instances results = Util.computeMetaFeatures(dataIds);
+		// ArffSaver saver = new ArffSaver();
+		// saver.setInstances(results);
+		// try {
+		// saver.setFile(new File("meta_computed.arff"));
+		// saver.writeBatch();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 		// Trying to save a .csv
 //		 Path path = FileSystems.getDefault().getPath("datatest.csv");
@@ -123,6 +123,20 @@ public class Main {
 //		}
 //		
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
+		
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
+				Util.charset);
+
+		Instances instances = new Instances(reader);
+		Ranker ranker = new RandomForestRanker();
+		
+		List<Integer> targetAttributes = new ArrayList<Integer>();
+		for (int i = 104; i < 126; i++) {
+			targetAttributes.add(i);
+		}
+		
+		System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 4), targetAttributes));
+	
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
 //		
 //		Rankprediction rankprediction = new Rankprediction(instances,targetAttributes,new GlobalCharacterizer(),ranker);
