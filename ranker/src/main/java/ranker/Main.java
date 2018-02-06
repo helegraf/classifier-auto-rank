@@ -64,22 +64,22 @@ public class Main {
 		// ranker.predictRankingforInstance(instances.get(388));
 		// System.out.println(ranker.getEstimatesForRanking());
 
-		// ArrayList<Integer> dataIds = new ArrayList<Integer>();
-		// BufferedReader reader =
-		// Files.newBufferedReader(FileSystems.getDefault().getPath("datasets_100_1000"));
-		// String line = null;
-		// while ((line=reader.readLine())!=null) {
-		// dataIds.add(Integer.parseInt(line));
-		// }
-		// Instances results = Util.computeMetaFeatures(dataIds);
-		// ArffSaver saver = new ArffSaver();
-		// saver.setInstances(results);
-		// try {
-		// saver.setFile(new File("meta_computed.arff"));
-		// saver.writeBatch();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
+		 ArrayList<Integer> dataIds = new ArrayList<Integer>();
+		 BufferedReader reader =
+		 Files.newBufferedReader(FileSystems.getDefault().getPath("datasets.txt"));
+		 String line = null;
+		 while ((line=reader.readLine())!=null) {
+		 dataIds.add(Integer.parseInt(line));
+		 }
+		 Instances results = MetaFeatureHelper.computeMetaFeatures(dataIds);
+		 ArffSaver saver = new ArffSaver();
+		 saver.setInstances(results);
+		 try {
+		 saver.setFile(new File("meta_computed.arff"));
+		 saver.writeBatch();
+		 } catch (IOException e) {
+		 e.printStackTrace();
+		 }
 
 		// Trying to save a .csv
 //		 Path path = FileSystems.getDefault().getPath("datatest.csv");
@@ -104,22 +104,31 @@ public class Main {
 		// writer.flush();
 		// writer.close();
 
-		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noID.arff"),
-				Util.charset);
-
-		Instances instances = new Instances(reader);
-		Ranker ranker = new RandomForestRanker();
-		
-		List<Integer> targetAttributes = new ArrayList<Integer>();
-		for (int i = 104; i < 125; i++) {
-			targetAttributes.add(i);
-		}
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
+//		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noID.arff"),
+//				Util.charset);
+//
+//		Instances instances = new Instances(reader);
+//		BestAlgorithmRanker ranker = new BestAlgorithmRanker();
+//		
+//		List<Integer> targetAttributes = new ArrayList<Integer>();
+//		for (int i = 103; i < 125; i++) {
+//			targetAttributes.add(i);
+//		}
+//		
+//		ranker.buildRanker(instances, targetAttributes);
+//		List<Classifier> ranking = ranker.predictRankingforInstance(instances.get(0));
+//		List<Integer> stats = ranker.getClassifierStats();
+//		for (int i = 0; i < ranking.size(); i++) {
+//			System.out.println(ranking.get(i).getClass().getSimpleName() + " " + stats.get(i));
+//		}
+//		
+		//System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
 //		
 //		Rankprediction rankprediction = new Rankprediction(instances,targetAttributes,new GlobalCharacterizer(),ranker);
 //		List<Classifier> classifs = rankprediction.predictRanking(OpenMLHelper.getInstancesById(2));
 //		classifs.forEach(elem -> System.out.println(elem.getClass().getSimpleName()));
+		
+		
 	}
 }
