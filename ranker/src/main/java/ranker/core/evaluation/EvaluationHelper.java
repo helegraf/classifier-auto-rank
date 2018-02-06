@@ -74,14 +74,26 @@ public class EvaluationHelper {
 	 */
 	public static List<Double> evaluateRanker(Ranker ranker, Instances instances, List<Integer> targetAttributes)
 			throws Exception {
-		// RegressionRanker ranker = new RegressionRanker();
-		// ranker.buildRanker(instances);
-		// ranker.predictRankingforInstance(instances.get(0)).forEach(action->System.out.println(action.getClass().getName()));
-		// TODO cases RegressionRanker: include RMSE
 		RankerEstimationProcedure estim = new LeaveOneOut();
 		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
 		measures.add(new KendallRankCorrelation());
-		// measures.add(new RootMeanSquaredError());
+		Loss loss = new Loss();
+		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
+		measures.add(loss);
+		BestThreeLoss bestLoss = new BestThreeLoss();
+		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
+		measures.add(bestLoss);
+		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
+		System.out.println(estim.getDetailedEvaluationResults());
+		return result;
+	}
+	
+	public static List<Double> evaluateRegressionRanker(Ranker ranker, Instances instances, List<Integer> targetAttributes)
+			throws Exception {
+		RankerEstimationProcedure estim = new LeaveOneOut();
+		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
+		measures.add(new KendallRankCorrelation());
+		measures.add(new RootMeanSquaredError());
 		Loss loss = new Loss();
 		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
 		measures.add(loss);
