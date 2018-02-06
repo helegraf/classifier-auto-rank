@@ -104,18 +104,18 @@ public class Main {
 		// writer.flush();
 		// writer.close();
 
-		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noID.arff"),
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
 				Util.charset);
 
 		Instances instances = new Instances(reader);
 		Ranker ranker = new RandomForestRanker();
 		
 		List<Integer> targetAttributes = new ArrayList<Integer>();
-		for (int i = 104; i < 125; i++) {
+		for (int i = 104; i < 126; i++) {
 			targetAttributes.add(i);
 		}
 		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
+		System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 4), targetAttributes));
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
 //		
 //		Rankprediction rankprediction = new Rankprediction(instances,targetAttributes,new GlobalCharacterizer(),ranker);
