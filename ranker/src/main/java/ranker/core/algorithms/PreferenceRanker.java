@@ -1,4 +1,4 @@
-package ranker.algorithms;
+package ranker.core.algorithms;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,10 @@ import de.upb.cs.is.jpl.api.dataset.defaultdataset.relative.Ranking;
 import de.upb.cs.is.jpl.api.dataset.labelranking.LabelRankingDataset;
 import de.upb.cs.is.jpl.api.dataset.labelranking.LabelRankingInstance;
 import de.upb.cs.is.jpl.api.exception.algorithm.PredictionFailedException;
+import ranker.util.wekaUtil.WekaHelper;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
-import wekaUtil.WekaUtil;
 
 public abstract class PreferenceRanker extends Ranker {
 
@@ -91,7 +91,7 @@ public abstract class PreferenceRanker extends Ranker {
 
 	protected LabelRankingDataset convertToLabelRankingDataSet(Instances data) throws Exception {
 		// Replace missing values as preference algorithm can't deal with those
-		Instances newData = WekaUtil.replaceMissingValues(data);
+		Instances newData = WekaHelper.replaceMissingValues(data);
 
 		initializeLabels();
 

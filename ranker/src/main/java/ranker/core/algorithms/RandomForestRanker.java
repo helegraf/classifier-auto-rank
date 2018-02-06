@@ -1,4 +1,4 @@
-package ranker.algorithms;
+package ranker.core.algorithms;
 
 import java.util.HashMap;
 import java.util.Map;

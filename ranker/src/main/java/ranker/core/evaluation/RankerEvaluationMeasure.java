@@ -1,4 +1,4 @@
-package rankerEvaluation;
+package ranker.core.evaluation;
 
 import java.util.List;
 

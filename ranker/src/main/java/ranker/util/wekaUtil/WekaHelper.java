@@ -1,10 +1,20 @@
-package wekaUtil;
+package ranker.util.wekaUtil;
 
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
-public class WekaUtil {
+public class WekaHelper {
+	
+	/**
+	 * Replaces missing values in the Instances object given with the
+	 * {@link weka.filters.unsupervised.attribute.ReplaceMissingValues} filter.
+	 * Returns new Instances object without missing values.
+	 * 
+	 * @param data
+	 * @return
+	 * @throws Exception
+	 */
 	public static Instances replaceMissingValues(Instances data) throws Exception {
 		// Ensure no missing vaules
 		// TODO extract method
@@ -16,7 +26,7 @@ public class WekaUtil {
 		filter.batchFinished();
 		Instances newData = filter.getOutputFormat();
 		Instance processed;
-		while  ((processed=filter.output())!=null) {
+		while ((processed = filter.output()) != null) {
 			newData.add(processed);
 		}
 		return newData;

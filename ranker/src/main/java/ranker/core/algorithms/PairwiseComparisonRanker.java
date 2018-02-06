@@ -1,4 +1,4 @@
-package ranker.algorithms;
+package ranker.core.algorithms;
 
 import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.labelrankingbypairwisecomparison.LabelRankingByPairwiseComparisonLearningAlgorithm;
 import de.upb.cs.is.jpl.api.dataset.labelranking.LabelRankingDataset;

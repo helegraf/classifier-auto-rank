@@ -3,9 +3,22 @@
 \chapter{Approach}
 \label{sec:approach}
 
+Approach of ranking classifier implementations here realized by two concepts, regression-based and preference-based ranking, which will be explained in detail. Also predicting predictive accuracy here. Thus target function of the form $meta features^n \rightarrow classifiers^m$.
 
-\section{System Section 1}
-\label{sec:approach:sec1}
+% Theory of approach
+Since the aim is to generate a ranking of classification algorithms, first, performance values of a number of classifiers are recorded on a few data sets. Then, meta features are computed for each data set. This is for training the ranking model. A ranking of the classifiers for a new instance is then achieved by computing the meta features for the data set and subsequently uing it to query the underlying model. 
+
+EXAMPLE TABLE ALL DATA
+
+% How is the regression ranking done
+One possibility to derive a ranking of classifiers from this information when given a new data set is to use regression models. The idea is to use separate regression models to predict a performance value for each classifier, and to then derive an ordering from these predictions. This is done by splitting the data set compiled beforehand into separate data sets that each contain all meta features for all data sets, but only the performance values of one classifier. The target feature on these individual data sets, the performance value of the classifier, is a numeric value, and thus a regression model can be trained on each of them. A regression model therefore tries to learn the target function $meta features \rightarrow classifier performance value$ for its respective classifier. Hence for a query instance, after computing the meta features, these are fed into each regression model. In a second step, the classifiers are ordered according to the predictions made by the models.
+
+EXAMPLE TABLE DERIVED DATA SETS and METAFEATURES -> PREDICTIONS -> COMBINED -> ORDERING
+
+% How is the preference ranking done
+The second ranking possibility considered here is using preference learning to predict a ranking. Each instance of the data set generated beforehand contains meta feature information for the considered data sets and performance values of classifiers This implies that the preference learning task at hand is label ranking. 
+
+EXAMPLE TABLE CONVERTED INFORMATION
 
 \begin{figure}[htb]
 	\includegraphics[width=\textwidth]{gfx/Clean-Thesis-Figure}
