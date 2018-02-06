@@ -24,5 +24,4 @@ public class RandomForestRanker extends RegressionRanker {
 			regressionModels.put(classifier, forest);
 		}
 	}
-
 }

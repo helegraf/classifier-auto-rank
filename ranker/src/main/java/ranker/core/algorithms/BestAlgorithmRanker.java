@@ -32,7 +32,7 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 		List<Classifier> remaining = new ArrayList<Classifier>();
 		classifiersMap.values().forEach(classifier -> remaining.add(classifier));
 
-		// Find ranking
+		// Find #Classifiers many times the best classifier
 		for (int i = 0; i < targetAttributes.size(); i++) {
 			// Scores count how many times an algorithm is ranked first
 			HashMap<Classifier, Integer> scores = new HashMap<Classifier, Integer>();
@@ -43,13 +43,20 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 				// Get ranking for instance
 				List<Classifier> ranking = oracle.predictRankingforInstance(data.get(j));
 
-				// Find first
+				// Find first (which algorithm is the first one in the ranking)
 				for (int k = 0; k < ranking.size(); k++) {
+					// First cannot be one that is already better
 					if (!bestRanking.contains(ranking.get(k))) {
 						// Increment score
-						int previousScore = scores.get(ranking.get(k));
-						int newScore = previousScore++;
-						scores.put(ranking.get(k), newScore);
+						for (Classifier cl : scores.keySet()) {
+							if (ranking.get(k).getClass().getName().equals(cl.getClass().getName())) {
+								int previousScore = scores.get(cl);
+								int newScore = previousScore++;
+								scores.put(ranking.get(k), newScore);
+								break;
+							}
+						}
+						// After found the first one, can stop
 						break;
 					}
 				}

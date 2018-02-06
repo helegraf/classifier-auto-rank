@@ -1,7 +1,10 @@
 package ranker.core.algorithms;
 
+import de.upb.cs.is.jpl.api.algorithm.baselearner.regression.linear.LinearRegression;
+import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.labelrankingbypairwisecomparison.LabelRankingByPairwiseComparisonConfiguration;
 import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.labelrankingbypairwisecomparison.LabelRankingByPairwiseComparisonLearningAlgorithm;
 import de.upb.cs.is.jpl.api.dataset.labelranking.LabelRankingDataset;
+import de.upb.cs.is.jpl.api.math.RandomGenerator;
 
 /**
  * A ranker that uses label ranking by pairwise comparison to predict rankings.
@@ -13,8 +16,11 @@ public class PairwiseComparisonRanker extends PreferenceRanker {
 
 	@Override
 	protected void initialize() throws Exception {
+		RandomGenerator.initializeRNG(1234);
 		LabelRankingDataset dataset = convertToLabelRankingDataSet(data);
 		LabelRankingByPairwiseComparisonLearningAlgorithm learningAlgorithm = new LabelRankingByPairwiseComparisonLearningAlgorithm();
+		LabelRankingByPairwiseComparisonConfiguration config = learningAlgorithm.getAlgorithmConfiguration();
+		//config.setBaseLearnerAlgorithm(new LinearRegression());
 		learningModel = learningAlgorithm.train(dataset);
 	}
 

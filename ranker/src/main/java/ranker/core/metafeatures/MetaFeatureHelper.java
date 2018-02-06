@@ -36,6 +36,9 @@ public class MetaFeatureHelper {
 	
 		// Prepare List of Attributes for Instances
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		
+		// Add the data set Id as an attribute
+		attributes.add(new Attribute("OpenML Data Set ID"));
 	
 		// Qualities
 		GlobalCharacterizer characterizer = new GlobalCharacterizer();
@@ -43,7 +46,7 @@ public class MetaFeatureHelper {
 		Map<String, Integer> qualityIndices = new HashMap<String, Integer>();
 		for (int i = 0; i < allDataQualities.length; i++) {
 			String dataQuality = allDataQualities[i];
-			qualityIndices.put(dataQuality, i);
+			qualityIndices.put(dataQuality, i+1);
 			attributes.add(new Attribute(dataQuality));
 		}
 	
@@ -57,17 +60,20 @@ public class MetaFeatureHelper {
 		Map<String, Integer> classifierIndices = new HashMap<String, Integer>();
 		for (int i = 0; i < EvaluationHelper.portfolio.length; i++) {
 			String classifierName = EvaluationHelper.portfolio[i].getClass().getName();
-			classifierIndices.put(classifierName, allDataQualities.length + i);
+			classifierIndices.put(classifierName, allDataQualities.length + 1 + i);
 			attributes.add(new Attribute(classifierName));
 		}
 	
 		// Prepare instances
-		Instances instances = new Instances("MetaDataOpenML_calculated_timed", attributes, 0);
+		Instances instances = new Instances("metaData_small_allPerformanceValues", attributes, 0);
 		HashMap<Integer, Instance> metaFeaturesForDataSets = new HashMap<Integer, Instance>();
 	
 		// Add meta features
 		for (int dataSetId : dataSetIds) {
 			Instance instance = new DenseInstance(attributes.size());
+			// Add data set id
+			instance.setValue(0, dataSetId);
+			
 			Instances openMLData = null;
 			try {
 				openMLData = OpenMLHelper.getInstancesById(dataSetId);
@@ -107,10 +113,12 @@ public class MetaFeatureHelper {
 						String classifierName = parts[0];
 						int dataSetId = Integer.parseInt(parts[1]);
 						if (dataSetIds.contains(dataSetId)) {
-							Instance instance = metaFeaturesForDataSets.get(dataSetId);
-							int attIndex = classifierIndices.get(classifierName);
-							double value = Double.parseDouble(line);
-							instance.setValue(attIndex, value);
+							if (classifierIndices.get(classifierName)!= null) {
+								Instance instance = metaFeaturesForDataSets.get(dataSetId);
+								int attIndex = classifierIndices.get(classifierName);
+								double value = Double.parseDouble(line);
+								instance.setValue(attIndex, value);
+							}
 						}
 					}
 	

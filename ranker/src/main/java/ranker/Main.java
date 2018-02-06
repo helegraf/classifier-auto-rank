@@ -11,12 +11,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ranker.core.algorithms.BestAlgorithmRanker;
+import ranker.core.algorithms.InstanceBasedLabelRankingRanker;
+import ranker.core.algorithms.PairwiseComparisonRanker;
+import ranker.core.algorithms.PerfectRanker;
 import ranker.core.algorithms.RandomForestRanker;
+import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.RegressionRanker;
+import ranker.core.evaluation.EvaluationHelper;
 import ranker.core.evaluation.KendallRankCorrelation;
 import ranker.core.evaluation.LeaveOneOut;
 import ranker.core.evaluation.Loss;
 import ranker.core.evaluation.RankerEvaluationMeasure;
+import ranker.core.metafeatures.GlobalCharacterizer;
+import ranker.core.metafeatures.MetaFeatureHelper;
+import ranker.util.openMLUtil.OpenMLHelper;
+import ranker.util.wekaUtil.WekaHelper;
+import weka.classifiers.Classifier;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Attribute;
 import weka.core.Instance;
@@ -27,9 +38,9 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-//		List<Integer> datasets = Util.getDataSetsFromIndex();
+//		List<Integer> datasets = OpenMLHelper.getDataSetsFromIndex();
 //		// List<Integer> datasets = Arrays.asList(3,4,5);
-//		Instances instances1 = Util.computeMetaFeatures(datasets);
+//		Instances instances1 = MetaFeatureHelper.computeMetaFeatures(datasets);
 //		ArffSaver saver = new ArffSaver();
 //		saver.setInstances(instances1);
 //		try {
@@ -93,27 +104,22 @@ public class Main {
 		// writer.flush();
 		// writer.close();
 
-//		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("meta_computed.arff"),
-//				Util.charset);
-//
-//		Instances instances = new Instances(reader);
-//		List<Instance> test = instances.subList(1,100);
-//		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
-//		for (int attribute = 0; attribute < instances.numAttributes(); attribute++) {
-//			attributes.add(instances.attribute(attribute));
-//		}
-//		Instances testInst = new Instances(instances.relationName(), attributes, 0);
-//		test.forEach(instance -> testInst.add(instance));
-//
-//		RegressionRanker ranker = new RandomForestRanker();
-//		
-//		List<Integer> targetAttributes = new ArrayList<Integer>();
-//		for (int i = 104; i < 131; i++) {
-//			targetAttributes.add(i);
-//		}
-//		
-//		System.out.println(Util.testRanker(ranker, testInst, targetAttributes));
-		
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noID.arff"),
+				Util.charset);
 
+		Instances instances = new Instances(reader);
+		Ranker ranker = new RandomForestRanker();
+		
+		List<Integer> targetAttributes = new ArrayList<Integer>();
+		for (int i = 104; i < 125; i++) {
+			targetAttributes.add(i);
+		}
+		
+		System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
+		//System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		
+//		Rankprediction rankprediction = new Rankprediction(instances,targetAttributes,new GlobalCharacterizer(),ranker);
+//		List<Classifier> classifs = rankprediction.predictRanking(OpenMLHelper.getInstancesById(2));
+//		classifs.forEach(elem -> System.out.println(elem.getClass().getSimpleName()));
 	}
 }

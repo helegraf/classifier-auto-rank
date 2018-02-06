@@ -54,7 +54,7 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
 public class EvaluationHelper {
-	
+
 	/**
 	 * Path for saving the generated jobs
 	 */
@@ -79,7 +79,7 @@ public class EvaluationHelper {
 		RankerEstimationProcedure estim = new LeaveOneOut();
 		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
 		measures.add(new KendallRankCorrelation());
-		measures.add(new RootMeanSquaredError());
+		// measures.add(new RootMeanSquaredError());
 		Loss loss = new Loss();
 		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
 		measures.add(loss);
@@ -117,7 +117,7 @@ public class EvaluationHelper {
 	public static void generateJobs() throws IOException {
 		BufferedReader reader = Files.newBufferedReader(Util.dataSetIndexPath, Util.charset);
 		BufferedWriter writer = Files.newBufferedWriter(EvaluationHelper.jobsPath, Util.charset);
-	
+
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			for (Classifier classifier : EvaluationHelper.portfolio) {
@@ -128,7 +128,7 @@ public class EvaluationHelper {
 		reader.close();
 		writer.close();
 	}
-	
+
 	/**
 	 * Executes the given jobs which must have been generated before.
 	 * 
@@ -175,7 +175,8 @@ public class EvaluationHelper {
 	}
 
 	/**
-	 * Evaluates all classifiers on all data sets and saves results in a new data set (Features = Classifiers, Instances = data sets).
+	 * Evaluates all classifiers on all data sets and saves results in a new data
+	 * set (Features = Classifiers, Instances = data sets).
 	 * 
 	 * @param classifiers
 	 * @param datasets
@@ -185,8 +186,8 @@ public class EvaluationHelper {
 	 */
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
-		//TODO add data set id
-	
+		// TODO add data set id
+
 		// Prepare table of results
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i = 0; i < datasets.size(); i++) {
@@ -194,7 +195,7 @@ public class EvaluationHelper {
 			attributes.add(new Attribute(datasets.get(i).relationName() + " " + i));
 		}
 		Instances results = new Instances("PerformanceMeasures", attributes, 0);
-	
+
 		// Calculate performance of each classifier on each data set
 		for (Classifier classifier : classifiers) {
 			Instance instance = new DenseInstance(attributes.size());
@@ -208,7 +209,7 @@ public class EvaluationHelper {
 			}
 			results.add(instance);
 		}
-	
+
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(results);
 		try {
@@ -217,13 +218,13 @@ public class EvaluationHelper {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	
+
 	}
 
 	public static Classifier[] portfolio = { new BayesNet(), new NaiveBayes(), new NaiveBayesMultinomial(),
-	new GaussianProcesses(), new LinearRegression(), new Logistic(), new MultilayerPerceptron(), new SGD(),
-	new SMO(), new SimpleLinearRegression(), new SimpleLogistic(), new VotedPerceptron(), new IBk(),
-	new KStar(), new DecisionTable(), new JRip(), new M5Rules(), new OneR(), new PART(), new ZeroR(),
-	new DecisionStump(), new J48(), new LMT(), new M5P(), new RandomForest(), new RandomTree(), new REPTree() };
+			new Logistic(), new MultilayerPerceptron(), new SGD(), new SMO(), new SimpleLogistic(),
+			new VotedPerceptron(), new IBk(), new KStar(), new DecisionTable(), new JRip(), new OneR(), new PART(),
+			new ZeroR(), new DecisionStump(), new J48(), new LMT(), new RandomForest(), new RandomTree(),
+			new REPTree() };
 
 }

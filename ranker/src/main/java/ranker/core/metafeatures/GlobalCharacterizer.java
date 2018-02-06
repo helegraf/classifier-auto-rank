@@ -65,7 +65,6 @@ public class GlobalCharacterizer extends Characterizer {
 					randomtreeOption));
 		}
 		batchCharacterizers.add(new Cardinality());
-		batchCharacterizers.add(new DefaultAccuracy());
 
 		List<String> metaFeatures = new ArrayList<String>();
 		for (Characterizer characterizer : batchCharacterizers) {

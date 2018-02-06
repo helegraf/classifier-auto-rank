@@ -1,5 +1,9 @@
 package ranker.util.wekaUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
@@ -30,5 +34,16 @@ public class WekaHelper {
 			newData.add(processed);
 		}
 		return newData;
+	}
+	
+	public static Instances subSet(Instances instances, int fromIndex, int toIndex) {
+		List<Instance> test = instances.subList(fromIndex, toIndex);
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		for (int attribute = 0; attribute < instances.numAttributes(); attribute++) {
+			attributes.add(instances.attribute(attribute));
+		}
+		Instances testInst = new Instances(instances.relationName(), attributes, 0);
+		test.forEach(instance -> testInst.add(instance));
+		return testInst;
 	}
 }
