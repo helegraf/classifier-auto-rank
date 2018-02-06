@@ -3,7 +3,7 @@
 \chapter{Fundamentals}
 \label{sec:fundamentals}
 
-This chapter lays out the fundamentals for Firstly,the  
+The core topic of this thesis falls under the category of machine learning. Thus, firstly the concept of machine learning and the   
 
 \section{Machine Learning}
 In this section, the aspects of the field of machine learning which are relevant for this thesis are going to be introduced briefly. The core of machine learning are learning algorithms, which are used to induce a general model from a set of data samples. The concept of machine learning will be explained here with the help of an example. % Further what happens exactly here 
@@ -84,13 +84,15 @@ Although called label ranking actually label ordering!
 \subsection{Meta Learning}
 % Context is meta learning -> what does that mean and what are the consequence
 
+% Algorithm selection problem
+
 \section{Evaluation}
 
 \subsection{Classifier Evaluation}
 
 \subsection{Kendall Rank Correlation Coefficient}
 % We need to evaluate the ranker quality somehow, ranker predicts rank, so need a 
-To evaluate the quality of the prediction that the ranker will make, a statistic is needed to compare a predicted ranking with other rankings like a baseline or an optimal ranking. 
+To evaluate the quality of the prediction that the ranker will make, a statistic is needed to compare a predicted ranking with other rankings like a baseline or an optimal ranking.  serves as indication of causal connection
 
 % Definition of Kendall
 The Kendall Rank Correlation Coefficient is a measure of association between two rankings of the same items also known as Kendall's tau. For two independent variables $X$ and $Y$ and and observations of values $(x_1,...,x_m)$ for $X$ and $(y_1,...,y_n)$ for $Y$ with unique $x_i$ and $y_i$ respectively, the coefficient is based on comparing pairs of observations. If for two pairs $(x_i,y_i)$ and $(x_j,y_j)$ both $x_i < x_j$ and $y_i < y_j$ (or the opposite) holds, they are viewed as concordant. If $x_i < x_j$ but $y_i > y_j$ (or the opposite), they are viewed as discordant. Other cases are not considered. The simplest version of the statistic, called $T_A$ is then defined as 
@@ -114,5 +116,6 @@ $u_j,$ the number of ties observed for Y in the ith position of the ranking
 % In theory explanation for Kendall's Tau B because ranking could be tied but not as a result of Label Ranking and unlikely for regression the implementation that is used calculates Tau b!
 
 \subsection{Loss}
+While kendall can serve as an indication how well t works (causal connection exists in the thing trying to proove / algorithm finds it) the disadvantage is that just from the correlation it is not clear what the user gains from following the advice represented by the ranking, i.e. how much worse is it when trying the best three and chossing the best than actually showing the best
 
 \subsection{Root Mean Square Error}
