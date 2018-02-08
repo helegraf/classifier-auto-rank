@@ -141,39 +141,39 @@ public class Main {
 		
 		Ranker ranker = new RandomForestRanker();
 		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
 		
 		ranker = new M5PRanker();
 		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
 		
 		ranker = new REPTreeRanker();
 		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
 		
 		ranker = new LinearRegressionRanker();
 		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
 		
-		ranker = new BestAlgorithmRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
-		
-		ranker = new InstanceBasedLabelRankingRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
-		
-		ranker = new InstanceBasedLabelRankingKemenyYoung();
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
-		
-		ranker = new InstanceBasedLabelRankingKemenyYoungSQRTN();
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
-		
-		ranker = new PairwiseComparisonRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		ranker = new BestAlgorithmRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new InstanceBasedLabelRankingRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new InstanceBasedLabelRankingKemenyYoung();
+//		
+//		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new InstanceBasedLabelRankingKemenyYoungSQRTN();
+//		
+//		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new PairwiseComparisonRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
 		
 	
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, instances, targetAttributes));
