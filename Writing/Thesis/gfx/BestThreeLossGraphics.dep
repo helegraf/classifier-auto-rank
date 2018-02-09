@@ -1,0 +1,2 @@
+gfx/BestThreeLossGraphics.pdf: data/InstanceBasedLabelRankingKemenyYoung_metaData_small_allPerformanceValues.csv
+gfx/BestThreeLossGraphics.pdf: data/BestAlgorithmRanker_metaData_small_allPerformanceValues.csv
