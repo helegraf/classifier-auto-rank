@@ -87,13 +87,19 @@ public abstract class RankerEstimationProcedure {
 		watch.start();
 		ranker.buildRanker(train, targetAttributes);
 		watch.stop();
+		double buildTime = (double) watch.getTime();
 		perfectRanker.buildRanker(train, targetAttributes);
 
 		// Evaluate on each instance and get result from evaluationMeasure
 		for (Instance instance : test) {
 			try {
 				// Build, get results and add to lists
+				watch.reset();
+				watch.start();
 				List<Classifier> predictedRanking = ranker.predictRankingforInstance(instance);
+				watch.stop();
+				double predictTime = (double)watch.getTime();
+				detailedEvaluationResults.get(Util.RANKER_PREDICT_TIMES).add(predictTime);
 				List<Classifier> perfectRanking = perfectRanker.predictRankingforInstance(instance);
 				List<Double> estimatedValues = ranker.getEstimates();
 				List<Double> performanceMeasures = perfectRanker.getEstimates();
@@ -108,7 +114,6 @@ public abstract class RankerEstimationProcedure {
 					detailedEvaluationResults.get(measure.getClass().getSimpleName()).add(result);
 				}
 				//save time of ranker building
-				double buildTime = (double) watch.getTime();
 				detailedEvaluationResults.get(Util.RANKER_BUILD_TIMES).add(buildTime);
 			} catch (Exception e) {
 				throw(e);

@@ -16,5 +16,6 @@ public class Util {
 	public static Path resultsPath = FileSystems.getDefault().getPath("data");
 	public static Path cacheDirectory = FileSystems.getDefault().getPath("data");
 	public static final String RANKER_BUILD_TIMES = "RankerBuildTimes";
+	public static final String RANKER_PREDICT_TIMES = "RankerPredictTimes";
 	public static final String DATA_ID = "DataId";
 }

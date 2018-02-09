@@ -41,6 +41,7 @@ public class LeaveOneOut extends RankerEstimationProcedure {
 		}
 		detailedEvaluationResults.put(Util.DATA_ID, new ArrayList<>());
 		detailedEvaluationResults.put(Util.RANKER_BUILD_TIMES, new ArrayList<>());
+		detailedEvaluationResults.put(Util.RANKER_PREDICT_TIMES, new ArrayList<>());
 		
 		// Evaluate all instances separately
 		for (int i = 0; i < data.numInstances(); i++) {
