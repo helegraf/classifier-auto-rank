@@ -64,9 +64,9 @@ Performance Values acquired with 5 times MCCV
 \stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young, Baselearner KNN with n=$\sqrt{\text{number of instances}}$}
 \end{landscape}
 
-\hspace{-1em}
 \begin{table}[h]
-	\begin{tabularx}{1.1\textwidth}{>{\hsize=1.6\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X}
+\hspace{-1cm}
+	\begin{tabularx}{1.15\textwidth}{>{\hsize=1.4\hsize}X | >{\hsize=.84\hsize}X | >{\hsize=1.07\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X}
 		Ranker 					& \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Loss} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{BestThreeLoss}\\ \cline{2-7} 
 										& Mann-Whitney U & P-Value & Mann-Whitney U	& P-Value & Mann-Whitney U & P-Value \\ \hline
 		LinearRegression 				& 186381.5 & 2.702E-109 & 126861.5 & 7.694E-12 & 129028.0 & 1.327E-13 \\
@@ -76,7 +76,7 @@ Performance Values acquired with 5 times MCCV
 		InstanceBased					& 142665.5 & 8.818E-28 & 109372.0 & 0.020 & 104279.0 & 0.311 \\
 		InstanceBased\footnotemark{}	& 166460.5 & 2.583E-65 & 111940.5 & 0.003 & 109211.0 & 0.022 \\
 		InstanceBased\footnotemark{} 	& 166031.0 & 1.715E-64 & 110675.5 & 0.008 & 106223.0 & 0.130 \\
-		PairwiseComparison				& 110610.0 & 0.008 & 120547.5 & 1.848E-7 & 107728.0 & 0.057
+		PairwiseCom- parison				& 110610.0 & 0.008 & 120547.5 & 1.848E-7 & 107728.0 & 0.057
 	\end{tabularx}
 	\label{tab:evaluationresults1}
 	\caption{Significance of Results Regarding Kendall Rank Correlation Coefficient}
