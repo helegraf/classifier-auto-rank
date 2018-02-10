@@ -23,6 +23,7 @@ import ranker.core.algorithms.REPTreeRanker;
 import ranker.core.algorithms.RandomForestRanker;
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.RegressionRanker;
+import ranker.core.evaluation.BestThreeLoss;
 import ranker.core.evaluation.EvaluationHelper;
 import ranker.core.evaluation.KendallRankCorrelation;
 import ranker.core.evaluation.LeaveOneOut;
@@ -183,13 +184,15 @@ public class Main {
 //		List<Classifier> classifs = rankprediction.predictRanking(OpenMLHelper.getInstancesById(2));
 //		classifs.forEach(elem -> System.out.println(elem.getClass().getSimpleName()));
 		
-		Path firstFile = FileSystems.getDefault().getPath("InstanceBasedLabelRankingKemenyYoungSQRTN_metaData_small_allPerformanceValues.csv");
-		Path secondFile = FileSystems.getDefault().getPath("InstanceBasedLabelRankingKemenyYoung_metaData_small_allPerformanceValues.csv");
+		Path firstFile = FileSystems.getDefault().getPath("PairwiseComparisonRanker_metaData_small_allPerformanceValues.csv");
+		Path secondFile = FileSystems.getDefault().getPath("BestAlgorithmRanker_metaData_small_allPerformanceValues.csv");
 		String measure = new KendallRankCorrelation().getClass().getSimpleName();
-		System.out.println("\"" + measure + "\"");
+		System.out.print("& " + EvaluationHelper.computeWhitneyU(firstFile, secondFile, measure) + " ");
 		
-		System.out.println(EvaluationHelper.computeWhitneyU(firstFile, secondFile, measure));
+		measure = new Loss().getClass().getSimpleName();
+		System.out.print("& " + EvaluationHelper.computeWhitneyU(firstFile, secondFile, measure) + " ");
 
-		
+		measure = new BestThreeLoss().getClass().getSimpleName();
+		System.out.print("& " + EvaluationHelper.computeWhitneyU(firstFile, secondFile, measure) +" ");
 	}
 }

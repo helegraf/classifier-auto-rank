@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
+import org.apache.commons.math3.stat.ranking.NaNStrategy;
+import org.apache.commons.math3.stat.ranking.TiesStrategy;
 
 import ranker.Util;
 import ranker.core.algorithms.Ranker;
@@ -25,27 +27,22 @@ import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.bayes.NaiveBayesMultinomial;
-import weka.classifiers.functions.GaussianProcesses;
-import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.Logistic;
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.classifiers.functions.SGD;
 import weka.classifiers.functions.SMO;
-import weka.classifiers.functions.SimpleLinearRegression;
 import weka.classifiers.functions.SimpleLogistic;
 import weka.classifiers.functions.VotedPerceptron;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.lazy.KStar;
 import weka.classifiers.rules.DecisionTable;
 import weka.classifiers.rules.JRip;
-import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.OneR;
 import weka.classifiers.rules.PART;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.LMT;
-import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.REPTree;
 import weka.classifiers.trees.RandomForest;
 import weka.classifiers.trees.RandomTree;
@@ -239,30 +236,33 @@ public class EvaluationHelper {
 	 * For comparing whether one Ranker is significantly better regarding a measure
 	 * than the other; to be used with the .csv files when a ranker is generated.
 	 * 
-	 * @param firstFile Evaluation results of the first ranker
-	 * @param secondFile Evaluation results of the second ranker
-	 * @param measure The measure to compare
+	 * @param firstFile
+	 *            Evaluation results of the first ranker
+	 * @param secondFile
+	 *            Evaluation results of the second ranker
+	 * @param measure
+	 *            The measure to compare
 	 * @return
 	 * @throws IOException
 	 */
 	public static double computeWhitneyU(Path firstFile, Path secondFile, String measure) throws IOException {
 		// Get the values
 		double[] xArray = getValues(firstFile, measure);
-		double[] yArray = getValues(secondFile,measure);
-		
+		double[] yArray = getValues(secondFile, measure);
+
 		// Compute result
-		MannWhitneyUTest uTest = new MannWhitneyUTest();
-		System.out.println(uTest.mannWhitneyU(xArray, yArray));
+		MannWhitneyUTest uTest = new MannWhitneyUTest(NaNStrategy.REMOVED, TiesStrategy.AVERAGE);
+		System.out.print("& " + uTest.mannWhitneyU(xArray, yArray) + " ");
 		return uTest.mannWhitneyUTest(xArray, yArray);
 	}
-	
+
 	public static double[] getValues(Path path, String measure) throws IOException {
 		List<Double> values = new ArrayList<Double>();
 		BufferedReader reader = Files.newBufferedReader(path, Util.charset);
-		
+
 		// Find index of measure
 		String line = reader.readLine();
-		int measureIndex = findIndex(line,measure);
+		int measureIndex = findIndex(line, measure);
 
 		// Get contents
 		while ((line = reader.readLine()) != null) {
@@ -270,11 +270,11 @@ public class EvaluationHelper {
 			double value = Double.parseDouble(contents[measureIndex]);
 			values.add(value);
 		}
-		
+
 		return convertToArray(values);
 
 	}
-	
+
 	public static int findIndex(String line, String measure) {
 		int measureIndex = -1;
 		String[] measures = line.split(";");
@@ -286,7 +286,7 @@ public class EvaluationHelper {
 		}
 		return measureIndex;
 	}
-	
+
 	public static double[] convertToArray(List<Double> values) {
 		double[] array = new double[values.size()];
 		for (int i = 0; i < values.size(); i++) {

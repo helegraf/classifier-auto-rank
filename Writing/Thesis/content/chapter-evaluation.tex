@@ -64,6 +64,28 @@ Performance Values acquired with 5 times MCCV
 \stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young, Baselearner KNN with n=$\sqrt{\text{number of instances}}$}
 \end{landscape}
 
+\hspace{-1em}
+\begin{table}[h]
+	\begin{tabularx}{1.1\textwidth}{>{\hsize=1.6\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X | >{\hsize=.9\hsize}X}
+		Ranker 					& \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Loss} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{BestThreeLoss}\\ \cline{2-7} 
+										& Mann-Whitney U & P-Value & Mann-Whitney U	& P-Value & Mann-Whitney U & P-Value \\ \hline
+		LinearRegression 				& 186381.5 & 2.702E-109 & 126861.5 & 7.694E-12 & 129028.0 & 1.327E-13 \\
+		M5P				 				& 186236.0 & 6.230E-109 & 118828.5 & 1.840E-6 & 126379.5 & 1.821E-11 \\
+		RandomForest		 			& 187750.5 & 9.737E-113 & 128853.5 & 1.861E-13 & 129037.0 & 1.304E-13 \\
+		REPTree			 				& 181228.0 & 8.094E-97 & 111850.0 & 0.003 & 118793.0 & 1.926E-6 \\		
+		InstanceBased					& 142665.5 & 8.818E-28 & 109372.0 & 0.020 & 104279.0 & 0.311 \\
+		InstanceBased\footnotemark{}	& 166460.5 & 2.583E-65 & 111940.5 & 0.003 & 109211.0 & 0.022 \\
+		InstanceBased\footnotemark{} 	& 166031.0 & 1.715E-64 & 110675.5 & 0.008 & 106223.0 & 0.130 \\
+		PairwiseComparison				& 110610.0 & 0.008 & 120547.5 & 1.848E-7 & 107728.0 & 0.057
+	\end{tabularx}
+	\label{tab:evaluationresults1}
+	\caption{Significance of Results Regarding Kendall Rank Correlation Coefficient}
+\end{table}
+
+\addtocounter{footnote}{-2}
+\stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young}
+\stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young, Baselearner KNN with n=$\sqrt{\text{number of instances}}$}
+
 \tikzsetnextfilename{LossGraphics}
 \pgfplotsset{width=\textwidth}
 \begin{tikzpicture}
@@ -105,7 +127,7 @@ Performance Values acquired with 5 times MCCV
 		BestAlgorithm	 				& 193	 	& 321		& 221	 	& 23	 	& 0		& 82.353		& 6.480 		& 10.168	\\							
 	\end{tabularx}
 	\label{tab:evaluationresults1}
-	\caption{Build and Prediction Times of the Rankers in ms}
+	\caption{Build and Prediction Times of the Rankers in ms (full meta data)}
 \end{table}
 
 \addtocounter{footnote}{-2}
@@ -115,8 +137,8 @@ Performance Values acquired with 5 times MCCV
 \subsection{Further Insights}
 
 \begin{table}[h]
-	\begin{tabularx}{1.1\textwidth}{>{\hsize=2.6\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X| >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X}
-		Ranker 				& \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Root Mean Square Error)} \\ \cline{2-5}
+	\begin{tabularx}{\textwidth}{>{\hsize=1.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X}
+		Ranker 				& \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Root Mean Square Error} \\ \cline{2-5}
 										& Min		& Max		& Mean		& Stdv 	\\ \hline
 		LinearRegression 				& 1454 		& 2060 		& 1580	 	& 36 	\\
 		M5P				 				& 3145 		& 4916 		& 3226	 	& 89 	\\	
@@ -124,7 +146,7 @@ Performance Values acquired with 5 times MCCV
 		REPTree			 				& 599 		& 1264 		& 629		& 38 	\\								
 	\end{tabularx}
 	\label{tab:evaluationresults1}
-	\caption{Root Mean Square Error of Predicted Performance Values for the Regression-Based Rankers}
+	\caption{Root Mean Square Error of Predicted Performance Values for the Regression-Based Rankers (full meta data)}
 \end{table}
 
 % TODO replace by large data set??
