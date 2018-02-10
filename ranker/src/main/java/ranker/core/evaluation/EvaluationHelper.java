@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
+
 import ranker.Util;
 import ranker.core.algorithms.Ranker;
 import ranker.util.openMLUtil.OpenMLHelper;
@@ -59,8 +61,6 @@ public class EvaluationHelper {
 	 * Path for saving the generated jobs
 	 */
 	public static Path jobsPath = FileSystems.getDefault().getPath("jobs.txt");
-	
-
 
 	/**
 	 * Evaluates all currently available measures for this type of ranker by means
@@ -87,13 +87,13 @@ public class EvaluationHelper {
 		System.out.println(estim.getDetailedEvaluationResults());
 		return result;
 	}
-	
-	public static List<Double> evaluateRegressionRanker(Ranker ranker, Instances instances, List<Integer> targetAttributes)
-			throws Exception {
+
+	public static List<Double> evaluateRegressionRanker(Ranker ranker, Instances instances,
+			List<Integer> targetAttributes) throws Exception {
 		RankerEstimationProcedure estim = new LeaveOneOut();
 		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
 		measures.add(new KendallRankCorrelation());
-		measures.add(new RootMeanSquaredError());
+		measures.add(new RootMeanSquareError());
 		Loss loss = new Loss();
 		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
 		measures.add(loss);
@@ -104,8 +104,6 @@ public class EvaluationHelper {
 		System.out.println(estim.getDetailedEvaluationResults());
 		return result;
 	}
-	
-
 
 	/**
 	 * Evaluates the predictive accuracy of the classifier on the data set by means
@@ -235,6 +233,66 @@ public class EvaluationHelper {
 			e.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * For comparing whether one Ranker is significantly better regarding a measure
+	 * than the other; to be used with the .csv files when a ranker is generated.
+	 * 
+	 * @param firstFile Evaluation results of the first ranker
+	 * @param secondFile Evaluation results of the second ranker
+	 * @param measure The measure to compare
+	 * @return
+	 * @throws IOException
+	 */
+	public static double computeWhitneyU(Path firstFile, Path secondFile, String measure) throws IOException {
+		// Get the values
+		double[] xArray = getValues(firstFile, measure);
+		double[] yArray = getValues(secondFile,measure);
+		
+		// Compute result
+		MannWhitneyUTest uTest = new MannWhitneyUTest();
+		System.out.println(uTest.mannWhitneyU(xArray, yArray));
+		return uTest.mannWhitneyUTest(xArray, yArray);
+	}
+	
+	public static double[] getValues(Path path, String measure) throws IOException {
+		List<Double> values = new ArrayList<Double>();
+		BufferedReader reader = Files.newBufferedReader(path, Util.charset);
+		
+		// Find index of measure
+		String line = reader.readLine();
+		int measureIndex = findIndex(line,measure);
+
+		// Get contents
+		while ((line = reader.readLine()) != null) {
+			String[] contents = line.split(";");
+			double value = Double.parseDouble(contents[measureIndex]);
+			values.add(value);
+		}
+		
+		return convertToArray(values);
+
+	}
+	
+	public static int findIndex(String line, String measure) {
+		int measureIndex = -1;
+		String[] measures = line.split(";");
+		for (int i = 0; i < measures.length; i++) {
+			if (measures[i].replaceAll(" ", "").equals(measure)) {
+				measureIndex = i;
+				break;
+			}
+		}
+		return measureIndex;
+	}
+	
+	public static double[] convertToArray(List<Double> values) {
+		double[] array = new double[values.size()];
+		for (int i = 0; i < values.size(); i++) {
+			array[i] = values.get(i);
+		}
+		return array;
 	}
 
 	public static Classifier[] portfolio = { new BayesNet(), new NaiveBayes(), new NaiveBayesMultinomial(),

@@ -129,32 +129,32 @@ public class Main {
 //		
 		//System.out.println(EvaluationHelper.evaluateRanker(ranker, WekaHelper.subSet(instances, 1, 50), targetAttributes));
 		
-		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
-				Util.charset);
-
-		Instances instances = new Instances(reader);
-		
-		List<Integer> targetAttributes = new ArrayList<Integer>();
-		for (int i = 104; i < 126; i++) {
-			targetAttributes.add(i);
-		}
-		
-		Ranker ranker = new RandomForestRanker();
-
-		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
-
-		
-		ranker = new M5PRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
-		
-		ranker = new REPTreeRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
-		
-		ranker = new LinearRegressionRanker();
-		
-		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
+//		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
+//				Util.charset);
+//
+//		Instances instances = new Instances(reader);
+//		
+//		List<Integer> targetAttributes = new ArrayList<Integer>();
+//		for (int i = 104; i < 126; i++) {
+//			targetAttributes.add(i);
+//		}
+//		
+//		Ranker ranker = new RandomForestRanker();
+//
+//		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
+//
+//		
+//		ranker = new M5PRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new REPTreeRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
+//		
+//		ranker = new LinearRegressionRanker();
+//		
+//		System.out.println(EvaluationHelper.evaluateRegressionRanker(ranker, instances, targetAttributes));
 		
 //		ranker = new BestAlgorithmRanker();
 //		
@@ -183,6 +183,13 @@ public class Main {
 //		List<Classifier> classifs = rankprediction.predictRanking(OpenMLHelper.getInstancesById(2));
 //		classifs.forEach(elem -> System.out.println(elem.getClass().getSimpleName()));
 		
+		Path firstFile = FileSystems.getDefault().getPath("InstanceBasedLabelRankingKemenyYoungSQRTN_metaData_small_allPerformanceValues.csv");
+		Path secondFile = FileSystems.getDefault().getPath("InstanceBasedLabelRankingKemenyYoung_metaData_small_allPerformanceValues.csv");
+		String measure = new KendallRankCorrelation().getClass().getSimpleName();
+		System.out.println("\"" + measure + "\"");
+		
+		System.out.println(EvaluationHelper.computeWhitneyU(firstFile, secondFile, measure));
+
 		
 	}
 }

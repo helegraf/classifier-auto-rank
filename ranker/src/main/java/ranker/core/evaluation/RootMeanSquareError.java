@@ -1,5 +1,6 @@
 package ranker.core.evaluation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import weka.classifiers.Classifier;
@@ -13,43 +14,59 @@ import weka.classifiers.Classifier;
  * @author Helena Graf
  *
  */
-public class RootMeanSquaredError extends RankerEvaluationMeasure {
+public class RootMeanSquareError extends RankerEvaluationMeasure {
 
 	@Override
 	public double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates,
 			List<Double> performanceMeasures) {
 		System.out.print("RMSE ");
-		// Initialize result, catch NaNs
-		double result = 0;
-		int numCalculated = predictedRanking.size();
-		
+		List<Double> estimations = new ArrayList<Double>();
+		List<Double> actualValues = new ArrayList<Double>();
+
 		// Find corresponding classifier values and compare
 		for (int i = 0; i < predictedRanking.size(); i++) {
 			for (int j = 0; j < perfectRanking.size(); j++) {
 				if (predictedRanking.get(i).getClass().getName()
 						.equals(perfectRanking.get(j).getClass().getName())) {
-					// Have found position, now compare predicted value with actual Value
-					double difference = estimates.get(i) - performanceMeasures.get(j);
-					double squared =  Math.pow(difference, 2);
-
-					if (!Double.isNaN(squared)) {
-						result += squared;
-					} else {
-						numCalculated--;
-					}					
+					// Have found position, now remember value
+					estimations.add(estimates.get(i));
+					actualValues.add(performanceMeasures.get(j));
 					break;
 				}
 			}
 		}
 		
+
+		double result = computeRMSE(estimations, actualValues);
+		System.out.println(result);
+		return result;
+	}
+	
+	public double computeRMSE(List<Double> estimations, List<Double> actualValues) {
+		double result = 0;
+		int numCalculated = estimations.size();
+		
+		// Add squares of differences
+		for (int i = 0; i < estimations.size(); i++) {
+			double difference = estimations.get(i) - actualValues.get(i);
+			double squared = Math.pow(difference, 2);
+			if (!Double.isNaN(squared)) {
+				result += squared;
+			} else {
+				numCalculated--;
+			}	
+		}
+
+		// Divide by n
 		if (numCalculated == 0) {
 			result = Double.NaN;
 		} else {
 			result /= numCalculated;
 		}
 		
-		result =  Math.sqrt(result);
-		System.out.println(result);
+		// Root
+		result = Math.sqrt(result);
+		
 		return result;
 	}
 
