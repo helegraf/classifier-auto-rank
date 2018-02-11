@@ -3,11 +3,15 @@
 \chapter{Approach}
 \label{sec:approach}
 
+In this chapter the two alternatives which ar
+
+\section{Theory}
+
 Approach of ranking classifier implementations here realized by two concepts, regression-based and preference-based ranking, which will be explained in detail. Also predicting predictive accuracy here. Thus target function of the form $meta features^n \rightarrow classifiers^m$.
 performance measure chosen predictive accuracy
 
 % Theory of approach
-Since the aim is to generate a ranking of classification algorithms, first, performance values of a number of classifiers are recorded on a few data sets. Then, meta features are computed for each data set. This is for training the ranking model. This generates a table that contains all necessary informatino for training both types of rankers. A ranking of the classifiers for a new instance is then achieved by computing the meta features for the data set and subsequently uing it to query the underlying model. 
+Since the aim is to generate a ranking of classification algorithms, first, performance values of a number of classifiers are recorded on a few data sets. Then, meta features are computed for each data set. This is for training the ranking model. This generates a table that contains all necessary informatino for training both types of rankers. A ranking of the classifiers for a new instance is then achieved by computing the meta features for the data set and subsequently using it to query the underlying model. 
 
 \begin{table}[h]
 \centering
@@ -75,6 +79,8 @@ The second possibility considered in this context is using preference learning t
 	\label{tab:table1}
 	\caption{This is a ranking}
 \end{table}
+
+\section{Implementation}
 
 META FEATURES USED!
 
