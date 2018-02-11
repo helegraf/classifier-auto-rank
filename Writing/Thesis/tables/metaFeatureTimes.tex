@@ -2,6 +2,45 @@
 	\begin{tabularx}{\textwidth}{>{\hsize=1.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X}
 		Meta Feature Group & \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Computation Time (ms)}\\ \cline{2-5}
 										& Min		& Max		& Mean		& Stdv\\ \hline			
+				REPTreeDepth3, 2 folds	&	0		& 60			& 3.259		& 7.206\\ 
+				J48.0001., 2 folds		&	0		& 101		& 4.944		& 10.657\\
+				DefaultAccuracy			& 	0		& 16			& 0.161		&1.088\\
+				NominalAttDistinctValues & 	0		& 16			& 0.127		& 1.128\\
+				RandomTreeDepth1, 2 folds&	0		& 29			& 1.955		& 4.785\\
+				Cardinality				&	0		&	19		& 0.654		& 2.723\\
+				RandomTreeDepth3, 2 folds &	0		& 30			& 1.636		& 4.454\\
+		CfsSubsetEval_NaiveBayes, 2 folds &	2		& 132		& 23.304		& 12.918\\
+		J48.001., 2 folds				& 0			& 201			& 5.129		& 13.935\\
+		J48.00001., 2 folds				& 0 			& 116		& 4.464		& 10.744\\
+		DecisionStump, 2 folds			& 0 			& 54			& 1.536		& 4.710\\
+		SimpleMetaFeatures				& 0 			& 16			& 0.221		& 1.614\\
+		RandomTreeDepth2, 2 folds		& 0			& 18			& 2.114		& 4.793\\
+		NaiveBayes, 2 folds				& 0			& 200		& 6.853		& 17.679 \\
+	CfsSubsetEval_DecisionStump, 2 folds & 2			& 150		& 23.087		& 12.296\\
+	CfsSubsetEval_kNN1N, 2 folds			& 2			& 1096		& 25.806		& 52.236\\
+	REPTreeDepth1, 2 folds				& 0			& 56			& 2.980		& 6.805\\
+	Statistical							& 0			& 69			& 1.520		& 5.442\\
+	kNN1N, 2 folds						& 0			& 1118		& 22.250		& 2.69.212\\
+	REPTreeDepth2, 2 folds				& 0			& 67			& 2.955		& 6.999\\	
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+					
 	\end{tabularx}
 	\label{tab:metaFeatureTimes}
 	\caption{Computation Times for Groups of Meta Features}
