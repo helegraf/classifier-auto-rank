@@ -3,12 +3,12 @@
 \chapter{Fundamentals}
 \label{sec:fundamentals}
 
-The core topic of this thesis falls under the category of machine learning. Thus, firstly the concept of machine learning and the   
+The core topic of this thesis falls under the category of machine learning. Thus, first the concept of machine learning and the tasks related to the approach of this thesis are explained. Second, means used for evaluation of the approach are discussed.
 
 \section{Machine Learning}
 In this section, the aspects of the field of machine learning which are relevant for this thesis are going to be introduced briefly. The core of machine learning is learning algorithms, which are used to induce a general model from a set of data samples. The concept of machine learning will be explained here with the help of an example. % Further what happens exactly here 
 
-Suppose an aspiring gardener wants to learn how to distinguish between different species of iris plants, a genus of ornamental plants with colorful flowers. More specifically, the focus lies on the three species iris versicolor, virginica and setosa. In order to do so, the gardener has observed four different \textit{features}, namely the length and width of their petals and sepals, for a number of different individuals for which he knows the species. The goal of the gardener is then to learn how to distinguish the species based on these features, that is to derive a \textit{model} from the data that will predict which species (out of the considered the three) an unknown iris plant is. The gardener decides to build a decision tree from the data with forks on the basis of feature values, so that they can determine the species of the plant without much calculation. They observe that all iris setosa plants from his sample have a petal width of $\leq 0.6 $ cm, and that of the plants with a petal width of $>0.6$ cm, most plants with a petal width $\leq 1.7$ cm are of the iris versicolor species. The remaining plants with a petal width of $>1.7$ cm are mostly iris virginica plants. While this model will not correctly predict the species of all iris plants, the gardener is settles with the approximation they have found.
+Suppose an aspiring gardener wants to learn how to distinguish between different species of iris plants, a genus of ornamental plants with colorful flowers. More specifically, the focus lies on the three species iris versicolor, virginica and setosa. In order to do so, the gardener has observed four different \textit{features}, namely the length and width of their petals and sepals, for a number of different individuals for which he knows the species, which is illustrated in Table \ref{tab:iris}. The goal of the gardener is then to learn how to distinguish the species based on these features, that is to derive a \textit{model} from the data that will predict which species (out of the considered three) an unknown iris plant is. The gardener decides to build a decision tree from the data with forks on the basis of feature values, so that they can determine the species of the plant without much calculation. They observe that all iris setosa plants from his sample have a petal width of $\leq 0.6 $ cm, and that of the plants with a petal width of $>0.6$ cm, most plants with a petal width $\leq 1.7$ cm are of the iris versicolor species. The remaining plants with a petal width of $>1.7$ cm are mostly iris virginica plants. While this model will not correctly predict the species of all iris plants, the gardener is settles with the approximation they have found.
 
 \begin{table}[h]
 	\begin{tabularx}{\textwidth}{X X X X X X}
@@ -28,23 +28,24 @@ Suppose an aspiring gardener wants to learn how to distinguish between different
 	\caption{Example values for the predictive accuracy of classifiers (data set not relevant in this context). The predictive accuracy denotes the percentage of instances for which the classifier correctly perdicted the class membership.}
 \end{table}
 
-In formal terms, the gardener is searching for an unknown \textit{target function} $f:X \rightarrow Y$ from the input space $X$ to the output space $Y$ that represents an ideal way of identifying iris species. $X$ denotes the possible inputs, in this case all combinations of the four features that have been defined, whereas $Y$ are the outputs, here the species of iris plant. The examples that the gardener recorded are samples $(x_1,y_1),\dots,(x_n,y_n)$ from $f$ such that $f(x_i)=y_i$. Together, they form a data set $D$ which is one of all possible data sets $\mathbb{D}$ for the problem. He then chooses a specific approximation $g:X \rightarrow Y,g\approx f$, the decision tree they built, from the hypothesis space $H$, which in this case consists of possible decision trees. The learning algorithm itself thus maps a data set to a hypothesis from the hypothesis space and can be defined as $A:\mathbb{D}\rightarrow H$.
+In formal terms, the gardener is searching for an unknown \textit{target function} $f:X \rightarrow Y$ from the input space $X$ to the output space $Y$ that represents an ideal way of identifying iris species \cite{abu2012learning}. $X$ denotes the possible inputs, in this case all combinations of the four features that have been defined, whereas $Y$ are the outputs, here the species of iris plant. The examples that the gardener recorded are samples $(x_1,y_1),(x_2,y_2),\dots,(x_n,y_n)$ from $f$ such that $f(x_i)=y_i$. Together, they form a data set $D$ which is one of all possible data sets $\mathbb{D}$ for the problem. They then choose a specific approximation $g:X \rightarrow Y,g\approx f$, the decision tree they built, from the hypothesis space $H$, which in this case consists of possible decision trees. The learning algorithm itself thus maps a data set to a hypothesis from the hypothesis space and can be defined as $A:\mathbb{D}\rightarrow H$.
 
-%TODO include picture of the models etc + table + decision tree that is built
+%TODO include picture of the decision tree that is built & of the general ML-Model (from book)
 
 \subsection{Supervised Learning}
-The problem described above has some additional properties besides being a machine learning problem in general. Firstly, it falls in the category of supervised machine learning. Supervised learning is one of the three main learning paradigms of machine learning, together with reinforcement learning and unsupervised learning. In the context of this thesis, the latter will be neglected as only supervised learning is used. It is characterized by the fact that the learning algorithm is provided with a set of inputs \textit{together} with the outputs, which could be viewed as a kind of teacher, or supervisor, explaining expected results to the learner. In the other cases, no such detailed feedback is provided to the learner. 
+The problem described above has some additional properties besides being a machine learning problem in general. Firstly, it falls in the category of supervised machine learning. Supervised learning is one of the three main learning paradigms of machine learning, together with reinforcement learning and unsupervised learning \cite{abu2012learning}. In the context of this thesis, the latter will be neglected as only supervised learning is used. It is characterized by the fact that the learning algorithm is provided with a set of inputs \textit{together} with the outputs, which could be viewed as a kind of teacher, or supervisor, explaining expected results to the learner. In the other cases, no such detailed feedback is provided to the learner. 
 
 \subsection{Classification and Regression}
-%TODO instance explained before here?
-In addition to falling into the category of supervised learning, the problem is a classification problem. The nature of the prediction is to assign one of the three classes, or labels, 'iris setosa', iris virginica' and 'iris versicolor' to a new plant. Formally, this means that the output space $Y$ of the target function consist of a finite set of labels $\lbrace y_1,\dots,y_n\rbrace$, so that each instance is associated with a label $y_i \in Y$, in this case $Y=\lbrace 'iris-setosa','iris virginica', 'iris versicolor' \rbrace $. 
+In addition to falling into the category of supervised learning, the problem is a classification problem. The nature of the prediction is to assign one of the three classes, or labels, 'iris setosa', iris virginica' and 'iris versicolor' to a new plant. Formally, this means that the output space $Y$ of the target function consists of a finite set of labels $\lbrace y_1,\dots,y_n\rbrace$, so that each instance of the data set is associated with a label $y_i \in Y$, in this case $Y=\lbrace 'iris-setosa','iris virginica', 'iris versicolor' \rbrace $. 
 
 Apart from classification, another important category of machine learning problems is regression problems. In the case of regression, the output space of the target function is no longer finite, but instead consist of real numbers. To reconsider the gardening example, the gardener could want to predict the height of a plant on the basis of the same features as used above. Likewise, they would have to observe a number of plants to gather feature values together with the expected target value, which instead of the species would then be the height of the plant in centimeters, that is $Y=\mathbb{R}$.
+
+%TODO include a picture of the regression model mapping one of the width to height & say that this would be a linear model but others could be used
 
 \subsection{Preference Learning}
 % Why is label ranking relevant? -> for prediction based on preference
 % Preference learning
-Preference Learning is a relatively new subfield of machine learning\cite{DBLP:books/daglib/0025729}. It is dedicated to the problem of learning how to rank, the precise definition of what this encompasses being defined by the specific task. Out of the three main tasks of preference learning, namely label ranking, instance ranking and object ranking, label ranking is the relevant one in the context of this thesis. But before going into to details of label ranking, it first has to be explained what is meant with a ranking in this context and how it is distinguished from the concept of an ordering.
+Preference Learning is a relatively new subfield of machine learning \cite{DBLP:books/daglib/0025729}. It is dedicated to the problem of learning how to rank, the precise definition of what this encompasses being defined by the specific task one considers. Out of the three main tasks of preference learning, namely label ranking, instance ranking and object ranking, label ranking is the relevant one in the context of this thesis. But before going into the details of label ranking, it first has to be explained what is meant with a ranking in this context and how it is distinguished from the concept of an ordering, as it is easily confused.
 
 \subsubsection{Ranking and Ordering}
 To clarify the meaning of ranking and ordering, we return to the gardening example. After spending some time studying the different flowers, the gardener has realized he prefers certain iris species to others. 
@@ -76,24 +77,29 @@ It must be noted that the definitions given here are not transferable to the gen
 The values in table \ref{tab:ranking_vs_ordering} result in the ranking $[2,3,1]$, whereas the ordering is $[3,1,2]$.
 
 \subsubsection{Label Ranking}
-% could be seen as a generalisation of classification
-Similar to classification, in label ranking there is a finite set of labels $Y=\lbrace y_1,\dots,y_n \rbrace$, but it is not the output space. Instead, \citeauthor{DBLP:books/daglib/0025729} define the target function for label ranking as $X\rightarrow S_Y$ where the output space $S_Y$ contains all permutations over the set of labels $Y$ \cite{DBLP:books/daglib/0025729}. An instance $x \in X$ therefore is assigned a permutation $y_{\pi_x^i}$
+Similar to classification, in label ranking there is a finite set of labels $Y=\lbrace y_1,\dots,y_n \rbrace$, but it is not the output space. Instead, \citeauthor{DBLP:books/daglib/0025729} define the target function for label ranking as $f:X\rightarrow S_Y$ where the output space $S_Y$ contains all permutations over the set of labels $Y$ \cite{DBLP:books/daglib/0025729}. An instance $x \in X$ therefore is assigned a permutation $y_{\pi_x^i}$
 
 Although called label ranking actually label ordering!
 
 \subsection{Meta Learning}
 % Context is meta learning -> what does that mean and what are the consequence
+Meta leThe previous discussion of machine learning problems has conceptually been about the fitting of different machine learning algorithms to problems in the form of data sets. In the context of meta learning, is 'possible to learn about the learning process
+itself, and in particular that a system could learn to profit from previous
+experience to generate additional knowledge that can simplify the automatic
+selection of efficient models summarizing the data' \cite{razdil2008metalearning}.
 
 % Algorithm selection problem
 
 \section{Evaluation}
 
+After having discussed the preliminaries that the theoretical approach of this thesis is built upon, the measures that will be used in the evaluation of the different methods are briefly reviewed. These include means of comparing the predicted rankings with actual rankings as well as a statistic that reveals if an advantage regarding one measure can be viewed as significant.
+
 \subsection{Kendall Rank Correlation Coefficient}
 % We need to evaluate the ranker quality somehow, ranker predicts rank, so need a 
-To evaluate the quality of the prediction that the ranker will make, a statistic is needed to compare a predicted ranking with other rankings like a baseline or an optimal ranking.  serves as indication of causal connection
+To evaluate the quality of the prediction that a ranker will make, a statistic is needed to compare a predicted ranking with the correct ranking. For this, the Kendall Rank Correlation Coefficient will be used here, as it expresses the similarity of two rankings.
 
 % Definition of Kendall
-The Kendall Rank Correlation Coefficient is a measure of association between two rankings of the same items also known as Kendall's tau. For two independent variables $X$ and $Y$ and and observations of values $(x_1,...,x_m)$ for $X$ and $(y_1,...,y_n)$ for $Y$ with unique $x_i$ and $y_i$ respectively, the coefficient is based on comparing pairs of observations. If for two pairs $(x_i,y_i)$ and $(x_j,y_j)$ both $x_i < x_j$ and $y_i < y_j$ (or the opposite) holds, they are viewed as concordant. If $x_i < x_j$ but $y_i > y_j$ (or the opposite), they are viewed as discordant. Other cases are not considered. The simplest version of the statistic, called $T_A$ is then defined as 
+The Kendall Rank Correlation Coefficient, also known as Kendall's tau, is a measure of association between two rankings of the same items \cite{kendall1938new}. For two independent variables $X$ and $Y$ and and observations of values $(x_1,x_2,...,x_m)$ for $X$ and $(y_1,y_2,...,y_n)$ for $Y$ with unique $x_i$ and $y_i$ respectively, the coefficient is based on comparing pairs of observations. If for two pairs $(x_i,y_i)$ and $(x_j,y_j)$ both $x_i < x_j$ and $y_i < y_j$ (or the opposite) holds, they are viewed as concordant. If $x_i < x_j$ but $y_i > y_j$ (or the opposite), they are viewed as discordant. Other cases are not considered. The simplest version of the statistic, called $T_A$ is then defined as 
 
 $$T_A = \frac{n_c - n_d}{n_0},$$
 with \\
@@ -103,7 +109,7 @@ $n_0 = n * (n + 1) / 2$.
 
 As we have seen in example above, can also have same rank for items. In order to account for this, a second statistic, $T_B$ is defined as
 
-$$T_A = \frac{n_c - n_d}{\sqrt{(n_0 - n_1 )(n_0 - n_2 )}},$$
+$$T_B = \frac{n_c - n_d}{\sqrt{(n_0 - n_1 )(n_0 - n_2 )}},$$
 with \\
 $n_c$, $n_d$, $n_0$ as above, \\
 $n_1=\sum_i{t_i(t_i-1)/2}$, \\
@@ -111,12 +117,17 @@ $n_1=\sum_j{t_j(t_j-1)/2}$, \\
 $t_i,$ the number of ties observed for X in the ith position of the ranking \\
 $u_j,$ the number of ties observed for Y in the ith position of the ranking 
 
-% In theory explanation for Kendall's Tau B because ranking could be tied but not as a result of Label Ranking and unlikely for regression the implementation that is used calculates Tau b!
+Thus, the value of the tau (for both versions) lies in the interval $[-1,1]$, with 1 indicating a perfect agreement of rankings, -1 perfect disagreement, and 0 corresponding to no correlation. A high value is therefore desirable in this context, as it indicates that the prediction of the ranker agrees with the actual ranking of algorithms.
+
+%TODO include example ranking
 
 \subsection{Loss}
-While the Kendall rank correlation coefficient is an indication as to what degree a predicted ranking agrees with the correct ranking of classifiers for a certain data set, it does not convey the difference in performance experienced by the user when choosing the first of the recommended algorithms. This difference can b expressed in measure called loss \cite{DBLP:conf/mldm/LeiteBV12}, which is defined as the difference of the performance of the actual best algorithm and the actual performance of the first recommended algorithm. 
+While the Kendall rank correlation coefficient is an indication as to what degree a predicted ranking agrees with the correct ranking of classifiers for a certain data set, it does not convey the difference in performance experienced by the user when choosing the first of the recommended algorithms. This difference can be expressed in measure called loss \cite{DBLP:conf/mldm/LeiteBV12}, which is defined as the difference of the performance of the actual best algorithm and the actual performance of the first recommended algorithm. 
 
-Additionally, the ranker recommends a ranking instead of a single algorithm in order to allow a user (or automated tool) to test a few of the top-ranked algorithms, which therefore also needs to be taken into account when thinking about loss. This is done here by computing a measure called best three loss, which denotes the loss resulting in the selection of the best of the first three recommended classifiers in comparison to the actual best-performing classifier among the considered set of classifiers. 
+Additionally, the ranker recommends a ranking instead of a single algorithm in order to allow a user (or automated tool) to test a few of the top-ranked algorithms, which therefore also needs to be taken into account when thinking about loss. This is done here by computing a measure called best three loss, which denotes the loss resulting in the selection of the best of the first three recommended classifiers in comparison to the actual best-performing classifier in the considered set of classifiers. 
+
+%TODO include example loss calculatio
 
 \subsection{Mann-Whitney U Test}
-too compare the ranking alternatives and to the basline to see if statistically significantly better.
+%TODO describe & don't forget example
+The measures previously presented can indicate if one alternative is superior to another regarding that measure, but one cannot conclude from those results alone whether this advantage is significant. The question is whether the null-hypothesis that two distributions \cite{mann1947test}
