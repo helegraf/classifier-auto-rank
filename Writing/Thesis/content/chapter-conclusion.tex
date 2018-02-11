@@ -6,7 +6,7 @@
 % Introductory restatement of research problems, aims / reseach question -> remin of problem + purpose and how addressed
 In this thesis, the problem of predicting a ranking of classification algorithms for a new data set on the basis of meta features of the data set and past performances of the algorithms has been considered. Being able to predict a ranking of such algorithms is desirable since this potentially speeds up and simplifies the process of algorithm selection, which is important due to a rapidly increasing amount of available data, and more importantly, data that is available but has not yet been analyzed. This problem has been addressed by implementing two different approaches, regression-based and preference-based ranking. Both have been evaluated extensively against a baseline and an oracle.
 
-% Summary of findings and limitations: what has been covered
+% Summary of findings and limitations: what has been covered LIMITATION: SMALL DATA SETS ESP!!
 - Results - 
 
 % Practical applications / limitations: assess value / relevance / implications: What does it mean for theory, what for practice
@@ -28,7 +28,7 @@ Additionally, so far the evaluation of the tool has been confined to predicting 
 In a similar manner to extending the algorithms for which a performance measure is predicted, one could use the tool to predict different performance measures. For this, the tool does not even need to be adapted, as it is agnostic to the semantics behind the measure it predicts, it only needs to be numeric. One possibility for this would be the prediction of build or prediction times of learning algorithms, or a measure that combines time and accuracy \cite{DBLP:journals/ml/AbdulrahmanBRV18}.
 
 % Auto fitting
-Depending on the fact whether one is willing to trade-off longer build and prediction times, it would also be possible to fit more sophisticated regression models for the regression based approach. This could include feature pre-processing, automating the choice of regression algorithm with one of the available tools \cite{thornton2013auto} \cite{feurer2015efficient}, or even using a whole pipeline prediction tool \cite{wever2017automatic} \cite{DBLP:conf/eurogp/SaPOP17}.
+Depending on the fact whether one is willing to trade-off longer build and prediction times, it would also be possible to fit more sophisticated regression models for the regression based approach. This could include feature pre-processing, automating the choice of regression algorithm with one of the available tools \cite{thornton2013auto} \cite{feurer2015efficient}, or even using a whole pipeline prediction tool \cite{wever2017automatic} \cite{DBLP:conf/eurogp/SaPOP17}. Furthermore, the building and predictions for the regression models could be parallelized and evaluated on a cluster to simulate and test  the usage of the ranking tool in a productive environment.
 
 % Additional baseline
 Last, it could be interesting to implement an additional baseline that averages ranks instead of counting how many times an algorithm is ranked first. This would help to determine if the surprising ranking returned by the best algorithm baseline (see Fig. \ref{tab:bestAlgorithmRanking}

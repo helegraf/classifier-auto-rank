@@ -82,6 +82,8 @@ Similar to classification, in label ranking there is a finite set of labels $Y=\
 
 Although called label ranking actually label ordering!
 
+original algorithms selection problem \cite{rice1976algorithm} can be viewed as a learning problem itself
+
 \subsection{Meta Learning}
 % Context is meta learning -> what does that mean and what are the consequence
 Meta leThe previous discussion of machine learning problems has conceptually been about the fitting of different machine learning algorithms to problems in the form of data sets. In the context of meta learning, is 'possible to learn about the learning process
@@ -93,7 +95,13 @@ selection of efficient models summarizing the data' \cite{razdil2008metalearning
 
 \section{Evaluation}
 
-After having discussed the preliminaries that the theoretical approach of this thesis is built upon, the measures that will be used in the evaluation of the different methods are briefly reviewed. These include means of comparing the predicted rankings with actual rankings as well as a statistic that reveals if an advantage regarding one measure can be viewed as significant.
+After having discussed the preliminaries that the theoretical approach of this thesis is built upon, how a data set can be split into training and test data to estimate the performance of learning algorithms and the measures that will be used in the evaluation of the different ranking methods are briefly reviewed. These include means of comparing the predicted rankings with actual rankings as well as a statistic that reveals if an advantage regarding one measure can be viewed as significant.
+
+\subsection{Estimation Procedures}
+
+- estimation using cross validation (monte carloMCCV)
+
+- estimation using leave one out
 
 \subsection{Kendall Rank Correlation Coefficient}
 % We need to evaluate the ranker quality somehow, ranker predicts rank, so need a 
