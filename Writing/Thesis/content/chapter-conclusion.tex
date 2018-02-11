@@ -4,44 +4,34 @@
 \chapter{Conclusion}
 \label{sec:conclusion}
 % Introductory restatement of research problems, aims / reseach question -> remin of problem + purpose and how addressed
-In this thesis, the problem of predicting a ranking of classification algorithms for a new data set on the basis of meta features of the data set and past performances of the algorithms has been considered. Being able to predict a ranking of such algorithms is desirable since this potentially speeds up and simplifies the process of algorithm selection, which is important due to a rapidly increasing amount of available data, and more importantly, data that is available but has not yet been analyzed. The problem has been addressed by implementing to different approaches, regression-based and preference-based ranking. Both have been evaluated extensively against a baseline and an oracle.
+In this thesis, the problem of predicting a ranking of classification algorithms for a new data set on the basis of meta features of the data set and past performances of the algorithms has been considered. Being able to predict a ranking of such algorithms is desirable since this potentially speeds up and simplifies the process of algorithm selection, which is important due to a rapidly increasing amount of available data, and more importantly, data that is available but has not yet been analyzed. This problem has been addressed by implementing two different approaches, regression-based and preference-based ranking. Both have been evaluated extensively against a baseline and an oracle.
 
 % Summary of findings and limitations: what has been covered
 - Results - 
 
 % Practical applications / limitations: assess value / relevance / implications: What does it mean for theory, what for practice
-On the basis of these results, it can be concluded that a causal connection exists between certain meta features of a data set and the predictive accuracy of classification algorithms for this data set, which can be exploited to a degree by regression models and label ranking models to predict a ranking of classification algorithms. A practical application of these findings may be to incorporate the implementation or parts of it in another Auto-ML tool as a search heuristic, similar to how some Auto-ML solutions like AUTO-SKLEARN already benefits from meta learning \cite{feurer2015efficient}. However, some additional work may have to be done in extension to this thesis in order for a sensible integration.
+On the basis of these results, it can be concluded that a causal connection exists between certain meta features of a data set and the predictive accuracy of classification algorithms for this data set, which can be exploited to a degree by regression models and label ranking models to predict a ranking of classification algorithms. A practical application of these findings, apart from the direct use as a ranker, may be to incorporate the implementation or parts of it in another Auto-ML tool as a search heuristic, similar to how some Auto-ML solutions like AUTO-SKLEARN already benefits from meta learning \cite{feurer2015efficient}. However, some additional work may have to be done in extension to this thesis in order for a sensible integration.
 
 % Recommendations for future work
 \section{Future Work}
 \label{sec:conclusion:future}
-% Has worked reasonably well -> extend evaluation
+% More evaluation - meta features
+As the results have shown that the approach taken in this thesis has worked out reasonably well, for example when considering the regression based approach using random forests, many possibilities for additional work arise. An intuitive thought would be to extend the evaluation of the tool, for instance in terms of meta features. Different sets of meta features could be evaluated, like adding implementations for additional meta features, or considering using only light probing by incorporating the performance values for usually cheap algorithms in the meta features. 
 
-
-%- more careful training by hand-selecting datasets for training (but then aains is this really the real world anymore? But then again duplicates may be contained)
-
-
-
-
-- use this to try to predict other measures (e.g. time needed)
-- look at the loss curve + loss-time (log) curve
-- further investigate the better solution
-- integrate solution into other auto ml solution if sensible regarding time contraints for that solution (and accuracy)
--e.g. use A3R
-- or runtime could be predicted separately by nn based on meta data \cite{DBLP:journals/corr/abs-1709-07615}
-- adding feature pre-processing
-
-% Extension of the tool
-- better fitting of learning algorithms to meta data (more manual work, but of course consider danger of overfitting!
-
-% Extended evaluation
-- compare against other tools that rank r.g. the Jan van Rijn one
-- deeper analysis of meta features, e.g. add some, remove some, consider trade-off time accuracy
+% More evaluation - loss - time & compare agains Jan van Rijn
+Furthermore, more insights could be gained about whether this approach is competitive by comparing it with other ranking approaches, for example like the one proposed by \citeauthor{DBLP:journals/ml/AbdulrahmanBRV18} \cite{DBLP:journals/ml/AbdulrahmanBRV18}. In this regard it would also be interesting  to implement the loss - and time - loss curves proposed by the authors, which show how loss decreases as one advances in the predicted ranking and tries out the recommended algorithms, and at what cost in the sense of time the sampling of algorithms comes respectively.
 
 % Use this for predicting different algorithms
-So far, the evaluation of the tool has been confined to predicting algorithms for classification. Since this has been relatively successful, it could be tested whether similar predictions can also be made for other machine learning tasks like regression or clustering. 
+Additionally, so far the evaluation of the tool has been confined to predicting algorithms for classification. Since this has been relatively successful, it could be tested whether similar predictions can also be made for other machine learning tasks like regression or clustering with the same approach by extending the tool to handling these functions. Also, one could try to include a few parameterized versions of algorithms, as so far only one variant of each classifier with standard hyperparameters has been used. 
 
-- hyperparameters neglected here, may include standard combinations in future work (or random ones)-> possible only if id by string
-- use this for regression
+% Use this to predict other measure
+In a similar manner to extending the algorithms for which a performance measure is predicted, one could use the tool to predict different performance measures. For this, the tool does not even need to be adapted, as it is agnostic to the semantics behind the measure it predicts, it only needs to be numeric. One possibility for this would be the prediction of build or prediction times of learning algorithms, or a measure that combines time and accuracy \cite{DBLP:journals/ml/AbdulrahmanBRV18}.
 
-an average baseline like used in speeding up algo select might be better
+% Auto fitting
+Depending on the fact whether one is willing to trade-off longer build and prediction times, it would also be possible to fit more sophisticated regression models for the regression based approach. This could include feature pre-processing, automating the choice of regression algorithm with one of the available tools \cite{thornton2013auto} \cite{feurer2015efficient}, or even using a whole pipeline prediction tool \cite{wever2017automatic} \cite{DBLP:conf/eurogp/SaPOP17}.
+
+% Additional baseline
+Last, it could be interesting to implement an additional baseline that averages ranks instead of counting how many times an algorithm is ranked first. This would help to determine if the surprising ranking returned by the best algorithm baseline (see Fig. \ref{tab:bestAlgorithmRanking}
+) still holds when using a different baseline. Naturally this new baseline then could also be used to re-evaluate the implemented ranking concepts. 
+
+
