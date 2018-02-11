@@ -1,9 +1,8 @@
 % Move from general to specific
 \chapter{Introduction}
 \label{sec:intro}
-%TODO does this introduction really follow the three-moves structure?
 %% Introduction to introduction
-This introduction emphasizes why there is a need for automation in machine learning, and how this thesis relates to that problem. 
+This introduction emphasizes why there is a need for automation in machine learning, and how this thesis relates to that problem in that it proposes two different approaches for ranking classification algorithms. Furthermore, an overview of the thesis structure is given.
 
 \section{Motivation and Problem Statement}
 \label{sec:intro:motivation}
@@ -15,21 +14,14 @@ The potential of big data is evident, and an increasing amount of information is
 One of the most prominent machine learning tasks is classification: A class is assigned to an instance, for example clients of a bank may be either deemed creditworthy or not, based on factors like other existing credits or the job of the client. But selecting a fitting classifier for a new data set is difficult, since algorithm performances can vary substantially among data sets, and it is not feasible to simply apply a large number of them to empirically find a good match. For example, on a data set about the electricity prices in the Australian state New South Wales \cite{harris1999splice}, the predictive accuracy for the Multilayer Perceptron\footnote{With standard hyperparameters (L:0.3,M:0.2,N:500,V:0,S:0,E:20,H:a).} is 0.7887 \cite{cachada2017run3}. The predictive accuracy of the Random Forest\footnote{With standart hyperparameters (P:100,I:100,num-slots:1,K:0,M:1.0,V:0.001,S:1).} algorithm on the same data set is 0.9236 \cite{cachada2017run}, a much higher value. On a different data set, with the topic of vehicle silhouettes \cite{siebert1987vehicle}, we get a predictive accuracy of 0.7979 for the Multilayer Perceptron \cite{cachada2017run4}, and 0.7518 for Random Forests \cite{cachada2017run2}, showing an advantage of the former on this data set\footnote{Hyperparameters as above.}. So in each case, one would have picked a different algorithm in order to achieve the best results. In general, this means that for a different data set, a different algorithm might yield the best performance.
 
 %% Problem + Significance
-Since there is no one best classifier for all data sets, it is likely that how well a classifier performs on a given data set is dependent on properties of the data set, at least to some degree. Combined with the need for automated machine learning, this calls for an approach that considers past performances of classifiers for data sets in relation to properties of these data sets to automatically suggest well-performing classifiers for a new problem.
-
-%% Problem + Significance
-% Together this means that classifier selection is area where one can automate -> area of problem is suggesting classifiers
-Since there is a need for automated machine learning and selecting a fitting classification algorithm for a new data set is an important but difficult task in the machine learning pipeline, facilitating this process by automatically suggesting well-performing classifiers for a new data set is a significant problem. A tool that efficiently predicts which algorithms are likely to perform well compared to their alternatives regarding a specific data set simplifies the process of selecting an algorithm for inexperienced users and experts alike. A user would send a request to the tool for their specific data set at hand and then evaluate highly ranked algorithms manually, choosing the one with the best performance. The advantage is that the user does not need to know characteristics of the classification algorithms or data set in order to achieve relatively good results in a short amount of time. A further speed-up and simplification could be achieved by embedding this tool in a solution that also takes care of the sampling of selected classifiers on the data set, for example existing solutions in the context of automated machine learning (auto-ml) context.
+Since there is no one best classifier for all data sets, it is likely that how well a classifier performs on a given data set is dependent on properties of the data set, at least to some degree. Combined with the need for automated machine learning and the importance but difficulty of selecting a fitting algorithm, this calls for an approach that considers past performances of classifiers for data sets in relation to properties of these data sets to automatically suggest well-performing classifiers for a new problem.
 
 %% Response
 % Therefore the goal is testing the this assumption if possible by using regression algos and preference learning
-Thus, the aim of this thesis is to
+Thus, the aim of this thesis is the implementation and evaluation of two different approaches to ranking classification algorithms based on past-performances of the algorithms and according to properties of the data set. The two approaches include one regression-based approach that breaks down the problem of predicting a ranking into predicting a single performance value for each algorithm and then ranking them accordingly, and a preference based approach that is concerned with learning the rankings directly. Especially in the case of regression based ranking there is reason to believe that such a prediction is possible, as regression models have been used successfully to predict the performance of an algorithm dependent on the hyperparameter configuration \cite{DBLP:conf/aaai/EggenspergerHHL15}.
 
-%TODO {correct this}
-
-algorithm selection problem at heart but want ranking to allow the user iterative testing
-
-could work because regression models have been used successfully to predict the performance of an algorithm dependent on the hyperparameter configuration \cite{DBLP:conf/aaai/EggenspergerHHL15}
+% More Significance
+A tool that efficiently predicts which algorithms are likely to perform well compared to their alternatives regarding a specific data set simplifies the process of selecting an algorithm for inexperienced users and experts alike. A user would send a request to the tool for their specific data set at hand and then evaluate highly ranked algorithms manually, choosing the one with the best performance. The advantage is that the user does not need to know characteristics of the classification algorithms or data set in order to achieve relatively good results in a short amount of time. A further speed-up and simplification could then possibly be achieved by embedding this tool in a solution that also takes care of the sampling of selected classifiers on the data set, for example existing solutions in the context of automated machine learning (auto-ml) context.
 
 \section{Thesis Structure}
 \label{sec:intro:structure}
