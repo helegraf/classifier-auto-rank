@@ -2,14 +2,15 @@
 	\begin{tabularx}{\textwidth}{>{\hsize=1.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X}
 		Ranker 				& \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Root Mean Square Error} \\ \cline{2-5}
 										& Min		& Max		& Mean		& Stdv 	\\ \hline
-		LinearRegression 				& 1454 		& 2060 		& 1580	 	& 36 	\\
-		M5P				 				& 3145 		& 4916 		& 3226	 	& 89 	\\	
-		RandomForest		 			& 6048 		& 9720 		& 6236	 	& 259 	\\	
-		REPTree			 				& 599 		& 1264 		& 629		& 38 	\\	\hline \hline
-		LinearRegression 				& 1454 		& 2060 		& 1580	 	& 36 	\\
-		M5P				 				& 3145 		& 4916 		& 3226	 	& 89 	\\	
-		RandomForest		 			& 6048 		& 9720 		& 6236	 	& 259 	\\	
-		REPTree			 				& 599 		& 1264 		& 629		& 38 	\\							
+		LinearRegression 				& 2.269 		& 454695.445 & 1028.751  & 21505.865	\\
+		M5P				 				& 1.487 		& 50757.174 	& 121.914	& 2400.412 	\\	
+		RandomForest		 				& 0.938 		& 23.788		& 6.625	 	& 3.873 	\\	
+		REPTree			 				& 2.276 		& 23.676 	& 7.616		& 4.223 	\\	
+		\hline \hline
+		LinearRegression 				& 3.503 		& 372808.391 & 850.213	 & 17632.512 	\\
+		M5P				 				& 1.934 		& 561871.676 & 1275.212	 & 26574.835 	\\	
+		RandomForest		 				& 0.868 		& 67.892		& 10.692	 	& 7.429 	\\	
+		REPTree			 				& 1.573 		& 78.048 	& 13.492		& 8.815	\\							
 	\end{tabularx}
 	\label{tab:rootMeanSquareError}
 	\caption{Root Mean Square Error of Predicted Performance Values for the Regression-Based Rankers (full meta data)}
