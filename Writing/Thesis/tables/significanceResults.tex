@@ -3,23 +3,28 @@
 	\begin{tabularx}{1.15\textwidth}{>{\hsize=1.4\hsize}X | >{\hsize=.84\hsize}X | >{\hsize=1.07\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X}
 		Ranker 					& \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Loss} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{BestThreeLoss}\\ \cline{2-7} 
 										& Mann-Whitney U & P-Value & Mann-Whitney U	& P-Value & Mann-Whitney U & P-Value \\ \hline
-		LinearRegression 			& 144397.5 & 5.7979419790039454E-30 		& 108781.0 & 0.029542692690485036 & 112695.5 & 0.0014385657600093544
-		M5P				 			& 144007.0 & 1.8313583694639947E-29 & 100897.5 & 0.8880001531710997		& 110031.5 & 0.012453813205355102 
-		RandomForest		 			& 148620.0 & 1.2083798885061242E-35 	& 110970.0 & 0.006119361496546756 & 113020.0 & 0.001073281360755882
-		REPTree			 			& 129582.0 & 4.4713335256680563E-14 	& 107225.0 & 0.07598944454911878 & 102345.0 & 0.6068707389022567
-		InstanceBased				& 117813.5 & 6.5396687926302236E-6 & 110030.5 & 0.012462889168704111 & 112178.0 & 0.0022642024247693537
-		InstanceBased\footnotemark{}	& 110063.0 & 0.012170900321252207 	& 106943.5 & 0.0887986535935289 & 107195.5 & 0.07725677493713601
-		InstanceBased\footnotemark{} & 109909.0 & 0.013610165706201232 	& 108406.5 & 0.037573155009881204 & 110058.5 & 0.012210964570043089
-		PairwiseCom- parison			& 163081.0 & 5.457188771524227E-59 	& 138148.5 & 1.7021389590092695E-22 & 123784.5 & 1.4510107510994907E-9 
-		LinearRegression 			& 114370.5 & 2.9546427605968575E-4	& 106405.5 & 0.11808310796467758		& 102563.0 & 0.5681163634970456
-		M5P				 			& 110774.0 & 0.007129939851230675	& 107366.5 & 0.07014430075147082		& 100699.0 & 0.9286152729580623
-		RandomForest		 			& 134467.0 & 1.277571002837018E-18	& 106410.0 & 0.1178100349958836		& 107453.0 & 0.06675648761719828
-		REPTree			 			& 101292.0 & 0.8082488625496466		& 120574.0 & 1.781121090609034E-7	& 111526.0 & 0.003915851766294958
-		InstanceBased				& 117813.5 & 6.5396687926302236E-6 	& 110030.5 & 0.012462889168704111 	& 112178.0 & 0.0022642024247693537
-		InstanceBased\footnotemark{} & 110063.0 & 0.012170900321252207 	& 106943.5 & 0.0887986535935289		& 107195.5 & 0.07725677493713601
-		InstanceBased\footnotemark{} & 109909.0 & 0.013610165706201232	& 108406.5 & 0.037573155009881204	& 110058.5 & 0.012210964570043089
-		PairwiseCom- parison			& 163420.0 & 1.3103925908118485E-59	& 138082.0 & 2.015765845327446E-22	& 124838.0 & 2.5869272145749966E-10
+		LinearRegression 			& 144397.5 & 5.798-30 	& 108781.0 & 0.030 	& 112695.5 	& 0.001 \\
+		M5P				 			& 144007.0 & 1.831E-29 	& 100897.5 & 0.888	& 110031.5 	& 0.012 \\
+		RandomForest		 		& 148620.0 & 1.208E-35 	& 110970.0 & 0.006 	& 113020.0 	& 0.001 \\
+		REPTree			 			& 129582.0 & 4.471E-14 	& 107225.0 & 0.076 	& 102345.0 	& 0.607 \\
+		InstanceBased				& 117813.5 & 6.540E-6 	& 110030.5 & 0.012 	& 112178.0 	& 0.002 \\
+		InstanceBased\footnotemark{}& 110063.0 & 0.012		& 106943.5 & 0.089 	& 107195.5 	& 0.077 \\
+		InstanceBased\footnotemark{}& 109909.0 & 0.014 		& 108406.5 & 0.038 	& 110058.5 	& 0.012 \\
+		PairwiseCom- parison		& 163081.0 & 5.457E-59 	& 138148.5 & 1.702E-22 & 123784.5 & 1.451E-9 \\ 
+		\hline \hline \addtocounter{footnote}{-2}
+		LinearRegression 			& 114370.5 & 2.955E-4	& 106405.5 & 0.118	& 102563.0 & 0.568 \\
+		M5P				 			& 110774.0 & 0.007		& 107366.5 & 0.070	& 100699.0 & 0.929 \\
+		RandomForest		 		& 134467.0 & 1.278E-18	& 106410.0 & 0.118	& 107453.0 & 0.0668 \\
+		REPTree			 			& 101292.0 & 0.808		& 120574.0 & 1.781E-7 & 111526.0 & 0.004 \\
+		InstanceBased				& 117813.5 & 6.540E-6 	& 110030.5 & 0.012	& 112178.0 & 0.002 \\
+		InstanceBased\footnotemark{} & 110063.0 & 0.012 	& 106943.5 & 0.089	& 107195.5 & 0.077 \\
+		InstanceBased\footnotemark{} & 109909.0 & 0.014		& 108406.5 & 0.038	& 110058.5 & 0.012 \\
+		PairwiseCom- parison		& 163420.0 & 1.310E-59	& 138082.0 & 2.016E-22	& 124838.0 & 2.587E-10 \\
 	\end{tabularx}
 	\label{tab:significanceResults}
-	\caption{Significance of Results Regarding Kendall Rank Correlation Coefficient}
+	\caption{Significance of Results with Full Meta Features (Top) and Without Probing (Bottom)}
 \end{table}
+
+\addtocounter{footnote}{-2}
+\stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young}
+\stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young, Baselearner KNN with n=$\sqrt{\text{number of instances}}$}

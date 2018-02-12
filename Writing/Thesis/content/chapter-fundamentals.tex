@@ -8,7 +8,7 @@ The core topic of this thesis falls under the category of machine learning. Thus
 \section{Machine Learning}
 In this section, the aspects of the field of machine learning which are relevant for this thesis are going to be introduced briefly. The core of machine learning is learning algorithms, which are used to induce a general model from a set of data samples. The concept of machine learning will be explained here with the help of an example. % Further what happens exactly here 
 
-Suppose an aspiring gardener wants to learn how to distinguish between different species of iris plants, a genus of ornamental plants with colorful flowers. More specifically, the focus lies on the three species iris versicolor, virginica and setosa. In order to do so, the gardener has observed four different \textit{features}, namely the length and width of their petals and sepals, for a number of different individuals for which he knows the species, which is illustrated in Table \ref{tab:iris}. The goal of the gardener is then to learn how to distinguish the species based on these features, that is to derive a \textit{model} from the data that will predict which species (out of the considered three) an unknown iris plant is. The gardener decides to build a decision tree from the data with forks on the basis of feature values, so that they can determine the species of the plant without much calculation. They observe that all iris setosa plants from his sample have a petal width of $\leq 0.6 $ cm, and that of the plants with a petal width of $>0.6$ cm, most plants with a petal width $\leq 1.7$ cm are of the iris versicolor species. The remaining plants with a petal width of $>1.7$ cm are mostly iris virginica plants. While this model will not correctly predict the species of all iris plants, the gardener is settles with the approximation they have found.
+Suppose an aspiring gardener wants to learn how to distinguish between different species of iris plants, a genus of ornamental plants with colorful flowers. More specifically, the focus lies on the three species iris versicolor, virginica and setosa. In order to do so, the gardener has observed four different \textit{features}, namely the length and width of their petals and sepals, for a number of different individuals for which he knows the species, which is illustrated in Table \ref{tab:iris}. The goal of the gardener is then to learn how to distinguish the species based on these features, that is to derive a \textit{model} from the data that will predict which species (out of the considered three) an unknown iris plant is. The gardener decides to build a decision tree from the data with forks on the basis of feature values, so that they can determine the species of the plant without much calculation. They observe that all iris setosa plants from his sample have a petal width of $\leq 0.6 $ cm, and that of the plants with a petal width of $>0.6$ cm, most plants with a petal width $\leq 1.7$ cm are of the iris versicolor species. The remaining plants with a petal width of $>1.7$ cm are mostly iris virginica plants. While this model (illustrated in Fig. \ref{fig:decision_tree}) will not correctly predict the species of all iris plants, the gardener is settles with the approximation they have found.
 
 \begin{table}[h]
 	\begin{tabularx}{\textwidth}{>{\hsize=1.1\hsize}X >{\hsize=0.8\hsize\centering\arraybackslash}X >{\hsize=0.8\hsize\centering\arraybackslash}X >{\hsize=0.8\hsize\centering\arraybackslash}X >{\hsize=0.8\hsize\centering\arraybackslash}X  >{\hsize=1.7\hsize}X}
@@ -28,9 +28,20 @@ Suppose an aspiring gardener wants to learn how to distinguish between different
 	\caption{Example values for the predictive accuracy of classifiers (data set not relevant in this context). The predictive accuracy denotes the percentage of instances for which the classifier correctly perdicted the class membership.}
 \end{table}
 
-In formal terms, the gardener is searching for an unknown \textit{target function} $f:X \rightarrow Y$ from the input space $X$ to the output space $Y$ that represents an ideal way of identifying iris species \cite{abu2012learning}. $X$ denotes the possible inputs, in this case all combinations of the four features that have been defined, whereas $Y$ are the outputs, here the species of iris plant. The examples that the gardener recorded are samples $(x_1,y_1),(x_2,y_2),\dots,(x_n,y_n)$ from $f$ such that $f(x_i)=y_i$. Together, they form a data set $D$ which is one of all possible data sets $\mathbb{D}$ for the problem. They then choose a specific approximation $g:X \rightarrow Y,g\approx f$, the decision tree they built, from the hypothesis space $H$, which in this case consists of possible decision trees. The learning algorithm itself thus maps a data set to a hypothesis from the hypothesis space and can be defined as $A:\mathbb{D}\rightarrow H$.
+%\tikzsetnextfilename{DecisionTree}
+\begin{figure}
+\includegraphics[width=\textwidth]{gfx/placeholder_decisionTree}
+\caption{PLACEHOLDER: The decision tree constructed as a simple model in the gardening example to classify iris species}
+\label{fig:decision_tree}
+\end{figure}
 
-%TODO include picture of the decision tree that is built & of the general ML-Model (from book)
+In formal terms, the gardener is searching for an unknown \textit{target function} $f:X \rightarrow Y$ from the input space $X$ to the output space $Y$ \cite{abu2012learning} that represents an ideal way of identifying iris species. $X$ denotes the possible inputs, in this case all combinations of the four features that have been defined, whereas $Y$ are the outputs, here the species of iris plant. The examples that the gardener recorded are samples $(x_1,y_1),(x_2,y_2),\dots,(x_n,y_n)$ from $f$ such that $f(x_i)=y_i$. Together, they form a data set $D$ which is one of all possible data sets $\mathbb{D}$ for the problem. They then choose a specific approximation $g:X \rightarrow Y,g\approx f$, the decision tree they built, from the hypothesis space $H$, which in this case consists of possible decision trees. The learning algorithm itself thus maps a data set to a hypothesis from the hypothesis space and can be defined as $A:\mathbb{D}\rightarrow H$.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{gfx/placeholder_learning}
+\caption{PLACEHOLDER: The learning problem, adapted from \cite{abu2012learning}}
+\label{fig:learning_problem}
+\end{figure}
 
 \subsection{Supervised Learning}
 The problem described above has some additional properties besides being a machine learning problem in general. Firstly, it falls in the category of supervised machine learning. Supervised learning is one of the three main learning paradigms of machine learning, together with reinforcement learning and unsupervised learning \cite{abu2012learning}. In the context of this thesis, the latter will be neglected as only supervised learning is used. It is characterized by the fact that the learning algorithm is provided with a set of inputs \textit{together} with the outputs, which could be viewed as a kind of teacher, or supervisor, explaining expected results to the learner. In the other cases, no such detailed feedback is provided to the learner. 
@@ -98,6 +109,8 @@ selection of efficient models summarizing the data' \cite{razdil2008metalearning
 After having discussed the preliminaries that the theoretical approach of this thesis is built upon, how a data set can be split into training and test data to estimate the performance of learning algorithms and the measures that will be used in the evaluation of the different ranking methods are briefly reviewed. These include means of comparing the predicted rankings with actual rankings as well as a statistic that reveals if an advantage regarding one measure can be viewed as significant.
 
 \subsection{Estimation Procedures}
+
+general measure predictive accuracy (e.g. go back to example gardener model is not perfect so miss classifies some instancs if want to know how good exactly, how find out?
 
 - estimation using cross validation (monte carloMCCV)
 
