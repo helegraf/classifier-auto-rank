@@ -47,31 +47,51 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 
 				// Find first (which algorithm is the first one in the ranking)
 				for (int k = 0; k < ranking.size(); k++) {
+
 					// First cannot be one that is already better
-					if (!bestRanking.contains(ranking.get(k))) {
-						// Increment score
-						for (Classifier cl : scores.keySet()) {
-							if (ranking.get(k).getClass().getName().equals(cl.getClass().getName())) {
-								int previousScore = scores.get(cl);
-								int newScore = previousScore + 1;
-								scores.put(ranking.get(k), newScore);
-								break;
-							}
+					boolean alreadyRanked = false;
+					for (Classifier bestClassifier : bestRanking) {
+						if (bestClassifier.getClass().getName().equals(ranking.get(k).getClass().getName())) {
+							alreadyRanked = true;
+							break;
 						}
-						// After found the first one, can stop
-						break;
 					}
+
+					if (alreadyRanked) {
+						continue;
+					}
+
+					// Increment score
+					for (Classifier cl : scores.keySet()) {
+						if (ranking.get(k).getClass().getName().equals(cl.getClass().getName())) {
+							int previousScore = scores.get(cl);
+							int newScore = previousScore + 1;
+							scores.put(cl, newScore);
+							break;
+						}
+					}
+					
+					// After found the first one, can stop
+					break;
 				}
 			}
 
 			// Find algorithm that is ranked first most often
 			Classifier bestClassifier = null;
 			int highScore = -1;
-			for (Classifier classifier : scores.keySet()) {
-				int score = scores.get(classifier);
-				if (score > highScore) {
-					bestClassifier = classifier;
-					highScore = score;
+
+			// Iterate over classifiers in order!
+			for (int attributeIndex : targetAttributes) {
+				for (Classifier classifier : scores.keySet()) {
+					if (classifier.getClass().getName()
+							.equals(classifiersMap.get(attributeIndex).getClass().getName())) {
+						int score = scores.get(classifier);
+						if (score > highScore) {
+							bestClassifier = classifier;
+							highScore = score;
+						}
+						break;
+					}
 				}
 			}
 
@@ -87,7 +107,7 @@ public class BestAlgorithmRanker extends PreferenceRanker {
 	public List<Classifier> predictRankingforInstance(Instance instance) {
 		return bestRanking;
 	}
-	
+
 	public List<Integer> getClassifierStats() {
 		return classifierStats;
 	}
