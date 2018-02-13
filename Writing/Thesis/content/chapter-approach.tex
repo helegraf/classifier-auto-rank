@@ -18,48 +18,50 @@ Since the aim is to generate a ranking of classification algorithms, first, perf
 	\begin{tabularx}{\textwidth}{X | X | X | X | X | X | X | X}
 		%\hline
 		MF 1			& MF 2		& ... 	& MF n		& PV 1 		& PV 2 		&	...	&	PV k 		\\ \hline
-		$v_{11}$		& $v_{12}$	& ...	& $v_{1n}$	& $p_{11}$	& $p_{12}$	& 	...	&	$p_{1k}$		\\ \hline
-		$v_{21}$		& $v_{22}$	& ...	& $v_{2n}$	& $p_{21}$	& $p_{22}$	& 	...	&	$p_{2k}$		\\ \hline
-		...			& ...		& ...	& ...		& ...		& ...		&	...	&	...			\\ \hline
+		$v_{11}$		& $v_{12}$	& ...	& $v_{1n}$	& $p_{11}$	& $p_{12}$	& 	...	&	$p_{1k}$		\\ 
+		$v_{21}$		& $v_{22}$	& ...	& $v_{2n}$	& $p_{21}$	& $p_{22}$	& 	...	&	$p_{2k}$		\\ 
+		...			& ...		& ...	& ...		& ...		& ...		&	...	&	...			\\ 
 		$v_{m1}$		& $v_{m2}$	& ... 	& $v_{mn}$	& $p_{2m}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
 	\end{tabularx}
-	\label{tab:table1}
+	\label{tab:performanceValues}
 	\caption{This is a caption text.}
 \end{table}
 
+\subsection{Regression Based Ranking}
 % How is the regression ranking done
 One possibility to derive a ranking of classifiers from this information when given a new data set is to use regression models. The idea is to use separate regression models to predict a performance value for each classifier, and to then derive an ordering from these predictions. This is done by splitting the data set compiled beforehand into separate data sets that each contain all meta features for all data sets, but only the performance values of one classifier. The target feature on these individual data sets, the performance value of the classifier, is a numeric value, and thus a regression model can be trained on each of them. All regression models therefore try to learn the target function $meta features \rightarrow classifier performance value$ for their respective classifier. Hence for a query instance, after computing the meta features, these are fed into each regression model and the predicted performance value for each classifier is saved. In a second step, the classifiers are ordered according to the predictions.
 
 \begin{table}[h]
 \centering
-	\begin{tabularx}{\textwidth}{X | X | X | X}
+\resizebox{\textwidth}{!}{%
+	\begin{tabularx}{1.1\textwidth}{X | X | X | X}
 		%\hline
 		Meta Feature 1	& ... 	& Meta Feature n		& Performance Value 1	\\ \hline
-		$v_{11}$			& ...	& $v_{1n}$			& $p_{11}$				\\ \hline
-		$v_{21}$			& ...	& $v_{2n}$			& $p_{21}$				\\ \hline
-		...				& ...	& ...				& ...					\\ \hline
+		$v_{11}$			& ...	& $v_{1n}$			& $p_{11}$				\\ 
+		$v_{21}$			& ...	& $v_{2n}$			& $p_{21}$				\\ 
+		...				& ...	& ...				& ...					\\ 
 		$v_{m1}$			& ... 	& $v_{mn}$			& $p_{m1}$				\\ \hline\hline
 		Meta Feature 1	& ... 	& Meta Feature n		& Performance Value 2 	\\ \hline
-		$v_{11}$			& ...	& $v_{1n}$			& $p_{12}$				\\ \hline
-		$v_{21}$			& ...	& $v_{2n}$			& $p_{22}$				\\ \hline
-		...				& ...	& ...				& ...					\\ \hline
+		$v_{11}$			& ...	& $v_{1n}$			& $p_{12}$				\\ 
+		$v_{21}$			& ...	& $v_{2n}$			& $p_{22}$				\\ 
+		...				& ...	& ...				& ...					\\ 
 		$v_{m1}$			& ... 	& $v_{mn}$			& $p_{m2}$					 
 	\end{tabularx}
-	
+}	
 \vspace{1em}
 ...
 \vspace{1em}	
-	
-	\begin{tabularx}{\textwidth}{X | X | X | X}
+\resizebox{\textwidth}{!}{%
+	\begin{tabularx}{1.1\textwidth}{X | X | X | X}
 		%\hline
 		Meta Feature 1	& ... 	& Meta Feature n		& Performance Value k 	\\ \hline
-		$v_{11}$			& ...	& $v_{1n}$			& $p_{1k}$				\\ \hline
-		$v_{21}$			& ...	& $v_{2n}$			& $p_{2k}$				\\ \hline
-		...				& ...	& ...				& ...					\\ \hline
+		$v_{11}$			& ...	& $v_{1n}$			& $p_{1k}$				\\ 
+		$v_{21}$			& ...	& $v_{2n}$			& $p_{2k}$				\\ 
+		...				& ...	& ...				& ...					\\ 
 		$v_{m1}$			& ... 	& $v_{mn}$			& $p_{mk}$					 
 	\end{tabularx}
-	
-	\label{tab:table1}
+}
+	\label{tab:regressionTables}
 	\caption{This is a caption text.}
 \end{table}
 
@@ -70,6 +72,7 @@ One possibility to derive a ranking of classifiers from this information when gi
 \label{fig:regression_ranker_model}
 \end{figure}
 
+\subsection{Preference Based Ranking}
 % How is the preference ranking done
 The second possibility considered in this context is using preference learning to predict a ranking. Each instance of the data set generated beforehand contains meta feature information for the considered data set and performance values of all classifiers. Similarly to the regression alternative, the performance values can be converted to preference information by sorting the corresponding classifiers by their performance values. This leads to an ordering of classifiers associated with each instance, and implies that the preference learning task at hand is label ranking. In this case, there exists only one label ranking mode which is fed the computed meta data for a new data set and returns an ordering of classifiers. Thereby it attempts to learn the mapping from meta features to an ordering of classifiers directly.
 
@@ -78,12 +81,12 @@ The second possibility considered in this context is using preference learning t
 	\begin{tabularx}{\textwidth}{X | X | X | X | X | X | X | X}
 		%\hline
 		MF 1				& MF 2				& ... 	& MF n				& PV 1 		& PV 2 		&	...	&	PV k 		\\ \hline
-		$v_{11}$			& $v_{12}$			& ...	& $v_{1n}$			& $p_{11}$	& $p_{12}$	& 	...	&	$p_{1k}$		\\ \hline
-		$v_{21}$			& $v_{22}$			& ...	& $v_{2n}$			& $p_{21}$	& $p_{22}$	& 	...	&	$p_{2k}$		\\ \hline
-		...				& ...				& ...	& ...				& ...		& ...		&	...	&	...			\\ \hline
+		$v_{11}$			& $v_{12}$			& ...	& $v_{1n}$			& $p_{11}$	& $p_{12}$	& 	...	&	$p_{1k}$		\\ 
+		$v_{21}$			& $v_{22}$			& ...	& $v_{2n}$			& $p_{21}$	& $p_{22}$	& 	...	&	$p_{2k}$		\\
+		...				& ...				& ...	& ...				& ...		& ...		&	...	&	...			\\
 		$v_{m1}$			& $v_{m2}$			& ... 	& $v_{mn}$			& $p_{2m}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
 	\end{tabularx}
-	\label{tab:table1}
+	\label{tab:preferenceTable}
 	\caption{This is a ranking}
 \end{table}
 
@@ -95,34 +98,13 @@ The second possibility considered in this context is using preference learning t
 \end{figure}
 
 \section{Implementation}
+% regression based model - weka used
 
-\subsection{Classifiers}
+% preference learning
+The jPL framework is a java framework for the evaluation of preference learning algorithms. It implements several tasks from the context of preference learning, including label ranking. 
 
-\subsection{Regression and Preference Learning}
+% meta features - openML webapp
+\cite{OpenML2013}
+% Which meta features
+As for the meta features, all meta features discussed in chapter \ref{sec:approach} where used. Initially, it was intended to download the computed meta features from OpenML, but since missing values for meta features ranged from roughly 25\% up to 89\% (except for a few simple meta features which were included for all data sets) it was decided to compute them anew. Meta features where calculated with the help of an implementation provided by OpenML \cite{openMLEvaluationEngine}. Two data sets, one including the downloaded meta features (for all 812 data sets) and one including the computed meta features (for the reduced set of 448 data sets) are thus included in the supplementary material. Since the meta data also includes probing, which is generally an expensive operation and furthermore does not aid in proving the point of a connection of properties of a data set and the performance of classifiers, additionally to the full meta features all evaluation measures where computed without using those meta features that use probing.
 
-\subsection{Meta Features}
-META FEATURES USED! \cite{OpenML2013}
-
-\subsection{Other Used Implementations}
-for mann-whitney U apache commons implementation used with ties averaged and NaNs removed before analysis
-apache commons implementation for Kendall Rank correlation as well
-JAICore implementation for stratified split of data set
-
-\subsection{Frameworks used}
-% Weka for classifiers
-
-% Data sets from OpenML
-
-\subsection{jPL framework}
-The jPL framework is a java framework for the evaluation of preference learning algorithms. It implements several tasks from the context of preference learning, including label ranking. Furthermore, the framework introduces the Generic Preference Representation Format (GPRF) to store preference information.
-
-\subsection{WEKA}
-
-% openml Webapp for metaFeature implementation except default accuracy
-
-\section{Generating Performance Values}
-Performance values generated by 
-
-\section{Stuff}
-
-Rankers trained with data set of the following form, so each ranking algorithm can derive its on performance

@@ -31,25 +31,26 @@ Before a classifier is evaluated on a data set, often a number of pre-processing
 % ML-Plan
 ML-Plan is an AutoML tool that instead of concentrating on hyperparameter optimization, aims to optimize the whole machine-learning pipeline \cite{wever2017automatic}. This is achieved by viewing machine-learning as a task, building a hierarchical task network out of those tasks, and then searching for a solution in the induced tree structure. In the tree, the root node contains the complex task of building a machine learning pipeline, inner nodes represent incomplete pipelines consisting of complex and possibly also primitive tasks, and leaf nodes are complete pipelines that include only primitive tasks. An example of this might be 'classify' as the root node, with an intermediate node on some level that contains the tasks 'build NN', 'train NN' and 'predict from NN'. The complex task 'build NN' would then further be decomposed, and could lead to a leaf node with n tasks 'Add layer', 'build NN' and 'predict from NN', which are all primitive tasks that do not need to be further decomposed. A best-first search algorithm in a modified variant is then used to find good solutions in this task network. For the actual implementation of the learning algorithms, WEKA is used. While this variant does not use meta-learning in the process of optimizing the pipeline, the authors find that their results exceed those achieved by Auto-WEKA.\\
 
-\tikzsetnextfilename{MLPlanTasks}
+%\tikzsetnextfilename{MLPlanTasks}
 \begin{figure}
 \centering
-\tikzset{edge from parent/.style={draw,->}}
-\begin{tikzpicture}[sibling distance=10em,
-  every node/.style = {shape=rectangle, rounded corners,
-    draw, align=center}]]
-  \node {\textcolor{uniblue}{classify}}
-    child { node {...} }
-    child { node {\textcolor{uniblue}{classifyWithNN}}
-    child { node {...} }
-      child { node {\textcolor{uniblue}{buildNN} \\ \textcolor{uniaccentblue}{trainNN} \\ \textcolor{uniaccentblue}{predictFromNN}}
-        child { node {...} }
-        child { node {...} 
-          child { node {...}  }
-          child { node {\textcolor{uniaccentblue}{addLayer} \\ ... \\ \textcolor{uniaccentblue}{addLayer} \\ \textcolor{uniaccentblue}{trainNN} \\ \textcolor{uniaccentblue}{predictFromNN} } } } }
-    };
-\end{tikzpicture}
-\caption{An example for how the complex task 'classify' might be broken down by ML-Plan. The figure is loosely adapted from \cite{wever2017automatic}. Nodes containing '...' represent an undefined number of subtrees. \textcolor{uniblue}{Complex tasks} and \textcolor{uniaccentblue}{primitive tasks} are distinguished by their color.}
+%\tikzset{edge from parent/.style={draw,->}}
+%\begin{tikzpicture}[sibling distance=10em,
+%  every node/.style = {shape=rectangle, rounded corners,
+%    draw, align=center}]]
+%  \node {\textcolor{uniblue}{classify}}
+%    child { node {...} }
+%    child { node {\textcolor{uniblue}{classifyWithNN}}
+%    child { node {...} }
+%      child { node {\textcolor{uniblue}{buildNN} \\ \textcolor{uniaccentblue}{trainNN} \\ \textcolor{uniaccentblue}{predictFromNN}}
+%        child { node {...} }
+%        child { node {...} 
+%          child { node {...}  }
+%          child { node {\textcolor{uniaccentblue}{addLayer} \\ ... \\ \textcolor{uniaccentblue}{addLayer} \\ \textcolor{uniaccentblue}{trainNN} \\ \textcolor{uniaccentblue}{predictFromNN} } %} } }
+%    };
+%\end{tikzpicture}
+\includegraphics[width=.8\textwidth]{gfx/MLPlan.pdf}
+\caption{An example for how the complex task 'classify' might be broken down by ML-Plan, adapted from \cite{wever2017automatic}. Nodes containing '...' represent an undefined number of subtrees.}
 \label{fig:mltree}
 \end{figure}
 

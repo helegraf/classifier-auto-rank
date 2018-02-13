@@ -1,4 +1,6 @@
+
 \begin{table}[h]
+	\resizebox{\textwidth}{!}{%
 	\begin{tabularx}{1.1\textwidth}{>{\hsize=2.6\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X| >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X | >{\hsize=.8\hsize}X}
 		Ranker 				& \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Ranker Build Time (ms)} & \multicolumn{4}{>{\hsize=4.0\hsize\centering\arraybackslash}X}{Ranker Prediction Time (ms)} \\ \cline{2-9}
 										& Min		& Max		& Mean		& Stdv 	& Min	& Max		& Mean		& Stdv 	\\ \hline
@@ -11,7 +13,7 @@
 		InstanceBased\footnotemark{}		& 66 		& 163		& 87	 		& 12 	& 0 		& 16		 	& 1		 	& 2	\\	
 		PairwiseComparison 				& 8456 		& 15063 		& 9096	 	& 449 	& 0 		& 16 		& 0	 		& 2	\\	
 		BestAlgorithm	 				& 204	 	& 1250		& 227	 	& 52	 	& 0		& 0			&  0 		& 0\\	
-		\hline \hline
+		\hline \hline \addtocounter{footnote}{-2}
 		LinearRegression 				& 421 		& 500 		& 446	 	& 10 	& 0 		& 0      	& 0	 	    & 0 	\\
 		M5P				 				& 2219 		& 4225 		& 2282	 	& 148 	& 0 		& 16		 	& 0	 		& 1	\\	
 		RandomForest		 				& 6175 		& 10535 		& 5419	 	& 479 	& 0		& 16 		& 3	 		& 6	\\	
@@ -22,10 +24,10 @@
 		PairwiseComparison 				& 6705 		& 7893		& 7253	 	& 169 	& 0 		& 16 		& 0		 	& 2	\\	
 		BestAlgorithm	 				& 206	 	& 405		& 232	 	& 23	 	& 0		& 0			&  0 		& 0\\				
 	\end{tabularx}
-	\label{tab:times}
+	}
 	\caption{Build and Prediction Times of the Rankers Rounded to Full Milliseconds with Full Meta Features (Top) and Without Probing (Bottom)}
+	\label{tab:times}
 \end{table}
-
 
 \addtocounter{footnote}{-2}
 \stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young}

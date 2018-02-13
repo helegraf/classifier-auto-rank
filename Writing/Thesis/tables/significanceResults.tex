@@ -1,4 +1,5 @@
 \begin{table}[h]
+\resizebox{\textwidth}{!}{%
 \hspace{-1cm}
 	\begin{tabularx}{1.15\textwidth}{>{\hsize=1.4\hsize}X | >{\hsize=.84\hsize}X | >{\hsize=1.07\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X}
 		Ranker 					& \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Loss} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{BestThreeLoss}\\ \cline{2-7} 
@@ -21,9 +22,11 @@
 		InstanceBased\footnotemark{} & 109909.0 & 0.014		& 108406.5 & 0.038	& 110058.5 & 0.012 \\
 		PairwiseCom- parison		& 163420.0 & 1.310E-59	& 138082.0 & 2.016E-22	& 124838.0 & 2.587E-10 \\
 	\end{tabularx}
-	\label{tab:significanceResults}
+	}
 	\caption{Significance of Results with Full Meta Features (Top) and Without Probing (Bottom)}
+	\label{tab:significanceResults}
 \end{table}
+
 
 \addtocounter{footnote}{-2}
 \stepcounter{footnote}\footnotetext{Rankaggregation: Kemeny-Young}
