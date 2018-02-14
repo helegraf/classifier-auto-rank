@@ -5,20 +5,12 @@
 \label{sec:abstract}
 \vspace*{-10mm}
 
-Should abstract be included?
-
-% Motivation
-
-% Problem Statement
-
-% Approach
-
-% Results
-
-% Conclusion
+Although the amount of data available worldwide is increasing, the portion of analyzed data remains low. This problem is caused by a lack of experts in the field that are able to carry out an analysis, and the difficulty of the analysis for non-experts. Especially for the task of classification, there are many algorithms with variing performance values from data set to data set - there does not exist one best algorithm, which one can always recommend. One response to this problem is automated machine learning. Therefore, in this thesis, to approaches to construct a ranking of classification algorithms for a new data set, based on properties of that data set,are presented and compared. The first of the two alternatives works on the basis of regression models; one regression model predicts a performance value for each classifier, from which then a ranking is constructed. In contrast, the second, preference based model directly learns and returns rankings. In the evaluation it became clear that the regression based alternative is superior to the preference based approach; the best evaluated regression model, based on the random forest algorithm, achieved values of up to 0.495 for Kendall's rank correlation coefficient and a peformance loss of 1.308 percent on average. However, the tested preference models are superior at least to the baseline in some scenarios. Therefore the conlucion can be drawn that at least certain properties of data sets are connected to performance values of classification algorithms, which can be exploited by regression and preference models, although the regression approach is superior to the preference alternative within the scope of the conducted evaluation.
 
 \vspace*{20mm}
+\newpage
 
 {\usekomafont{chapter}Abstract (German)}\label{sec:abstract-german} \\
 
-Und falls ja, dann zweisprachig?
+% Motivation
+Die weltweit verfügbare Menge an Daten steigt immer weiter an, und doch bleibt der Anteil der tatsächlich analysierten Daten gering. Dieses Problem entsteht, da nicht genug Experten verfügbar sind, um diese Analyse auszuführen, und es für Laien schwierig ist, das richtige Verfahren auszuwählen. Besonders im Bereich der Klassifikation gibt es viele Algorithmen, deren Performanz jedoch von Datensatz zu Datensatz variieren kann - es gibt also keinen einen besten Algorithmus, der immer eine gute Wahl darstellt. Eine Antwort auf diese Problem ist automatisiertes Machine Learning. Daher werden in dieser Arbeit zwei verschiedene Ansätze, welche für einen neuen Datensatz ein Ranking von Klassifizierungsalgorithmen aufgrund von Eigenschaften des Datensatzes vorhersagt, vorgestellt und miteinander verglichen. Der erste der beiden Ansätze arbeitet auf Grundlage von Regressionsmodellen; ein Ranking wird hier konstruiert indem ein einzelnes Regressionsmodell für jeden Klassifizierungsalgorithmus einen Performanzwert vorhersagt, auf deren basierend dann das Ranking erstellt wird. Der zweite Ansatz beschäftigt sich mit Präferenzmodellen, welche direkt Rankings lernen und zurückgeben. In der Evaluation stellte sich heraus, dass der Regressionsansatz dem Präferenzmodell überlegen ist; das beste der getesteten Regressionsmodelle, basierend auf dem Random Forest Algorithmus, erreicht einen Wert von Kendalls Tau von bis zu 0,495 und Performanzverlustwerte von durchschnittlich nur 1,308 Prozentpunkten. Jedoch sind auch manche der getesten Präferenzmodelle in einigen Punkten wenigstens der zum Vergleich benutzten Baseline überlegen. Daher kann die Schlussfolgerung gezogen werden, dass wenigstens einige der benutzen Eigenschaften der Datensätze mit den Performanzwerten der Klassifizierungsalgorithmen zusammenhängen, und dieser Zusammenhang durch Regressionsmodelle sowohl als auch Präferenzmodelle ausgenutzt werden kann, wobei jedoch der Regressionsansatz letzterem im Rahmen der durchgeführten Evaluation überlegen ist.
