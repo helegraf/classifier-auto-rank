@@ -3,8 +3,24 @@
 \chapter{Appendix}
 \label{sec:appendix}
 
-\begin{figure}
-\includegraphics[width=\textwidth]{gfx/placeholder_allMetaFeatures}
-\caption{PLACEHOLDER: The meta features computed by each meta feature group. The full list of meta features encompasses all features enumerated in the right column.}
-\label{fig:metaFeaturesDetails}
-\end{figure}
+\begin{table}[h]
+\centering
+	\begin{tabularx}{\textwidth}{X}
+	\multicolumn{1}{>{\centering\arraybackslash}X}{Meta Feature Group} \\
+	\hline \hline
+	\multicolumn{1}{>{\centering\arraybackslash}X}{NominalAttDistinctValues} \\ \hline
+	MaxNominalAttDistinctValues, MinNominalAttDistinctValues, MeanNominalAttDistinctValues, StdvNominalAttDistinctValues \\ \hline
+	\multicolumn{1}{>{\centering\arraybackslash}X}{SimpleMetaFeatures} \\ \hline
+	NumberOfInstances, NumberOfFeatures, NumberOfClasses, Dimensionality, NumberOfInstancesWithMissingValues, NumberOfMissingValues, PercentageOfInstancesWithMissingValues, PercentageOfMissingValues, NumberOfNumericFeatures, NumberOfSymbolicFeatures, NumberOfBinaryFeatures, PercentageOfNumericFeatures, PercentageOfSymbolicFeatures, PercentageOfBinaryFeatures, MajorityClassSize, MinorityClassSize, MajorityClassPercentage, MinorityClassPercentage, AutoCorrelation \\ \hline
+	\multicolumn{1}{>{\centering\arraybackslash}X}{Cardinality} \\ \hline
+	MeanCardinalityOfNumericAttributes, StdevCardinalityOfNumericAttributes, MinCardinalityOfNumericAttributes, MaxCardinalityOfNumericAttributes, MeanCardinalityOfNominalAttributes, StdevCardinalityOfNominalAttributes, MinCardinalityOfNominalAttributes, MaxCardinalityOfNominalAttributes, CardinalityAtTwo, CardinalityAtThree, CardinalityAtFour \\ \hline
+	\multicolumn{1}{>{\centering\arraybackslash}X}{Statistical} \\ \hline
+	MeanMeansOfNumericAtts, MeanStdDevOfNumericAtts, MeanKurtosisOfNumericAtts, MeanSkewnessOfNumericAtts, MinMeansOfNumericAtts, MinStdDevOfNumericAtts, MinKurtosisOfNumericAtts, MinSkewnessOfNumericAtts, MaxMeansOfNumericAtts, MaxStdDevOfNumericAtts, MaxKurtosisOfNumericAtts, MaxSkewnessOfNumericAtts, Quartile1MeansOfNumericAtts, Quartile1StdDevOfNumericAtts, Quartile1KurtosisOfNumericAtts, Quartile1SkewnessOfNumericAtts, Quartile2MeansOfNumericAtts, Quartile2StdDevOfNumericAtts, Quartile2KurtosisOfNumericAtts, Quartile2SkewnessOfNumericAtts, Quartile3MeansOfNumericAtts, Quartile3StdDevOfNumericAtts, Quartile3KurtosisOfNumericAtts, Quartile3SkewnessOfNumericAtts \\ \hline
+	\multicolumn{1}{>{\centering\arraybackslash}X}{Landmarkers\footnotemark{}} \\ \hline
+	DecisionStump, RandomTreeDepth1, RandomTreeDepth2, RandomTreeDepth3, REPTreeDepth1, REPTreeDepth2, REPTreeDepth3, J48.001., J48.0001., J48.00001., NaiveBayes, kNN1N, CfsSubsetEval kNN1N, CfsSubsetEval NaiveBayes, CfsSubsetEval DecisionStump \\ 
+	\end{tabularx}
+	\label{tab:metaFeatureDetails}
+	\caption{The meta features computed by each meta feature group. More details can be found on \href{www.openml.org}{www.openml.org}.}
+\end{table}
+
+\footnotetext{Each landmarker represents its own group of meta features consisting of AUC, ErrRate and Kappa. All are computed with 2-fold crossvalidation.}

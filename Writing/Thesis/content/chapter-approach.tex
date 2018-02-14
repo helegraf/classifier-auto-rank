@@ -24,7 +24,7 @@ Since the aim is to generate a ranking of classification algorithms, first, perf
 		$v_{m1}$		& $v_{m2}$	& ... 	& $v_{mn}$	& $p_{2m}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
 	\end{tabularx}
 	\label{tab:performanceValues}
-	\caption{This is a caption text.}
+	\caption{Training data for the rankers.}
 \end{table}
 
 \subsection{Regression Based Ranking}
@@ -62,13 +62,13 @@ One possibility to derive a ranking of classifiers from this information when gi
 	\end{tabularx}
 }
 	\label{tab:regressionTables}
-	\caption{This is a caption text.}
+	\caption{How the regression ranker processes the training data.}
 \end{table}
 
 \begin{figure}
 \centering
 \includegraphics[scale=1]{gfx/regression_models.pdf}
-\caption{A model of the regression based ranker}
+\caption{An overview of how a regression based ranker constructs a ranking.}
 \label{fig:regression_ranker_model}
 \end{figure}
 
@@ -87,13 +87,13 @@ The second possibility considered in this context is using preference learning t
 		$v_{m1}$			& $v_{m2}$			& ... 	& $v_{mn}$			& $p_{2m}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
 	\end{tabularx}
 	\label{tab:preferenceTable}
-	\caption{This is a ranking}
+	\caption{How the preference ranker processes the training data.}
 \end{table}
 
 \begin{figure}
 \centering
 \includegraphics[scale=1]{gfx/label_ranking_model.pdf}
-\caption{A model of the preference based ranker}
+\caption{An overview of how a preference based ranker constructs a ranking.}
 \label{fig:preference_ranker_model}
 \end{figure}
 
