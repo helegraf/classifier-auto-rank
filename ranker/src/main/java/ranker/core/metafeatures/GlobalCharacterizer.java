@@ -116,6 +116,23 @@ public class GlobalCharacterizer extends Characterizer {
 		}
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		
+		for (Characterizer characterizer : batchCharacterizers) {
+			builder.append(characterizer.toString());
+			builder.append(System.lineSeparator());
+			String[] ids = characterizer.getIDs();
+			for (String id : ids) {
+				builder.append(id + ",");
+			}
+			builder.append(System.lineSeparator());
+		}
+		
+		return builder.toString();
+	}
 
 }
 
