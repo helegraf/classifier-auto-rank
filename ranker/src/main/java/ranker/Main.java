@@ -159,27 +159,27 @@ public class Main {
 		// stats.get(i));
 		// }
 		//
-		// reader =
-		// Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noProbing.arff"),
-		// Util.charset);
-		//
-		// instances = new Instances(reader);
-		//
-		// targetAttributes = new ArrayList<Integer>();
-		// for (int i = 59; i < 81; i++) {
-		// targetAttributes.add(i);
-		// }
-		//
-		// ranker = new BestAlgorithmRanker();
+		 BufferedReader reader =
+		 Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noProbing.arff"),
+		 Util.charset);
+		
+		 Instances instances = new Instances(reader);
+		
+		 List<Integer> targetAttributes = new ArrayList<Integer>();
+		 for (int i = 59; i < 81; i++) {
+		 targetAttributes.add(i);
+		 }
+		
+		 BestAlgorithmRanker ranker = new BestAlgorithmRanker();
 
-		// ranker.buildRanker(instances, targetAttributes);
-		// ranking = ranker.predictRankingforInstance(instances.get(0));
-		// stats = ranker.getClassifierStats();
-		// System.out.println("---------------------------------------------------------------------");
-		// for (int i = 0; i < ranking.size(); i++) {
-		// System.out.println(ranking.get(i).getClass().getSimpleName() + " " +
-		// stats.get(i));
-		// }
+		 ranker.buildRanker(instances, targetAttributes);
+		 List<Classifier> ranking = ranker.predictRankingforInstance(instances.get(0));
+		 List<Integer> stats = ranker.getClassifierStats();
+		 System.out.println("---------------------------------------------------------------------");
+		 for (int i = 0; i < ranking.size(); i++) {
+		 System.out.println(ranking.get(i).getClass().getSimpleName() + " " +
+		 stats.get(i));
+		 }
 
 		// System.out.println(EvaluationHelper.evaluateRanker(ranker, instances,
 		// targetAttributes));
@@ -248,9 +248,13 @@ public class Main {
 		// System.out.print("& " + EvaluationHelper.computeWhitneyU(firstFile,
 		// secondFile, measure) +" ");
 		
-		//evaluateAllRankersOnAllDataSets();
+//		evaluateAllRankersOnAllDataSets();
 		
-		System.out.println(new GlobalCharacterizer());
+//		String dataset = "metaData_small_allPerformanceValues-weka.filters.unsupervised.attribute.Remove-R49-93.csv";
+//		String measure = Loss.class.getSimpleName();
+//		String firstAlgo = LinearRegressionRanker.class.getSimpleName();
+//		String secondAlgo = BestAlgorithmRanker.class.getSimpleName();
+//		printMeasureForAlgo(firstAlgo, secondAlgo, measure, dataset);
 
 	}
 
