@@ -7,7 +7,7 @@ In this chapter, the two alternatives considered in this thesis to tackle the pr
 
 \section{Theory}
 
-In general, the aim is to predict a ranking of algorithms based on properties, or meta features of a data set. This means, that as training data for a ranking approach (ranker), a number of performance values of classifiers need to be recorded on data sets in a first pre-processing phase, for which also meta features are to be computed. The table of this collected data is illustrated in Table \ref{tab:performanceValues}, for n meta features, k classifiers and n data sets. This approach to ranking is realized here, as pointed out before, in a regression based and preference based approach, which are explained in detail in the following sections.
+In general, the aim is to predict a ranking of algorithms based on properties, or meta features of a data set. This means, that as training data for a ranking approach (ranker), a number of performance values of classifiers need to be recorded on data sets in a first pre-processing phase, for which also meta features are to be computed. The table of this collected data is illustrated in Table \ref{tab:performanceValues}, for n meta features, k classifiers and m data sets. This approach to ranking is realized here, as pointed out before, in a regression based and preference based approach, which are explained in detail in the following sections.
 
 \begin{table}[h]
 \centering
@@ -17,7 +17,7 @@ In general, the aim is to predict a ranking of algorithms based on properties, o
 		$v_{11}$		& $v_{12}$	& ...	& $v_{1n}$	& $p_{11}$	& $p_{12}$	& 	...	&	$p_{1k}$		\\ 
 		$v_{21}$		& $v_{22}$	& ...	& $v_{2n}$	& $p_{21}$	& $p_{22}$	& 	...	&	$p_{2k}$		\\ 
 		...			& ...		& ...	& ...		& ...		& ...		&	...	&	...			\\ 
-		$v_{m1}$		& $v_{m2}$	& ... 	& $v_{mn}$	& $p_{2m}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
+		$v_{m1}$		& $v_{m2}$	& ... 	& $v_{mn}$	& $p_{2n}$	& $p_{m2}$	& 	...	&	$p_{mk}$			 
 	\end{tabularx}
 	\caption{Training data for the rankers.}
 	\label{tab:performanceValues}
@@ -25,7 +25,7 @@ In general, the aim is to predict a ranking of algorithms based on properties, o
 
 \subsection{Regression Based Ranking}
 % How is the regression ranking done
-One possibility to derive a ranking of classifiers from this information when given a new data set is to use regression models. The idea is to use separate regression models to predict a performance value for each classifier, and to subsequently derive an ordering from these predictions. This is done by splitting the data set compiled beforehand (see Tab. \ref{tab:performanceValues}) into separate data sets that each contain all meta features for all data sets, but only the performance values of one classifier, as illustrated in Table \ref{tab:regressionTables}. The target feature on these individual data sets, the performance value of the classifier, is a numeric value, and thus, a regression model can be trained on each of them. All regression models therefore try to learn the target function \textit{meta features}$\rightarrow$\textit{performance value} for their respective classifier. Hence, for a query instance, after computing the meta features, these are fed into each regression model and the predicted performance value for each classifier is saved. In a second step, the classifiers are ordered according to the predictions. This generation of a ranking is presented in Figure \ref{fig:regression_ranker_model}.
+One possibility to derive a ranking of classifiers from this information when given a new data set is to use regression models. The idea is to use separate regression models to predict a performance value for each classifier, and to subsequently derive an ordering from these predictions. This is done by splitting the data set compiled beforehand (see Tab. \ref{tab:performanceValues}) into separate data sets that each contain all meta features for all data sets, but only the performance values of one classifier, as illustrated in Table \ref{tab:regressionTables}. The target feature on these individual data sets, the performance value of the classifier, is a numeric value, and thus, a regression model can be trained on each of them. All regression models therefore try to learn the target function \textit{meta features}$\rightarrow$\textit{performance value} for their respective classifier. Hence, for a query instance, a new data set, after computing the meta features, these are fed into each regression model and the predicted performance value for each classifier is saved. In a second step, the classifiers are ordered according to the predictions. This generation of a ranking is presented in Figure \ref{fig:regression_ranker_model}.
 
 \begin{table}[h]
 \centering
@@ -57,8 +57,8 @@ One possibility to derive a ranking of classifiers from this information when gi
 		$v_{m1}$			& ... 	& $v_{mn}$			& $p_{mk}$					 
 	\end{tabularx}
 }
+	\caption{How the regression ranker processes the training data. Performance data for each classifier are in a separate table, which are then used to train separate regression models.}
 	\label{tab:regressionTables}
-	\caption{How the regression ranker processes the training data.}
 \end{table}
 
 \begin{figure}
@@ -70,7 +70,7 @@ One possibility to derive a ranking of classifiers from this information when gi
 
 \subsection{Preference Based Ranking}
 % How is the preference ranking done
-The second possibility considered in this context is using preference learning to predict a ranking. Each instance of the data set generated beforehand (see Fig \ref{tab:performanceValues}) contains meta feature information for the considered data set and performance values of all classifiers. Similar to the regression alternative, the performance values can be converted to preference information by sorting the corresponding classifiers by their performance values for each data set. This leads to an ordering of classifiers associated with each instance, and implies that the preference learning task at hand is label ranking. In this case, there exists only one label ranking model which is fed the computed meta data for a new data set and returns an ordering of classifiers, which is depicted in Figure \ref{fig:preference_ranker_model}. Thereby, it attempts to learn the mapping from meta features to an ordering of classifiers directly.
+The second possibility considered in this context is using preference learning to predict a ranking. Each instance of the data set generated beforehand (see Tab. \ref{tab:performanceValues}) contains meta feature information for the considered data set and performance values of all classifiers. Similar to the regression alternative, the performance values can be converted to preference information by sorting the corresponding classifiers by their performance values for each data set. This leads to an ordering of classifiers associated with each instance, and implies that the preference learning task at hand is label ranking. In this case, there exists only one label ranking model which is fed the computed meta data for a new data set and returns an ordering of classifiers, which is depicted in Figure \ref{fig:preference_ranker_model}. Thereby, it attempts to learn the mapping from meta features to an ordering of classifiers directly.
 
 \begin{table}[h]
 \centering
@@ -83,7 +83,7 @@ The second possibility considered in this context is using preference learning t
 		$v_{m1}$			& $v_{m2}$			& ... 	& $v_{mn}$			& $p_m$		 
 	\end{tabularx}
 	\label{tab:preferenceTable}
-	\caption{How the preference ranker processes the training data.}
+	\caption{How the preference ranker processes the training data. The ranker is trained with a table containing meta features and a ranking of classifiers for each data set.}
 \end{table}
 
 \begin{figure}
