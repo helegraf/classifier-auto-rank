@@ -1,26 +1,26 @@
 \begin{table}[h]
 \resizebox{\textwidth}{!}{%
 \hspace{-1cm}
-	\begin{tabularx}{1.15\textwidth}{>{\hsize=1.4\hsize}X | >{\hsize=.84\hsize}X | >{\hsize=1.07\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X | >{\hsize=.85\hsize}X | >{\hsize=0.98\hsize}X}
-		Ranker 					& \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{Loss} & \multicolumn{2}{>{\hsize=2.0\hsize\centering\arraybackslash}X}{BestThreeLoss}\\ \cline{2-7} 
-										& Mann-Whitney U & P-Value & Mann-Whitney U	& P-Value & Mann-Whitney U & P-Value \\ \hline
-		LinearRegression 			& 144397.5 & 5.798-30 	& 108781.0 & 0.030 	& 112695.5 	& 0.001 \\
-		M5P				 			& 144007.0 & 1.831E-29 	& 100897.5 & 0.888	& 110031.5 	& 0.012 \\
-		RandomForest		 		& 148620.0 & 1.208E-35 	& 110970.0 & 0.006 	& 113020.0 	& 0.001 \\
-		REPTree			 			& 129582.0 & 4.471E-14 	& 107225.0 & 0.076 	& 102345.0 	& 0.607 \\
-		InstanceBased				& 117813.5 & 6.540E-6 	& 110030.5 & 0.012 	& 112178.0 	& 0.002 \\
-		InstanceBased\footnotemark{}& 110063.0 & 0.012		& 106943.5 & 0.089 	& 107195.5 	& 0.077 \\
-		InstanceBased\footnotemark{}& 109909.0 & 0.014 		& 108406.5 & 0.038 	& 110058.5 	& 0.012 \\
-		PairwiseCom- parison		& 163081.0 & 5.457E-59 	& 138148.5 & 1.702E-22 & 123784.5 & 1.451E-9 \\ 
+	\begin{tabularx}{\textwidth}{>{\hsize=1.3\hsize}X | >{\hsize=0.9\hsize\raggedleft\arraybackslash}X | >{\hsize=0.9\hsize\raggedleft\arraybackslash}X | >{\hsize=0.9\hsize\raggedleft\arraybackslash}X}
+		Ranker 						& \multicolumn{3}{>{\hsize=3.0\hsize\centering\arraybackslash}X}{P-Value}\\ \cline{2-4} 
+									& \multicolumn{1}{>{\centering\arraybackslash}X}{Kendall's Rank Correlation} & \multicolumn{1}{>{\centering\arraybackslash}X}{Loss} & \multicolumn{1}{>{\centering\arraybackslash}X}{B3L} \\ \hline
+		LinearRegression 			& 5.798E-30 		& 0.030 		& 0.001 \\
+		M5P				 			& 1.831E-29 		& 0.888		& 0.012 \\
+		RandomForest		 			& 1.208E-35 		& 0.006 		& 0.001 \\
+		REPTree			 			& 4.471E-14 		& 0.076 		& 0.607 \\
+		InstanceBased				& 6.540E-6 		& 0.012 		& 0.002 \\
+		InstanceBased\footnotemark{}	& 0.012			& 0.089 		& 0.077 \\
+		InstanceBased\footnotemark{}	& 0.014 			& 0.038 		& 0.012 \\
+		PairwiseComparison			& 5.457E-59 		& 1.702E-22 	& 1.451E-9 \\ 
 		\hline \hline \addtocounter{footnote}{-2}
-		LinearRegression 			& 114370.5 & 2.955E-4	& 106405.5 & 0.118	& 102563.0 & 0.568 \\
-		M5P				 			& 110774.0 & 0.007		& 107366.5 & 0.070	& 100699.0 & 0.929 \\
-		RandomForest		 		& 134467.0 & 1.278E-18	& 106410.0 & 0.118	& 107453.0 & 0.067 \\
-		REPTree			 			& 101292.0 & 0.808		& 120574.0 & 1.781E-7 & 111526.0 & 0.004 \\
-		InstanceBased				& 117813.5 & 6.540E-6 	& 110030.5 & 0.012	& 112178.0 & 0.002 \\
-		InstanceBased\footnotemark{} & 110063.0 & 0.012 	& 106943.5 & 0.089	& 107195.5 & 0.077 \\
-		InstanceBased\footnotemark{} & 109909.0 & 0.014		& 108406.5 & 0.038	& 110058.5 & 0.012 \\
-		PairwiseCom- parison		& 163420.0 & 1.310E-59	& 138082.0 & 2.016E-22	& 124838.0 & 2.587E-10 \\
+		LinearRegression 			& 2.955E-4		& 0.118		& 0.568 \\
+		M5P				 			& 0.007			& 0.070		& 0.929 \\
+		RandomForest		 			& 1.278E-18		& 0.118		& 0.067 \\
+		REPTree			 			& 0.808			& 1.781E-7 	& 0.004 \\
+		InstanceBased				& 6.540E-6 		& 0.012		& 0.002 \\
+		InstanceBased\footnotemark{} & 0.012 		& 0.089		& 0.077 \\
+		InstanceBased\footnotemark{} & 0.014			& 0.038		& 0.012 \\
+		PairwiseComparison			& 1.310E-59		& 2.016E-22	& 2.587E-10 \\
 	\end{tabularx}
 	}
 	\caption{Significance of evaluation results (compared to the baseline) with full meta data (top) and no probing (bottom).}
