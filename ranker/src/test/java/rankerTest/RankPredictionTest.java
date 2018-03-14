@@ -28,7 +28,7 @@ public class RankPredictionTest {
 
 	@BeforeClass
 	public static void loadMetaData() throws Exception {
-		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("meta_computed.arff"),
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
 				Util.charset);
 		testInstances = new Instances(reader);
 		targetAttributes = new ArrayList<Integer>();

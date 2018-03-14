@@ -29,6 +29,9 @@ dependencies {
 
 	// OpenmlWebapplication for computing meta-features
 	implementation files ('libs/OpenmlWebapplication.jar')
+	
+	// jPL
+	implementation files ('libs/jpl-api.jar')
 
 	// JAICore
 	implementation group: 'com.github.fmohr', name: 'JAICore', version: 'dcc8d337dc'
@@ -41,9 +44,6 @@ dependencies {
     
     // https://mvnrepository.com/artifact/org.openml/apiconnector
     implementation group: 'org.openml', name: 'apiconnector', version: '1.0.18'
-    
-    // jPL
-    implementation group: 'de.upb.cs.is', name: 'jpl-api', version: '0.0.9'
     
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
