@@ -1,0 +1,87 @@
+@relation metaData_all_noProbing
+
+@attribute 'OpenML Data Set ID' numeric
+@attribute NumberOfInstances numeric
+@attribute NumberOfFeatures numeric
+@attribute NumberOfClasses numeric
+@attribute Dimensionality numeric
+@attribute NumberOfInstancesWithMissingValues numeric
+@attribute NumberOfMissingValues numeric
+@attribute PercentageOfInstancesWithMissingValues numeric
+@attribute PercentageOfMissingValues numeric
+@attribute NumberOfNumericFeatures numeric
+@attribute NumberOfSymbolicFeatures numeric
+@attribute NumberOfBinaryFeatures numeric
+@attribute PercentageOfNumericFeatures numeric
+@attribute PercentageOfSymbolicFeatures numeric
+@attribute PercentageOfBinaryFeatures numeric
+@attribute MajorityClassSize numeric
+@attribute MinorityClassSize numeric
+@attribute MajorityClassPercentage numeric
+@attribute MinorityClassPercentage numeric
+@attribute AutoCorrelation numeric
+@attribute MeanMeansOfNumericAtts numeric
+@attribute MeanStdDevOfNumericAtts numeric
+@attribute MeanKurtosisOfNumericAtts numeric
+@attribute MeanSkewnessOfNumericAtts numeric
+@attribute MinMeansOfNumericAtts numeric
+@attribute MinStdDevOfNumericAtts numeric
+@attribute MinKurtosisOfNumericAtts numeric
+@attribute MinSkewnessOfNumericAtts numeric
+@attribute MaxMeansOfNumericAtts numeric
+@attribute MaxStdDevOfNumericAtts numeric
+@attribute MaxKurtosisOfNumericAtts numeric
+@attribute MaxSkewnessOfNumericAtts numeric
+@attribute Quartile1MeansOfNumericAtts numeric
+@attribute Quartile1StdDevOfNumericAtts numeric
+@attribute Quartile1KurtosisOfNumericAtts numeric
+@attribute Quartile1SkewnessOfNumericAtts numeric
+@attribute Quartile2MeansOfNumericAtts numeric
+@attribute Quartile2StdDevOfNumericAtts numeric
+@attribute Quartile2KurtosisOfNumericAtts numeric
+@attribute Quartile2SkewnessOfNumericAtts numeric
+@attribute Quartile3MeansOfNumericAtts numeric
+@attribute Quartile3StdDevOfNumericAtts numeric
+@attribute Quartile3KurtosisOfNumericAtts numeric
+@attribute Quartile3SkewnessOfNumericAtts numeric
+@attribute MaxNominalAttDistinctValues numeric
+@attribute MinNominalAttDistinctValues numeric
+@attribute MeanNominalAttDistinctValues numeric
+@attribute StdvNominalAttDistinctValues numeric
+@attribute MeanCardinalityOfNumericAttributes numeric
+@attribute StdevCardinalityOfNumericAttributes numeric
+@attribute MinCardinalityOfNumericAttributes numeric
+@attribute MaxCardinalityOfNumericAttributes numeric
+@attribute MeanCardinalityOfNominalAttributes numeric
+@attribute StdevCardinalityOfNominalAttributes numeric
+@attribute MinCardinalityOfNominalAttributes numeric
+@attribute MaxCardinalityOfNominalAttributes numeric
+@attribute CardinalityAtTwo numeric
+@attribute CardinalityAtThree numeric
+@attribute CardinalityAtFour numeric
+@attribute weka.classifiers.bayes.BayesNet numeric
+@attribute weka.classifiers.bayes.NaiveBayes numeric
+@attribute weka.classifiers.bayes.NaiveBayesMultinomial numeric
+@attribute weka.classifiers.functions.Logistic numeric
+@attribute weka.classifiers.functions.MultilayerPerceptron numeric
+@attribute weka.classifiers.functions.SGD numeric
+@attribute weka.classifiers.functions.SMO numeric
+@attribute weka.classifiers.functions.SimpleLogistic numeric
+@attribute weka.classifiers.functions.VotedPerceptron numeric
+@attribute weka.classifiers.lazy.IBk numeric
+@attribute weka.classifiers.lazy.KStar numeric
+@attribute weka.classifiers.rules.DecisionTable numeric
+@attribute weka.classifiers.rules.JRip numeric
+@attribute weka.classifiers.rules.OneR numeric
+@attribute weka.classifiers.rules.PART numeric
+@attribute weka.classifiers.rules.ZeroR numeric
+@attribute weka.classifiers.trees.DecisionStump numeric
+@attribute weka.classifiers.trees.J48 numeric
+@attribute weka.classifiers.trees.LMT numeric
+@attribute weka.classifiers.trees.RandomForest numeric
+@attribute weka.classifiers.trees.RandomTree numeric
+@attribute weka.classifiers.trees.REPTree numeric
+
+@data
+554,70000,785,10,0.011214,0,0,0,0,784,1,0,0.998726,0.001274,0,7877,6313,0.112529,0.090186,0.095644,33.385965,49.255704,4894.714443,31.079436,0,0,-1.825429,-0.235497,140.015057,113.886297,70000,264.575131,0.120582,4.670546,-1.029732,0.874412,7.19605,36.765819,16.226837,4.134907,69.334618,100.848508,623.082764,23.939583,10,10,10,0,179.33801,105.154423,1,256,10,0,10,10,65536,16777216,4294967296,83.8599,69.653562,82.709554,?,?,0,93.563021,92.230641,0,97.062664,?,52.298308,89.611627,24.721468,90.50274,11.255659,20.417441,88.234453,?,96.544198,79.952347,87.062187
+40927,60000,3073,10,0.051217,0,0,0,0,3072,1,0,0.999675,0.000325,0,6000,6000,0.1,0.1,0.098652,120.844497,63.290202,-0.758378,0.201905,99.977183,57.464304,-1.324786,-0.078859,140.558933,80.396639,-0.391699,0.552281,114.151321,60.02352,-0.8463,0.092196,121.7308,61.542248,-0.730963,0.166298,127.957837,65.190827,-0.645842,0.26225,10,10,10,0,256,0,256,256,10,0,10,10,65536,16777216,4294967296,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
