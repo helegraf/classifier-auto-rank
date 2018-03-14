@@ -1,4 +1,4 @@
-package ranker.core.algorithms;
+package ranker.core.algorithms.regression;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import ranker.core.algorithms.Ranker;
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -15,18 +16,17 @@ import weka.core.Instances;
 public abstract class RegressionRanker extends Ranker {
 
 	/**
-	 * Maps that contains a regression model for each classifier
-	 * (classifier -> regression model)
+	 * Maps learning algorithms to their regression models.
 	 */
 	protected Map<Classifier, Classifier> regressionModels;
 
 	/**
-	 * Map that contains a training data set for each regression model.
+	 * Maps regression models to their training data.
 	 */
-	protected HashMap<Classifier, Instances> map;
-	
+	protected HashMap<Classifier, Instances> trainingData;
+
 	/**
-	 * List with estimates of learning algorithm performances for last predicted
+	 * Contains estimates of learning algorithm performances for the last predicted
 	 * ranking.
 	 */
 	protected List<Double> estimates;
@@ -47,7 +47,7 @@ public abstract class RegressionRanker extends Ranker {
 		// Calculate results
 		for (Classifier classifier : regressionModels.keySet()) {
 			Instance newInstance = new DenseInstance(newFeatures.length, newFeatures);
-			newInstance.setDataset(map.get(classifier));
+			newInstance.setDataset(trainingData.get(classifier));
 			double result = regressionModels.get(classifier).classifyInstance(newInstance);
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(classifier);
@@ -83,8 +83,7 @@ public abstract class RegressionRanker extends Ranker {
 
 	@Override
 	protected void initialize() throws Exception {
-		// Initialize variable
-		map = new HashMap<Classifier, Instances>();
+		trainingData = new HashMap<Classifier, Instances>();
 
 		// Get all attributes
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
@@ -95,8 +94,8 @@ public abstract class RegressionRanker extends Ranker {
 
 		// Create new Instances for each target attribute
 		for (int i : targetAttributes) {
-			map.put(classifiersMap.get(i), new Instances(classifiersMap.get(i).getClass().getName(), attributes, 0));
-			map.get(classifiersMap.get(i)).setClassIndex(features.size());
+			trainingData.put(classifiersMap.get(i), new Instances(classifiersMap.get(i).getClass().getName(), attributes, 0));
+			trainingData.get(classifiersMap.get(i)).setClassIndex(features.size());
 		}
 
 		// Add each Instance of given train set to each of the individual train set with
@@ -109,10 +108,10 @@ public abstract class RegressionRanker extends Ranker {
 					newFeatureValues[j] = featureValues[j];
 				}
 				newFeatureValues[featureValues.length] = instance.value(i);
-				map.get(classifiersMap.get(i)).add(new DenseInstance(newFeatureValues.length, newFeatureValues));
+				trainingData.get(classifiersMap.get(i)).add(new DenseInstance(newFeatureValues.length, newFeatureValues));
 			}
 		}
 
-		buildRegressionModels(map);
+		buildRegressionModels(trainingData);
 	}
 }

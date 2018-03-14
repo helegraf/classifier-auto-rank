@@ -3,6 +3,7 @@ package ranker.core.evaluation;
 import java.util.ArrayList;
 import java.util.List;
 
+import ranker.core.algorithms.PerformanceOrder;
 import weka.classifiers.Classifier;
 
 public class BestThreeLoss extends RankerEvaluationMeasure {

@@ -8,7 +8,7 @@ import weka.classifiers.Classifier;
 import weka.core.Instances;
 
 /**
- * Measuring the performance of a classifier on a given data set by means of Monte Carlo Crossvalidation.
+ * Measures the performance of a classifier on a given data set by means of Monte Carlo Crossvalidation.
  * 
  * @author Helena Graf
  *
@@ -18,7 +18,7 @@ public class StratifiedMCCV implements EstimationProcedure {
 	final private double holdout;
 
 	/**
-	 * Construct a StratifiedMCCV estimation procedure.
+	 * Construct a StratifiedMCCV estimation procedure with the specified number of repetitions and size of hold-out set.
 	 * 
 	 * @param times How many times the procedure is to be repeated (results averaged).
 	 * @param holdout The size of the holdout set.
@@ -29,14 +29,19 @@ public class StratifiedMCCV implements EstimationProcedure {
 	}
 
 	@Override
-	public double estimate(Classifier classifier, EvaluationMeasure evaluationMeasure, Instances dataset)
+	public double estimate(Classifier classifier, EvaluationMeasure evaluationMeasure, Instances dataSet)
 			throws Exception {
 		double result = 0;
+		
+		// Split data set and evaluate classifier
 		for (int i = 0; i < times; i++) {
-			List<Instances> splits = WekaUtil.getStratifiedSplit(dataset, new Random(i), 1 - holdout);
+			List<Instances> splits = WekaUtil.getStratifiedSplit(dataSet, new Random(i), 1 - holdout);
 			result += evaluationMeasure.evaluate(classifier, splits.get(0), splits.get(1));
 		}
+		
+		// Average results
 		result /= times;
+		
 		return result;
 	}
 

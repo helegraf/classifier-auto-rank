@@ -1,4 +1,4 @@
-package ranker.core.evaluation;
+package ranker.core.algorithms;
 
 public enum PerformanceOrder {
 	ASCENDING,DESCENDING;

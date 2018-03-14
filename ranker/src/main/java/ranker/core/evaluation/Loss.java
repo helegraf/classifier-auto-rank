@@ -2,6 +2,7 @@ package ranker.core.evaluation;
 
 import java.util.List;
 
+import ranker.core.algorithms.PerformanceOrder;
 import weka.classifiers.Classifier;
 
 public class Loss extends RankerEvaluationMeasure {

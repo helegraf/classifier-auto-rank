@@ -9,7 +9,7 @@ import weka.classifiers.Classifier;
  * Calculated the difference between the predicted performance value of the
  * learning algorithm and its actual value and thus fives information about how
  * well the Ranker has learned this model. Rankers evaluated with this class
- * need to be sub types of {@link ranker.core.algorithms.RegressionRanker}.
+ * need to be sub types of {@link ranker.core.algorithms.regression.RegressionRanker}.
  * 
  * @author Helena Graf
  *

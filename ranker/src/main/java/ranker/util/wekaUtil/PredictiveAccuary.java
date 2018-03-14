@@ -5,7 +5,7 @@ import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 /**
- * Computes the predictive accuary of a classifier. 
+ * Computes the predictive accuracy of a classifier. 
  * 
  * @author Helena Graf
  *

@@ -23,6 +23,10 @@ import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
+/**
+ * @author Helena Graf
+ *
+ */
 public class OpenMLHelper {
 
 	/**

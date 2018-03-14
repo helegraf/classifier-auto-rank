@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.upb.cs.is.jpl.api.dataset.defaultdataset.relative.Ranking;
 import de.upb.cs.is.jpl.api.exception.algorithm.PredictionFailedException;
+import ranker.core.algorithms.preference.PreferenceRanker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 

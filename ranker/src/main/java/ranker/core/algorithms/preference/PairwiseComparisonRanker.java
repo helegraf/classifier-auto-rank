@@ -1,4 +1,4 @@
-package ranker.core.algorithms;
+package ranker.core.algorithms.preference;
 
 import de.upb.cs.is.jpl.api.algorithm.baselearner.regression.linear.LinearRegression;
 import de.upb.cs.is.jpl.api.algorithm.learningalgorithm.labelranking.labelrankingbypairwisecomparison.LabelRankingByPairwiseComparisonConfiguration;

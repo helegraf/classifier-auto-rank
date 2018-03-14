@@ -11,13 +11,27 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+/**
+ * @author Helena Graf
+ *
+ */
 public class Rankprediction {
 	
+	/**
+	 * Instances holding the meta data
+	 */
 	protected Instances metaData;
 	protected List<Integer> targetAttributes;
 	protected Characterizer characterizer;
 	protected Ranker ranker;
 	
+	/**
+	 * @param metaData
+	 * @param targetAttributes
+	 * @param characterizer
+	 * @param ranker
+	 * @throws Exception
+	 */
 	public Rankprediction(Instances metaData, List<Integer> targetAttributes, Characterizer characterizer, Ranker ranker) throws Exception {
 		this.metaData = metaData;
 		this.targetAttributes = targetAttributes;
@@ -27,11 +41,17 @@ public class Rankprediction {
 		ranker.buildRanker(metaData, targetAttributes);
 	}
 	
+	/**
+	 * @param instances
+	 * @return
+	 * @throws Exception
+	 */
 	public List<Classifier> predictRanking (Instances instances) throws Exception {
 		// Get meta features for instance
 		Map<String,Double> metaFeatures = characterizer.characterize(instances);
 		
 		// Insert in the right order in instance
+		// TODO extract in class
 		Instance queryInstance = new DenseInstance(metaData.numAttributes());
 		for (int i = 0; i < metaData.numAttributes(); i++) {
 			if (!targetAttributes.contains(i)) {

@@ -16,6 +16,7 @@ import org.apache.commons.math3.stat.ranking.NaNStrategy;
 import org.apache.commons.math3.stat.ranking.TiesStrategy;
 
 import ranker.Util;
+import ranker.core.algorithms.PerformanceOrder;
 import ranker.core.algorithms.Ranker;
 import ranker.util.openMLUtil.OpenMLHelper;
 import ranker.util.wekaUtil.EstimationProcedure;

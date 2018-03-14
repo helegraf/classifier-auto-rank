@@ -12,17 +12,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import ranker.core.algorithms.BestAlgorithmRanker;
-import ranker.core.algorithms.InstanceBasedLabelRankingKemenyYoung;
-import ranker.core.algorithms.InstanceBasedLabelRankingKemenyYoungSQRTN;
-import ranker.core.algorithms.InstanceBasedLabelRankingRanker;
-import ranker.core.algorithms.LinearRegressionRanker;
-import ranker.core.algorithms.M5PRanker;
-import ranker.core.algorithms.PairwiseComparisonRanker;
 import ranker.core.algorithms.PerfectRanker;
-import ranker.core.algorithms.REPTreeRanker;
-import ranker.core.algorithms.RandomForestRanker;
 import ranker.core.algorithms.Ranker;
-import ranker.core.algorithms.RegressionRanker;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoung;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoungSQRTN;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingRanker;
+import ranker.core.algorithms.preference.PairwiseComparisonRanker;
+import ranker.core.algorithms.regression.LinearRegressionRanker;
+import ranker.core.algorithms.regression.M5PRanker;
+import ranker.core.algorithms.regression.REPTreeRanker;
+import ranker.core.algorithms.regression.RandomForestRanker;
+import ranker.core.algorithms.regression.RegressionRanker;
 import ranker.core.evaluation.BestThreeLoss;
 import ranker.core.evaluation.EvaluationHelper;
 import ranker.core.evaluation.KendallRankCorrelation;
@@ -31,8 +31,9 @@ import ranker.core.evaluation.Loss;
 import ranker.core.evaluation.RankerEvaluationMeasure;
 import ranker.core.metafeatures.GlobalCharacterizer;
 import ranker.core.metafeatures.MetaFeatureHelper;
+import ranker.core.metafeatures.NoProbingCharacterizer;
 import ranker.util.openMLUtil.OpenMLHelper;
-import ranker.util.wekaUtil.WekaHelper;
+import ranker.util.wekaUtil.WEKAHelper;
 import weka.classifiers.Classifier;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Attribute;
@@ -159,28 +160,26 @@ public class Main {
 		// stats.get(i));
 		// }
 		//
-		 BufferedReader reader =
-		 Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noProbing.arff"),
-		 Util.charset);
+//		BufferedReader reader = Files.newBufferedReader(
+//				FileSystems.getDefault().getPath("metaData_small_allPerformanceValues_noProbing.arff"), Util.charset);
+//
+//		Instances instances = new Instances(reader);
+//
+//		List<Integer> targetAttributes = new ArrayList<Integer>();
+//		for (int i = 59; i < 81; i++) {
+//			targetAttributes.add(i);
+//		}
+//
+//		BestAlgorithmRanker ranker = new BestAlgorithmRanker();
+//
+//		ranker.buildRanker(instances, targetAttributes);
+//		List<Classifier> ranking = ranker.predictRankingforInstance(instances.get(0));
+//		List<Integer> stats = ranker.getClassifierStats();
+//		System.out.println("---------------------------------------------------------------------");
+//		for (int i = 0; i < ranking.size(); i++) {
+//			System.out.println(ranking.get(i).getClass().getSimpleName() + " " + stats.get(i));
+//		}
 		
-		 Instances instances = new Instances(reader);
-		
-		 List<Integer> targetAttributes = new ArrayList<Integer>();
-		 for (int i = 59; i < 81; i++) {
-		 targetAttributes.add(i);
-		 }
-		
-		 BestAlgorithmRanker ranker = new BestAlgorithmRanker();
-
-		 ranker.buildRanker(instances, targetAttributes);
-		 List<Classifier> ranking = ranker.predictRankingforInstance(instances.get(0));
-		 List<Integer> stats = ranker.getClassifierStats();
-		 System.out.println("---------------------------------------------------------------------");
-		 for (int i = 0; i < ranking.size(); i++) {
-		 System.out.println(ranking.get(i).getClass().getSimpleName() + " " +
-		 stats.get(i));
-		 }
-
 		// System.out.println(EvaluationHelper.evaluateRanker(ranker, instances,
 		// targetAttributes));
 
