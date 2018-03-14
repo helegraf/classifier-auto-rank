@@ -38,7 +38,7 @@ public abstract class Ranker {
 	 * @param data
 	 *            The training data
 	 * @param targetAttributes
-	 *            TODO
+	 *            The target attributes
 	 */
 	public void buildRanker(Instances data, List<Integer> targetAttributes) throws Exception {
 		// Check for sensible input

@@ -50,7 +50,6 @@ public class MetaFeatureHelper {
 			attributes.add(new Attribute(dataQuality));
 		}
 	
-		// TODO isolate in class + clean up
 		HashMap<String, List<Double>> computationTimes = new HashMap<String, List<Double>>();
 		for (String chara : characterizer.getCharacterizerNames()) {
 			computationTimes.put(chara, new ArrayList<Double>());
@@ -78,14 +77,12 @@ public class MetaFeatureHelper {
 			try {
 				openMLData = OpenMLHelper.getInstancesById(dataSetId);
 			} catch (IOException e) {
-				// TODO logging maybe / outprint here
 				System.out.println("Couldn't get " + dataSetId);
 				continue;
 			}
 	
 			Map<String, Double> dataQualities = characterizer.characterize(openMLData);
 	
-			// TODO remove/ disable
 			Map<String, Double> times = characterizer.getMetaFeatureComputationTimes();
 			System.out.println(times);
 			for (String metaFeature : times.keySet()) {
@@ -123,13 +120,11 @@ public class MetaFeatureHelper {
 					}
 	
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
 		}
 		
-		//TODO make this more efficient
 		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath("MetaStats_new.txt"), Util.charset);
 		for (String chara : computationTimes.keySet()) {
 			List<Double> values = computationTimes.get(chara);
@@ -141,7 +136,6 @@ public class MetaFeatureHelper {
 					writer.write(value + ";");
 					writer.newLine();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
@@ -209,14 +203,11 @@ public class MetaFeatureHelper {
 					if (line != null) {
 						value = Double.parseDouble(line);
 					} else {
-						// TODO hack to avoid NaNs actually has to be worst value for performance
-						// measure used!
 						value = 0;
 					}
 					instance.setValue(attIndex, value);
 	
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});

@@ -51,7 +51,6 @@ public class Rankprediction {
 		Map<String,Double> metaFeatures = characterizer.characterize(instances);
 		
 		// Insert in the right order in instance
-		// TODO extract in class
 		Instance queryInstance = new DenseInstance(metaData.numAttributes());
 		for (int i = 0; i < metaData.numAttributes(); i++) {
 			if (!targetAttributes.contains(i)) {

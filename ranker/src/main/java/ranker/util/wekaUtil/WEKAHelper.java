@@ -1,11 +1,14 @@
 package ranker.util.wekaUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 import weka.filters.unsupervised.attribute.ReplaceMissingValues;
 
 /**
@@ -72,5 +75,19 @@ public class WEKAHelper {
 		Instances subSet = new Instances(instances.relationName(), attributes, instances.numInstances());
 		subList.forEach(instance -> subSet.add(instance));
 		return subSet;
+	}
+
+	/**
+	 * Takes an Instances object and saves it in the .arff format with the filename
+	 * as the relation name.
+	 * 
+	 * @param instances
+	 * @throws IOException
+	 */
+	public static void saveAsArff(Instances instances) throws IOException {
+		ArffSaver saver = new ArffSaver();
+		saver.setInstances(instances);
+		saver.setFile(new File(instances.relationName()));
+		saver.writeBatch();
 	}
 }

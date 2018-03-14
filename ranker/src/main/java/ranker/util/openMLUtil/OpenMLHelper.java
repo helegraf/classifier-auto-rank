@@ -74,8 +74,6 @@ public class OpenMLHelper {
 	 * @throws Exception
 	 */
 	public static void createDataSetIndex(int maxNumFeatures, int maxNumInstances) throws Exception {
-		// TODO more elaborate filters maybe?
-		
 		// For statistics
 		int unfiltered;
 		int filteredBNG = 0;

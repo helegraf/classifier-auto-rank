@@ -198,8 +198,6 @@ public class EvaluationHelper {
 	 */
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
-		// TODO add data set id
-
 		// Prepare table of results
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		for (int i = 0; i < datasets.size(); i++) {
