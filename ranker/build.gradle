@@ -2,6 +2,8 @@ apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 
+group = 'com.github.helegraf'
+
 uploadArchives {
     repositories {
      	mavenDeployer{
