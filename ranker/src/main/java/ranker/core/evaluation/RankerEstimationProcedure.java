@@ -29,7 +29,7 @@ public abstract class RankerEstimationProcedure {
 	private  StopWatch watch = new StopWatch();
 
 	/**
-	 * Has to divide data given into chunks of train/test splits & evaluate those on the evaluationProcedures
+	 * Has to divide data given into chunks of train/test splits and evaluate those on the evaluationProcedures
 	 * 
 	 * @param ranker
 	 * @param evaluationProcedures
@@ -74,7 +74,6 @@ public abstract class RankerEstimationProcedure {
 	 * @param test
 	 * @param measures
 	 * @param targetAttributes
-	 * @return
 	 * @throws Exception
 	 *             If either the given ranker or the perfect ranker cannot be built
 	 */

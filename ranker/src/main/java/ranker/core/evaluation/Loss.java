@@ -38,8 +38,6 @@ public class Loss extends RankerEvaluationMeasure {
 
 	/**
 	 * Gets the Performance Order. Standard is {@link PerformanceOrder#DESCENDING}
-	 * 
-	 * @param order
 	 */
 	public PerformanceOrder getPerformanceOrder() {
 		return order;

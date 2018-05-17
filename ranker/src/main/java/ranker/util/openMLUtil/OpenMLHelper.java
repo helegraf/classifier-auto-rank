@@ -67,7 +67,7 @@ public class OpenMLHelper {
 	}
 
 	/**
-	 * Creates a list of data sets by id in a file with caps for the maximum of features and instances. Caps ignored if set to values <= 0.
+	 * Creates a list of data sets by id in a file with caps for the maximum of features and instances. Caps ignored if set to values smaller than 0.
 	 * 
 	 * @param maxNumFeatures
 	 * @param maxNumInstances

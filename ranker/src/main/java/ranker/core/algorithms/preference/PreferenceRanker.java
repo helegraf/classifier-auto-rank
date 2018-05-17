@@ -24,7 +24,7 @@ public abstract class PreferenceRanker extends Ranker {
 	protected ALabelRankingLearningModel learningModel;
 
 	/**
-	 * Contains a label for each learning algorithm (0 -> n-1 for n learning
+	 * Contains a label for each learning algorithm (0 to n-1 for n learning
 	 * algorithms)
 	 */
 	protected ArrayList<Integer> labels;

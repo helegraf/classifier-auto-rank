@@ -26,29 +26,29 @@ import weka.core.converters.ConverterUtils.DataSource;
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		
-//		DataSource source = new DataSource("metaData_small_allPerformanceValues.arff");
-//		Instances data = source.getDataSet();
-//		data.deleteAttributeAt(0);
-//		
-//		ArrayList<Integer> targetAttributes = new ArrayList<Integer>();
-//		for (int i = 103; i < 125; i++) {
-//			targetAttributes.add(i);
-//		}
-//		
-//		RandomForestRanker ranker = new RandomForestRanker();
-//		ranker.buildRanker(data, targetAttributes);
-		
+
+		// DataSource source = new
+		// DataSource("metaData_small_allPerformanceValues.arff");
+		// Instances data = source.getDataSet();
+		// data.deleteAttributeAt(0);
+		//
+		// ArrayList<Integer> targetAttributes = new ArrayList<Integer>();
+		// for (int i = 103; i < 125; i++) {
+		// targetAttributes.add(i);
+		// }
+		//
+		// RandomForestRanker ranker = new RandomForestRanker();
+		// ranker.buildRanker(data, targetAttributes);
+
 		Rankprediction pre = new Rankprediction();
 
 		DataSource source = new DataSource("src/main/resources/dataset_31_credit-g.arff");
 		Instances data = source.getDataSet();
 		data.setClassIndex(data.attribute("class").index());
-		
+
 		List<Classifier> classifs = pre.predictRanking(data);
-		classifs.forEach(classif-> 
-		System.out.println(classif.getClass().getSimpleName()));
-		
+		classifs.forEach(classif -> System.out.println(classif.getClass().getSimpleName()));
+
 	}
 
 	public static void evaluateAllRankersOnAllDataSets() throws IOException {
@@ -65,8 +65,8 @@ public class Main {
 				InstanceBasedLabelRankingKemenyYoungSQRTN.class.getSimpleName(),
 				PairwiseComparisonRanker.class.getSimpleName(), RandomForestRanker.class.getSimpleName(),
 				LinearRegressionRanker.class.getSimpleName(), REPTreeRanker.class.getSimpleName(),
-				M5PRanker.class.getSimpleName()};
-		
+				M5PRanker.class.getSimpleName() };
+
 		for (String firstAlgo : algorithms) {
 			printAllMeasuresForAlgorithm(firstAlgo, dataset);
 		}
@@ -82,6 +82,16 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Computes the Mann-Whitney U for the given algorithms, measures and data set.
+	 * Reads the values from a file (must have been created before).
+	 * 
+	 * @param firstAlgo
+	 * @param secondAlgo
+	 * @param measure
+	 * @param dataset
+	 * @throws IOException
+	 */
 	public static void printMeasureForAlgo(String firstAlgo, String secondAlgo, String measure, String dataset)
 			throws IOException {
 		System.out.println(firstAlgo + " vs " + secondAlgo + " on " + dataset + " regarding " + measure);
