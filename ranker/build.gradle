@@ -1,8 +1,27 @@
-apply plugin: 'java-library'
-apply plugin: 'eclipse'
-apply plugin: 'maven'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
+
+plugins {
+    id 'com.gradle.build-scan' version '1.13.1' 
+    id 'java-library'
+    id 'eclipse'
+    id 'maven'
+}
 
 group = 'com.github.helegraf'
+description = ''
+// version = 
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
 
 uploadArchives {
     repositories {
@@ -53,14 +72,7 @@ dependencies {
  	
 }
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
-    }
-}
+
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
