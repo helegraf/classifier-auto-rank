@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.net.SyslogAppender;
+
 import ranker.core.algorithms.BestAlgorithmRanker;
 import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoung;
 import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoungSQRTN;
@@ -40,14 +42,47 @@ public class Main {
 		// RandomForestRanker ranker = new RandomForestRanker();
 		// ranker.buildRanker(data, targetAttributes);
 
-		Rankprediction pre = new Rankprediction();
-
-		DataSource source = new DataSource("src/main/resources/dataset_31_credit-g.arff");
+//		Rankprediction pre = new Rankprediction();
+//
+//		DataSource source = new DataSource("src/main/resources/dataset_31_credit-g.arff");
+//		Instances data = source.getDataSet();
+//		data.setClassIndex(data.attribute("class").index());
+//
+//		List<Classifier> classifs = pre.predictRanking(data);
+//		classifs.forEach(classif -> System.out.println(classif.getClass().getSimpleName()));
+		
+		// Read data set
+		DataSource source  = new DataSource("metaData_small_allPerformanceValues_onlyProbing.arff");
 		Instances data = source.getDataSet();
-		data.setClassIndex(data.attribute("class").index());
-
-		List<Classifier> classifs = pre.predictRanking(data);
-		classifs.forEach(classif -> System.out.println(classif.getClass().getSimpleName()));
+		List<Integer> targetAttributes = new ArrayList<Integer>();
+		for (int i = 45; i < 67; i++) {
+			targetAttributes.add(i);
+		}
+		
+		// Evaluate ranker
+		// List<Double> evaluationResults = EvaluationHelper.evaluateRegressionRanker(new RandomForestRanker(), data, targetAttributes);
+		// evaluationResults.forEach(result -> System.out.println(result));
+		
+//		evaluationResults = EvaluationHelper.evaluateRanker(new LinearRegressionRanker(), data, targetAttributes);
+//		evaluationResults.forEach(result -> System.out.println(result));
+//		
+//		evaluationResults = EvaluationHelper.evaluateRanker(new REPTreeRanker(), data, targetAttributes);
+//		evaluationResults.forEach(result -> System.out.println(result));
+//		
+//		evaluationResults = EvaluationHelper.evaluateRanker(new M5PRanker(), data, targetAttributes);
+//		evaluationResults.forEach(result -> System.out.println(result));
+		
+		List<Double> evaluationResults = EvaluationHelper.evaluateRanker(new PairwiseComparisonRanker(), data, targetAttributes);
+		evaluationResults.forEach(result -> System.out.println(result));
+		
+		evaluationResults = EvaluationHelper.evaluateRanker(new InstanceBasedLabelRankingRanker(), data, targetAttributes);
+		evaluationResults.forEach(result -> System.out.println(result));
+		
+		evaluationResults = EvaluationHelper.evaluateRanker(new InstanceBasedLabelRankingKemenyYoung(), data, targetAttributes);
+		evaluationResults.forEach(result -> System.out.println(result));
+		
+		evaluationResults = EvaluationHelper.evaluateRanker(new InstanceBasedLabelRankingKemenyYoungSQRTN(), data, targetAttributes);
+		evaluationResults.forEach(result -> System.out.println(result));
 
 	}
 
