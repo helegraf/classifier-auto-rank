@@ -1,3 +1,7 @@
 /build/
 /versicolor.gprf
 /.gradle/
+
+# ide files
+.classpath
+.project
