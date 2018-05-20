@@ -88,7 +88,10 @@ public class EvaluationHelper {
 
 	public static List<Double> evaluateRegressionRanker(Ranker ranker, Instances instances,
 			List<Integer> targetAttributes) throws Exception {
+		// use leave one out as the estimation procedure
 		RankerEstimationProcedure estim = new LeaveOneOut();
+		
+		// apply all evaluation measures fit for regression rankers
 		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
 		measures.add(new KendallRankCorrelation());
 		measures.add(new RootMeanSquareError());
@@ -98,8 +101,14 @@ public class EvaluationHelper {
 		BestThreeLoss bestLoss = new BestThreeLoss();
 		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
 		measures.add(bestLoss);
+		
+		// estimate 
 		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
+		
+		// print detailed results
 		System.out.println(estim.getDetailedEvaluationResults());
+		
+		// return results
 		return result;
 	}
 
