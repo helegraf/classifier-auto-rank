@@ -52,7 +52,7 @@ dependencies {
 	implementation files ('libs/OpenmlWebapplication.jar')
 	
 	// jPL
-	implementation files ('libs/jpl-api.jar')
+	implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
 
 	// JAICore
 	implementation group: 'com.github.fmohr', name: 'JAICore', version: 'dcc8d337dc'
