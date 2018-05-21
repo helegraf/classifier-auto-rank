@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.openml.apiconnector.io.OpenmlConnector;
+import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.Data;
 import org.openml.apiconnector.xml.Data.DataSet;
 import org.openml.apiconnector.xml.DataFeature;
@@ -28,6 +29,8 @@ import weka.core.converters.ConverterUtils.DataSource;
  *
  */
 public class OpenMLHelper {
+	
+	public static String apiKey;
 
 	/**
 	 * Downloads the data set with the given id and returns the Instances file for
@@ -40,11 +43,14 @@ public class OpenMLHelper {
 	 * @throws IOException
 	 */
 	public static Instances getInstancesById(int dataId) throws IOException {
+		// Set the cache according to specified directory
+		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
+		
 		Instances dataset = null;
 
 		// Get apiKey if not given
 		if (OpenMLHelper.apiKey == null) {
-			BufferedReader reader = Files.newBufferedReader(OpenMLHelper.apiKeyPath, Util.charset);
+			BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath(Util.APIKEY), Util.CHARSET);
 			OpenMLHelper.apiKey = reader.readLine();
 		}
 
@@ -52,7 +58,7 @@ public class OpenMLHelper {
 		OpenmlConnector client = new OpenmlConnector();
 		try {
 			DataSetDescription description = client.dataGet(dataId);
-			File file = description.getDataset(OpenMLHelper.apiKey);
+			File file = description.getDataset(apiKey);
 			// Instances convert
 			DataSource source = new DataSource(file.getCanonicalPath());
 			dataset = source.getDataSet();
@@ -73,7 +79,7 @@ public class OpenMLHelper {
 	 * @param maxNumInstances
 	 * @throws Exception
 	 */
-	public static void createDataSetIndex(int maxNumFeatures, int maxNumInstances) throws Exception {
+	public static void createDataSetIndex(int maxNumFeatures, int maxNumInstances, Path path) throws Exception {
 		// For statistics
 		int unfiltered;
 		int filteredBNG = 0;
@@ -83,8 +89,7 @@ public class OpenMLHelper {
 		int fitForAnalysis = 0;
 	
 		// For saving data sets
-		BufferedWriter writer = Files.newBufferedWriter(
-				FileSystems.getDefault().getPath("datasets_" + maxNumFeatures + "_" + maxNumInstances), Util.charset);
+		BufferedWriter writer = Files.newBufferedWriter(path, Util.CHARSET);
 	
 		// OpenML connection
 		OpenmlConnector client = new OpenmlConnector();
@@ -172,11 +177,9 @@ public class OpenMLHelper {
 		System.out.println("Fit for analysis: " + fitForAnalysis);
 	}
 
-	public static String apiKey;
-	public static Path apiKeyPath = FileSystems.getDefault().getPath("apikey.txt");
-	public static List<Integer> getDataSetsFromIndex() throws Exception {
+	public static List<Integer> getDataSetsFromIndex(Path path) throws Exception {
 		List<Integer> dataSets = new ArrayList<Integer>();
-		BufferedReader reader = Files.newBufferedReader(Util.dataSetIndexPath, Util.charset);
+		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
 		String line = null;
 		while ((line = reader.readLine()) != null) {
 			int dataSetId = Integer.parseInt(line);

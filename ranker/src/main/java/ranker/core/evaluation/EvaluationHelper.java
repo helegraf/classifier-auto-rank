@@ -25,28 +25,6 @@ import ranker.util.wekaUtil.PredictiveAccuary;
 import ranker.util.wekaUtil.StratifiedMCCV;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.Classifier;
-import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.bayes.NaiveBayesMultinomial;
-import weka.classifiers.functions.Logistic;
-import weka.classifiers.functions.MultilayerPerceptron;
-import weka.classifiers.functions.SGD;
-import weka.classifiers.functions.SMO;
-import weka.classifiers.functions.SimpleLogistic;
-import weka.classifiers.functions.VotedPerceptron;
-import weka.classifiers.lazy.IBk;
-import weka.classifiers.lazy.KStar;
-import weka.classifiers.rules.DecisionTable;
-import weka.classifiers.rules.JRip;
-import weka.classifiers.rules.OneR;
-import weka.classifiers.rules.PART;
-import weka.classifiers.rules.ZeroR;
-import weka.classifiers.trees.DecisionStump;
-import weka.classifiers.trees.J48;
-import weka.classifiers.trees.LMT;
-import weka.classifiers.trees.REPTree;
-import weka.classifiers.trees.RandomForest;
-import weka.classifiers.trees.RandomTree;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;
@@ -54,11 +32,6 @@ import weka.core.Instances;
 import weka.core.converters.ArffSaver;
 
 public class EvaluationHelper {
-
-	/**
-	 * Path for saving the generated jobs
-	 */
-	public static Path jobsPath = FileSystems.getDefault().getPath("jobs.txt");
 
 	/**
 	 * Evaluates all currently available measures for this type of ranker by means
@@ -136,12 +109,12 @@ public class EvaluationHelper {
 	}
 
 	public static void generateJobs() throws IOException {
-		BufferedReader reader = Files.newBufferedReader(Util.dataSetIndexPath, Util.charset);
-		BufferedWriter writer = Files.newBufferedWriter(EvaluationHelper.jobsPath, Util.charset);
+		BufferedReader reader = Files.newBufferedReader(Util.dataSetIndexPath, Util.CHARSET);
+		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath(Util.JOBS_FILE), Util.CHARSET);
 
 		String line = null;
 		while ((line = reader.readLine()) != null) {
-			for (Classifier classifier : EvaluationHelper.portfolio) {
+			for (Classifier classifier : Util.PORTFOLIO) {
 				writer.write(classifier.getClass().getName() + "," + line);
 				writer.newLine();
 			}
@@ -167,7 +140,7 @@ public class EvaluationHelper {
 
 		// Get jobs
 		HashMap<Classifier, Integer> jobs = new HashMap<Classifier, Integer>();
-		BufferedReader reader = Files.newBufferedReader(EvaluationHelper.jobsPath, Util.charset);
+		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath(Util.JOBS_FILE), Util.CHARSET);
 		String line = null;
 		while (offset > 0 && (line = reader.readLine()) != null) {
 			offset--;
@@ -183,7 +156,7 @@ public class EvaluationHelper {
 		jobs.forEach((classifier, dataId) -> {
 			try {
 				Path dataPath = Util.resultsPath.resolve(classifier.getClass().getName() + "_" + dataId + ".txt");
-				BufferedWriter writer = Files.newBufferedWriter(dataPath, Util.charset);
+				BufferedWriter writer = Files.newBufferedWriter(dataPath, Util.CHARSET);
 				Instances dataset = OpenMLHelper.getInstancesById(dataId);
 				double result = evaluateClassifier(classifier, dataset);
 				writer.write(Double.toString(result));
@@ -266,7 +239,7 @@ public class EvaluationHelper {
 
 	public static double[] getValues(Path path, String measure) throws IOException {
 		List<Double> values = new ArrayList<Double>();
-		BufferedReader reader = Files.newBufferedReader(path, Util.charset);
+		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
 
 		// Find index of measure
 		String line = reader.readLine();
@@ -302,11 +275,5 @@ public class EvaluationHelper {
 		}
 		return array;
 	}
-
-	public static Classifier[] portfolio = { new BayesNet(), new NaiveBayes(), new NaiveBayesMultinomial(),
-			new Logistic(), new MultilayerPerceptron(), new SGD(), new SMO(), new SimpleLogistic(),
-			new VotedPerceptron(), new IBk(), new KStar(), new DecisionTable(), new JRip(), new OneR(), new PART(),
-			new ZeroR(), new DecisionStump(), new J48(), new LMT(), new RandomForest(), new RandomTree(),
-			new REPTree() };
 
 }

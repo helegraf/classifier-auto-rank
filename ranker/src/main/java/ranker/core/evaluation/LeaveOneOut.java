@@ -15,6 +15,8 @@ import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 
+//TODO separate .csv logic
+
 /**
  * Divides data into n different splits of n-1 instances as a train set and the
  * remaining instance as the test set. Averages the result of these n runs,

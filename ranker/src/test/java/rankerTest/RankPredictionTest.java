@@ -29,7 +29,7 @@ public class RankPredictionTest {
 	@BeforeClass
 	public static void loadMetaData() throws Exception {
 		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
-				Util.charset);
+				Util.CHARSET);
 		testInstances = new Instances(reader);
 		targetAttributes = new ArrayList<Integer>();
 		for (int i = 104; i < 131; i++) {

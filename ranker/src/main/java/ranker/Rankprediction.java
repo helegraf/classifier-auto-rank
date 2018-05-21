@@ -58,7 +58,7 @@ public class Rankprediction {
 	 */
 	public Rankprediction() throws Exception {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream inputStream = classLoader.getResourceAsStream("metaData_small_allPerformanceValues_noProbing.arff");
+		InputStream inputStream = classLoader.getResourceAsStream(Util.META_DATA_SMALL_DATA_SETS_COMPUTED_NO_PROBING);
 		DataSource source = new DataSource(inputStream);
 		metaData = source.getDataSet();
 		metaData.deleteAttributeAt(0);
