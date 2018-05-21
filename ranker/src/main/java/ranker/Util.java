@@ -59,7 +59,7 @@ public class Util {
 	/**
 	 * Used to separate values in generated .CSV files.
 	 */
-	public static final String CSV_SEPARATOR = ";";
+	public static final String CSV_SEPARATOR = "; ";
 
 	/**
 	 * Used as a separator in the file names for the evaluation results of a
@@ -165,5 +165,10 @@ public class Util {
 	 * The folder where the openML cache is located.
 	 */
 	public static final String OPENML_CACHE_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR + "openML_cache";
+
+	/**
+	 * The folder where the evaluation results for the rankers are lcoated.
+	 */
+	public static final String RANKER_EVALUATION_RESULTS = IO_FOLDER + SYSTEM_SEPARATOR + "ranker_evaluation_results";
 
 }
