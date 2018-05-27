@@ -55,7 +55,7 @@ dependencies {
 	implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
 
 	// JAICore
-	implementation group: 'com.github.fmohr', name: 'JAICore', version: 'dcc8d337dc'
+    implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
