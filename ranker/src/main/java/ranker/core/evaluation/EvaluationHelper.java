@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
-import org.apache.commons.math3.stat.ranking.NaNStrategy;
-import org.apache.commons.math3.stat.ranking.TiesStrategy;
-
 import ranker.Util;
 import ranker.core.algorithms.PerformanceOrder;
 import ranker.core.algorithms.Ranker;
@@ -63,7 +59,7 @@ public class EvaluationHelper {
 			List<Integer> targetAttributes) throws Exception {
 		// use leave one out as the estimation procedure
 		RankerEstimationProcedure estim = new LeaveOneOut();
-		
+
 		// apply all evaluation measures fit for regression rankers
 		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
 		measures.add(new KendallRankCorrelation());
@@ -74,13 +70,13 @@ public class EvaluationHelper {
 		BestThreeLoss bestLoss = new BestThreeLoss();
 		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
 		measures.add(bestLoss);
-		
-		// estimate 
+
+		// estimate
 		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
-		
+
 		// print detailed results
 		System.out.println(estim.getDetailedEvaluationResults());
-		
+
 		// return results
 		return result;
 	}
@@ -108,8 +104,8 @@ public class EvaluationHelper {
 		return result;
 	}
 
-	public static void generateJobs() throws IOException {
-		BufferedReader reader = Files.newBufferedReader(Util.dataSetIndexPath, Util.CHARSET);
+	public static void generateJobs(Path dataSetIndex) throws IOException {
+		BufferedReader reader = Files.newBufferedReader(dataSetIndex, Util.CHARSET);
 		BufferedWriter writer = Files.newBufferedWriter(FileSystems.getDefault().getPath(Util.JOBS_FILE), Util.CHARSET);
 
 		String line = null;
@@ -155,7 +151,8 @@ public class EvaluationHelper {
 		// Generate Performance Measures & save to files
 		jobs.forEach((classifier, dataId) -> {
 			try {
-				Path dataPath = Util.resultsPath.resolve(classifier.getClass().getName() + "_" + dataId + ".txt");
+				Path dataPath = FileSystems.getDefault().getPath(Util.CLASSIFIER_EVALUATION_RESULTS_FOLDER,
+						classifier.getClass().getName() + "_" + dataId + ".txt");
 				BufferedWriter writer = Files.newBufferedWriter(dataPath, Util.CHARSET);
 				Instances dataset = OpenMLHelper.getInstancesById(dataId);
 				double result = evaluateClassifier(classifier, dataset);
@@ -212,68 +209,4 @@ public class EvaluationHelper {
 		}
 
 	}
-
-	/**
-	 * For comparing whether one Ranker is significantly better regarding a measure
-	 * than the other; to be used with the .csv files when a ranker is generated.
-	 * 
-	 * @param firstFile
-	 *            Evaluation results of the first ranker
-	 * @param secondFile
-	 *            Evaluation results of the second ranker
-	 * @param measure
-	 *            The measure to compare
-	 * @return
-	 * @throws IOException
-	 */
-	public static double computeWhitneyU(Path firstFile, Path secondFile, String measure) throws IOException {
-		// Get the values
-		double[] xArray = getValues(firstFile, measure);
-		double[] yArray = getValues(secondFile, measure);
-
-		// Compute result
-		MannWhitneyUTest uTest = new MannWhitneyUTest(NaNStrategy.REMOVED, TiesStrategy.AVERAGE);
-		System.out.print("& " + uTest.mannWhitneyU(xArray, yArray) + " ");
-		return uTest.mannWhitneyUTest(xArray, yArray);
-	}
-
-	public static double[] getValues(Path path, String measure) throws IOException {
-		List<Double> values = new ArrayList<Double>();
-		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
-
-		// Find index of measure
-		String line = reader.readLine();
-		int measureIndex = findIndex(line, measure);
-
-		// Get contents
-		while ((line = reader.readLine()) != null) {
-			String[] contents = line.split(";");
-			double value = Double.parseDouble(contents[measureIndex]);
-			values.add(value);
-		}
-
-		return convertToArray(values);
-
-	}
-
-	public static int findIndex(String line, String measure) {
-		int measureIndex = -1;
-		String[] measures = line.split(";");
-		for (int i = 0; i < measures.length; i++) {
-			if (measures[i].replaceAll(" ", "").equals(measure)) {
-				measureIndex = i;
-				break;
-			}
-		}
-		return measureIndex;
-	}
-
-	public static double[] convertToArray(List<Double> values) {
-		double[] array = new double[values.size()];
-		for (int i = 0; i < values.size(); i++) {
-			array[i] = values.get(i);
-		}
-		return array;
-	}
-
 }

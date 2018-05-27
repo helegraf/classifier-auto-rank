@@ -156,6 +156,25 @@ public class MetaFeatureHelper {
 	}
 
 	/**
+	 * Merges files containing the same set of meta features for different data set
+	 * into one meta feature data set.
+	 * 
+	 * @return The merged data set
+	 * @throws IOException
+	 *             If the files cannot be read correctly
+	 */
+	public static Instances mergeMetaFeatureParts() throws IOException {
+		try (Stream<Path> paths = Files
+				.walk(FileSystems.getDefault().getPath(Util.METAFEATURE_COMPUTATION_RESULTS_FOLDER))) {
+			paths.filter(Files::isRegularFile).forEach(file -> {
+
+			});
+		}
+		return null;
+
+	}
+
+	/**
 	 * Gets the meta features from OpenML for all the data sets contained in the
 	 * file located at the given Path.
 	 * 
@@ -166,7 +185,7 @@ public class MetaFeatureHelper {
 	public static Instances getMetaFeaturesFromOpenML(Path dataSetIndices) throws Exception {
 		// Set the OpenML cache to the specified directory
 		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
-		
+
 		// Prepare List of Attributes for Instances
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 
@@ -205,7 +224,8 @@ public class MetaFeatureHelper {
 		}
 
 		// Add performance results
-		try (Stream<Path> paths = Files.walk(Util.resultsPath)) {
+		try (Stream<Path> paths = Files
+				.walk(FileSystems.getDefault().getPath(Util.CLASSIFIER_EVALUATION_RESULTS_FOLDER))) {
 			paths.filter(Files::isRegularFile).forEach(file -> {
 				try {
 					BufferedReader reader = Files.newBufferedReader(file, Util.CHARSET);

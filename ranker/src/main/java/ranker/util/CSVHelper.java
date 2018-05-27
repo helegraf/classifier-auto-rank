@@ -1,9 +1,12 @@
 package ranker.util;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,8 +18,7 @@ import ranker.core.algorithms.Ranker;
 import weka.core.Instances;
 
 /**
- * Class that converts evaluation results to .csv files and writes them on the
- * disk.
+ * Class that helps with the reading and writing of .csv files.
  * 
  * @author Helena Graf
  *
@@ -31,12 +33,24 @@ public class CSVHelper {
 	 * @param ranker
 	 *            The ranker
 	 * @param instances
-	 *            The meta data set that was used in the evaluation in the ranker
+	 *            The meta data set that was used in the evaluation of the ranker
 	 * @return The converted path
 	 */
 	public static String getCSVPath(Ranker ranker, Instances instances) {
-		return Util.RANKER_EVALUATION_RESULTS + ranker.getClass().getSimpleName() + "_" + instances.relationName()
-				+ ".csv";
+		return getCSVPath(ranker.getClass().getSimpleName(), instances.relationName());
+	}
+
+	/**
+	 * Converts the given ranker name and data set name into a path. TO be used as a
+	 * destination for .csv files containing evaluation results of the given ranker
+	 * and meta data set.
+	 *  
+	 * @param rankerName The ranker name
+	 * @param instancesName The meta data set name that was used in the evaluation of the ranker.
+	 * @return The converted Path
+	 */
+	public static String getCSVPath(String rankerName, String instancesName) {
+		return Util.RANKER_EVALUATION_RESULTS + Util.SYSTEM_SEPARATOR + rankerName + Util.RANKER_EVALUATION_RESULTS_SEPARATOR + instancesName + ".csv";
 	}
 
 	/**
@@ -73,14 +87,82 @@ public class CSVHelper {
 		writer.close();
 	}
 
+	/**
+	 * Finds the index of a given column in a header line of a .csv file. If the
+	 * name occurs more than one time, the index of the first occurrence is
+	 * returned.
+	 * 
+	 * @param line
+	 *            The header line
+	 * @param column
+	 *            The name of the column
+	 * @return The column index
+	 * @throws ColumnNotFoundException
+	 *             If the given name does not occur in the line
+	 */
+	public static int findIndexOfColumn(String line, String column) throws ColumnNotFoundException {
+		// Find first occurrence of index
+		int columnIndex = -1;
+		String[] columns = line.split(Util.CSV_SEPARATOR);
+		for (int i = 0; i < columns.length; i++) {
+			if (columns[i].equals(column)) {
+				columnIndex = i;
+				break;
+			}
+		}
+
+		// Throw exception if no occurrence found
+		if (columnIndex == -1) {
+			throw new ColumnNotFoundException("The column " + column + " could not be found in the given .csv");
+		}
+
+		// Return result
+		return columnIndex;
+	}
+
+	/**
+	 * Reads the given column of a .csv file located at the given path and returns
+	 * it as an array.
+	 * 
+	 * @param path
+	 *            The path where the .csv file is located
+	 * @param column
+	 *            The column to read
+	 * @return The values of the column of the file in an array
+	 * @throws IOException
+	 *             If an Exception occurs while trying to read the file
+	 * @throws ColumnNotFoundException
+	 *             If the column name does not occurr in the header of the fiven
+	 *             file
+	 */
+	public static double[] getColumnValues(Path path, String column) throws IOException, ColumnNotFoundException {
+		// Initialize values and reader
+		List<Double> values = new ArrayList<Double>();
+		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
+
+		// Find index of measure
+		String line = reader.readLine();
+		int measureIndex = findIndexOfColumn(line, column);
+
+		// Get contents
+		while ((line = reader.readLine()) != null) {
+			String[] contents = line.split(";");
+			double value = Double.parseDouble(contents[measureIndex]);
+			values.add(value);
+		}
+
+		return values.stream().mapToDouble(d -> d).toArray();
+	}
+
 	private static List<String> createListOfColumnTitles(Set<String> columnTitles) {
 		// initialize list to return
 		List<String> toReturn = new ArrayList<>();
-		
+
 		// ensure that data id is in the first column
 		Set<String> columnTitlesCopy = new HashSet<String>(columnTitles);
 		if (columnTitlesCopy.contains(Util.DATA_ID) && columnTitlesCopy.contains(Util.RANKER_BUILD_TIMES)) {
-			//TODO there must be a better way for this -> don't assume always exist / data id is first when deleting for analysis etc. ?
+			// TODO there must be a better way for this -> don't assume always exist / data
+			// id is first when deleting for analysis etc. ?
 			toReturn.add(Util.DATA_ID);
 			toReturn.add(Util.RANKER_BUILD_TIMES);
 			columnTitlesCopy.remove(Util.DATA_ID);

@@ -2,7 +2,6 @@ package ranker;
 
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
-import java.nio.file.Path;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
@@ -49,9 +48,6 @@ public class Util {
 
 	public static final Charset CHARSET = Charset.forName("UTF-8");
 
-	public static Path dataSetIndexPath = FileSystems.getDefault().getPath("datasets_100_1000");
-	public static Path resultsPath = FileSystems.getDefault().getPath("data");
-	public static Path cacheDirectory = FileSystems.getDefault().getPath("data");
 	public static final String RANKER_BUILD_TIMES = "RankerBuildTimes";
 	public static final String RANKER_PREDICT_TIMES = "RankerPredictTimes";
 	public static final String DATA_ID = "DataId";
@@ -60,6 +56,12 @@ public class Util {
 	 * Used to separate values in generated .CSV files.
 	 */
 	public static final String CSV_SEPARATOR = "; ";
+
+	/**
+	 * Used as a separator in the file names for the evaluation results of a
+	 * classifier on a data set.
+	 */
+	public static final String RANKER_EVALUATION_RESULTS_SEPARATOR = "_";
 
 	/**
 	 * Used as a separator in the file names for the evaluation results of a
@@ -159,6 +161,13 @@ public class Util {
 	 * features of data sets are stored.
 	 */
 	public static final String METAFEATURE_COMPUTATION_STATISTIC_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR
+			+ "metafeature_computation_statistics";
+
+	/**
+	 * The folder where the (intermediate) results of computing meta features are
+	 * stored.
+	 */
+	public static final String METAFEATURE_COMPUTATION_RESULTS_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR
 			+ "metafeature_computation_statistics";
 
 	/**
