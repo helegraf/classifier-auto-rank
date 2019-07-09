@@ -4,7 +4,6 @@ import java.util.Map;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.trees.REPTree;
-import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 public class REPTreeRanker extends RegressionRanker {

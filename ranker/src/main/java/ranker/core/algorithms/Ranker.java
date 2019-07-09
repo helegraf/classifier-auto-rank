@@ -118,4 +118,12 @@ public abstract class Ranker {
 		}
 		return instanceFeatureValues;
 	}
+
+	public String getName() {
+		return this.getClass().getSimpleName();
+	}
+
+	public Object getClassifierString() {
+		return this.getClass().getSimpleName();
+	}
 }

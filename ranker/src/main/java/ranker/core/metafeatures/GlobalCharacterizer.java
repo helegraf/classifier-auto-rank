@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.time.StopWatch;
-
 import org.openml.webapplication.fantail.dc.Characterizer;
 import org.openml.webapplication.fantail.dc.landmarking.GenericLandmarker;
 import org.openml.webapplication.fantail.dc.statistical.Cardinality;
 import org.openml.webapplication.fantail.dc.statistical.NominalAttDistinctValues;
 import org.openml.webapplication.fantail.dc.statistical.SimpleMetaFeatures;
 import org.openml.webapplication.fantail.dc.statistical.Statistical;
+
 import weka.core.Instances;
 import weka.core.Utils;
 
@@ -104,6 +104,10 @@ public class GlobalCharacterizer extends Characterizer {
 
 		return builder.toString();
 	}
+	
+	public ArrayList<Characterizer> getCharacterizers() {
+		return characterizers;
+	}
 
 	/**
 	 * Gets the time in milliseconds it took to compute each group of meta features
@@ -126,6 +130,18 @@ public class GlobalCharacterizer extends Characterizer {
 		List<String> names = new ArrayList<String>();
 		characterizerNames.values().forEach(name -> names.add(name));
 		return names;
+	}
+	
+	public Map<Characterizer, String> getCharacterizerNamesMappings() {
+		return characterizerNames;
+	}
+	
+	public Map<String,List<String>> getCharacterizerGroups() {
+		Map<String,List<String>> results = new HashMap<String,List<String>>();
+		characterizerNames.forEach((characterizer, name) -> {
+			results.put(name, Arrays.asList(characterizer.getIDs()));
+		});
+		return results;
 	}
 
 	@Override
@@ -176,10 +192,10 @@ public class GlobalCharacterizer extends Characterizer {
 		characterizers.forEach(characterizer -> {
 			if (characterizer.getClass().equals(GenericLandmarker.class)) {
 				String AUCName = characterizer.getIDs()[0];
-				String name = AUCName.substring(AUCName.length() - 3, AUCName.length());
+				String name = AUCName.substring(0, AUCName.length() - 3);
 				characterizerNames.put(characterizer, name);
 			} else {
-				characterizerNames.put(characterizer, characterizers.getClass().getSimpleName());
+				characterizerNames.put(characterizer, characterizer.getClass().getSimpleName());
 			}
 		});
 	}

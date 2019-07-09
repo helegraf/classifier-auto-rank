@@ -1,7 +1,6 @@
 package ranker;
 
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.bayes.BayesNet;
@@ -44,13 +43,15 @@ public class Util {
 			new ZeroR(), new DecisionStump(), new J48(), new LMT(), new RandomForest(), new RandomTree(),
 			new REPTree() };
 
-	public static final String SYSTEM_SEPARATOR = FileSystems.getDefault().getSeparator();
+	public static final String SEPARATOR = "/";
 
 	public static final Charset CHARSET = Charset.forName("UTF-8");
 
 	public static final String RANKER_BUILD_TIMES = "RankerBuildTimes";
 	public static final String RANKER_PREDICT_TIMES = "RankerPredictTimes";
 	public static final String DATA_ID = "DataId";
+	
+	public static final String RESOURCES_FOLDER  = SEPARATOR + "src" + SEPARATOR + "main" + SEPARATOR + "resources";
 
 	/**
 	 * Used to separate values in generated .CSV files.
@@ -78,39 +79,38 @@ public class Util {
 	/**
 	 * The folder containing different .ARFF files of different sets of meta
 	 * features computed for sets of data sets. Assumed to be located in the
-	 * resources folder.
+	 * resources folder (relative path).
 	 */
 	public static final String META_DATA_FOLDER = "meta_data";
 
 	/**
 	 * The location of the file containing the full initial set of meta data for all
-	 * initial data sets. The information has been gathered from OpenML:
+	 * initial data sets (relative path). The information has been gathered from OpenML. 
 	 */
-	public static final String META_DATA_SMALL_DATA_SETS_OPENML = META_DATA_FOLDER + SYSTEM_SEPARATOR
+	public static final String META_DATA_SMALL_DATA_SETS_OPENML = META_DATA_FOLDER + SEPARATOR
 			+ "metaData_allDataSets_OpenML.arff";
 
 	/**
 	 * The location of the file containing the full initial set of meta data for a
 	 * selection of small data sets (containing no more than 100 features and 1000
-	 * instances). The information has been computed.
+	 * instances, relative Path). The information has been computed.
 	 */
-	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED = META_DATA_FOLDER + SYSTEM_SEPARATOR
-			+ "metaData_smallDataSets_computed.arff";
+	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED = META_DATA_FOLDER + SEPARATOR + "metaData_smallDataSets_computed.arff";
 
 	/**
 	 * The location of the file containing the full initial set of meta data except
 	 * for landmarkers for a selection of small data sets (containing no more than
-	 * 100 features and 1000 instances).
+	 * 100 features and 1000 instances, relative Path).
 	 */
-	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED_NO_PROBING = META_DATA_FOLDER + SYSTEM_SEPARATOR
+	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED_NO_PROBING = META_DATA_FOLDER + SEPARATOR
 			+ "metaData_smallDataSets_computed_noProbing.arff";
 
 	/**
 	 * The location of the file containing all initial landmarkers as meta data for
 	 * a selection of small data sets (containing no more than 100 features and 1000
-	 * instances).
+	 * instances, relative Path).
 	 */
-	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED_ONLY_PROBING = META_DATA_FOLDER + SYSTEM_SEPARATOR
+	public static final String META_DATA_SMALL_DATA_SETS_COMPUTED_ONLY_PROBING = META_DATA_FOLDER + SEPARATOR
 			+ "metaData_smallDataSets_computed_onlyProbing.arff";
 
 	/**
@@ -135,49 +135,56 @@ public class Util {
 	 * The folder where the results of the evaluation of classifiers on data sets
 	 * are stored.
 	 */
-	public static final String CLASSIFIER_EVALUATION_RESULTS_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR
+	public static final String CLASSIFIER_EVALUATION_RESULTS_FOLDER = IO_FOLDER + SEPARATOR
 			+ "classifier_evaluation_results";
 
 	/**
 	 * The folder where the indices of data sets (on OpenML) are stored.
 	 */
-	public static final String DATASET_INDICES_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR + "dataset_indices";
+	public static final String DATASET_INDICES_FOLDER = IO_FOLDER + SEPARATOR + "dataset_indices";
 
 	/**
 	 * The file containing indices of data sets (on OpenML) of all initial data
 	 * sets.
 	 */
-	public static final String DATASET_INDEX_ALL = DATASET_INDICES_FOLDER + SYSTEM_SEPARATOR + "alldatasets.txt";
+	public static final String DATASET_INDEX_ALL = DATASET_INDICES_FOLDER + SEPARATOR + "all_datasets.txt";
 
 	/**
 	 * The file containing indices of data sets (on OpenML) of all initial small
 	 * data sets (less than 100 features and 1000 instances).
 	 */
-	public static final String DATASET_INDEX_SMALL = DATASET_INDICES_FOLDER + SYSTEM_SEPARATOR
+	public static final String DATASET_INDEX_SMALL = DATASET_INDICES_FOLDER + SEPARATOR
 			+ "max_100_features_1000_instances_datasets.txt";
+
+	/**
+	 * The file containing indices of data sets (on OpenML) of all initial large
+	 * data sets (more than 100 features or 1000 instances).
+	 */
+	public static final String DATASET_INDEX_LARGE = DATASET_INDICES_FOLDER + SEPARATOR
+			+ "more_than_100_features_1000_instances_datasets.txt";
 
 	/**
 	 * The folder where some statistics gathered during the computation of meta
 	 * features of data sets are stored.
 	 */
-	public static final String METAFEATURE_COMPUTATION_STATISTIC_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR
+	public static final String METAFEATURE_COMPUTATION_STATISTIC_FOLDER = IO_FOLDER + SEPARATOR
 			+ "metafeature_computation_statistics";
 
 	/**
 	 * The folder where the (intermediate) results of computing meta features are
 	 * stored.
 	 */
-	public static final String METAFEATURE_COMPUTATION_RESULTS_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR
+	public static final String METAFEATURE_COMPUTATION_RESULTS_FOLDER = IO_FOLDER + SEPARATOR
 			+ "metafeature_computation_statistics";
 
 	/**
 	 * The folder where the openML cache is located.
 	 */
-	public static final String OPENML_CACHE_FOLDER = IO_FOLDER + SYSTEM_SEPARATOR + "openML_cache";
+	public static final String OPENML_CACHE_FOLDER = IO_FOLDER + SEPARATOR + "openML_cache";
 
 	/**
 	 * The folder where the evaluation results for the rankers are lcoated.
 	 */
-	public static final String RANKER_EVALUATION_RESULTS = IO_FOLDER + SYSTEM_SEPARATOR + "ranker_evaluation_results";
+	public static final String RANKER_EVALUATION_RESULTS = IO_FOLDER + SEPARATOR + "ranker_evaluation_results";
 
 }

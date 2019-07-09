@@ -11,7 +11,6 @@ public class KendallRankCorrelation extends RankerEvaluationMeasure {
 	@Override
 	public double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates,
 			List<Double> performanceMeasures) {
-		System.out.print("Kendall ");
 		// Initialize temporary variables
 		double[] xArray = new double[predictedRanking.size()];
 		double[] yArray = new double[perfectRanking.size()];
@@ -29,7 +28,11 @@ public class KendallRankCorrelation extends RankerEvaluationMeasure {
 
 		KendallsCorrelation correlation = new KendallsCorrelation();
 		double result = correlation.correlation(xArray, yArray);
-		System.out.println(result);
+		
+		if (result < -1 || result > 1) {
+			System.err.println(result);
+		}
+		
 		return result;
 	}
 

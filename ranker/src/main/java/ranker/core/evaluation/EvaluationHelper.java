@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import ranker.Util;
-import ranker.core.algorithms.PerformanceOrder;
 import ranker.core.algorithms.Ranker;
 import ranker.util.openMLUtil.OpenMLHelper;
 import ranker.util.wekaUtil.EstimationProcedure;
@@ -39,46 +38,44 @@ public class EvaluationHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<Double> evaluateRanker(Ranker ranker, Instances instances, List<Integer> targetAttributes)
+	public static List<Double> evaluateRanker(RankerEstimationProcedure estim,Ranker ranker, Instances instances, List<Integer> targetAttributes)
 			throws Exception {
-		RankerEstimationProcedure estim = new LeaveOneOut();
-		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
+		List<RankerEvaluationMeasure> measures = new ArrayList<>();
 		measures.add(new KendallRankCorrelation());
-		Loss loss = new Loss();
-		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
-		measures.add(loss);
-		BestThreeLoss bestLoss = new BestThreeLoss();
-		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
-		measures.add(bestLoss);
-		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
-		System.out.println(estim.getDetailedEvaluationResults());
-		return result;
+		measures.add(new KendallRankCorrelationWithTies());
+		measures.add(new MaxDiff());
+
+		for (int i = 1; i < 23; i++) {
+			measures.add(new BestNLoss(i));
+		}
+		
+		measures.add(new NDCGAtK(3));
+		measures.add(new NDCGAtK(5));
+		measures.add(new NDCGAtK(10));
+		measures.add(new NDCGAtK(22));
+		
+		return estim.estimate(ranker, measures, instances, targetAttributes);
 	}
-
-	public static List<Double> evaluateRegressionRanker(Ranker ranker, Instances instances,
+	
+	public static List<Double> evaluateRegressionRanker(RankerEstimationProcedure estim, Ranker ranker, Instances instances,
 			List<Integer> targetAttributes) throws Exception {
-		// use leave one out as the estimation procedure
-		RankerEstimationProcedure estim = new LeaveOneOut();
-
 		// apply all evaluation measures fit for regression rankers
-		List<RankerEvaluationMeasure> measures = new ArrayList<RankerEvaluationMeasure>();
+		List<RankerEvaluationMeasure> measures = new ArrayList<>();
 		measures.add(new KendallRankCorrelation());
+		measures.add(new KendallRankCorrelationWithTies());
+		measures.add(new MaxDiff());
 		measures.add(new RootMeanSquareError());
-		Loss loss = new Loss();
-		loss.setPerformanceOrder(PerformanceOrder.ASCENDING);
-		measures.add(loss);
-		BestThreeLoss bestLoss = new BestThreeLoss();
-		bestLoss.setPerformanceOrder(PerformanceOrder.ASCENDING);
-		measures.add(bestLoss);
+		
+		for (int i = 1; i < 23; i++) {
+			measures.add(new BestNLoss(i));
+		}
+		
+		measures.add(new NDCGAtK(3));
+		measures.add(new NDCGAtK(5));
+		measures.add(new NDCGAtK(10));
+		measures.add(new NDCGAtK(22));
 
-		// estimate
-		List<Double> result = estim.estimate(ranker, measures, instances, targetAttributes);
-
-		// print detailed results
-		System.out.println(estim.getDetailedEvaluationResults());
-
-		// return results
-		return result;
+		return estim.estimate(ranker, measures, instances, targetAttributes);
 	}
 
 	/**

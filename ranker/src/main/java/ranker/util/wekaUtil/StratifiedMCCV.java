@@ -1,7 +1,6 @@
 package ranker.util.wekaUtil;
 
 import java.util.List;
-import java.util.Random;
 
 import jaicore.ml.WekaUtil;
 import weka.classifiers.Classifier;
@@ -34,8 +33,8 @@ public class StratifiedMCCV implements EstimationProcedure {
 		double result = 0;
 		
 		// Split data set and evaluate classifier
-		for (int i = 0; i < times; i++) {
-			List<Instances> splits = WekaUtil.getStratifiedSplit(dataSet, new Random(i), 1 - holdout);
+		for (long i = 0; i < times; i++) {
+			List<Instances> splits = WekaUtil.getStratifiedSplit(dataSet, i, 1 - holdout);
 			result += evaluationMeasure.evaluate(classifier, splits.get(0), splits.get(1));
 		}
 		

@@ -7,13 +7,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.time.StopWatch;
 
+import ranker.Util;
 import ranker.core.algorithms.PerfectRanker;
 import ranker.core.algorithms.Ranker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
-
-import ranker.Util;
 
 public abstract class RankerEstimationProcedure {
 
@@ -21,11 +20,11 @@ public abstract class RankerEstimationProcedure {
 
 	protected Ranker perfectRanker = new PerfectRanker();
 
-	protected Map<String ,List<Double>> detailedEvaluationResults = new HashMap<String,List<Double>>();
-	protected List<List<Classifier>> predictedRankings = new ArrayList<List<Classifier>>();
-	protected List<List<Classifier>> actualRankings = new ArrayList<List<Classifier>>();
-	protected List<List<Double>> estimates = new ArrayList<List<Double>>();
-	protected List<List<Double>> performanceValues = new ArrayList<List<Double>>();
+	protected Map<String ,List<Object>> detailedEvaluationResults = new HashMap<>();
+	protected List<List<Classifier>> predictedRankings = new ArrayList<>();
+	protected List<List<Classifier>> actualRankings = new ArrayList<>();
+	protected List<List<Double>> estimates = new ArrayList<>();
+	protected List<List<Double>> performanceValues = new ArrayList<>();
 	private  StopWatch watch = new StopWatch();
 
 	/**
@@ -40,8 +39,8 @@ public abstract class RankerEstimationProcedure {
 	 */
 	public abstract List<Double> estimate(Ranker ranker, List<RankerEvaluationMeasure> evaluationProcedures, Instances data,
 			List<Integer> targetAttributes) throws Exception;
-
-	public Map<String,List<Double>> getDetailedEvaluationResults() {
+	
+	public Map<String,List<Object>> getDetailedEvaluationResults() {
 		return detailedEvaluationResults;
 	}
 
@@ -110,13 +109,28 @@ public abstract class RankerEstimationProcedure {
 				// Evaluate on each measure & save results
 				for (RankerEvaluationMeasure measure : measures) {
 					double result = measure.evaluate(predictedRanking, perfectRanking, estimatedValues, performanceMeasures);
-					detailedEvaluationResults.get(measure.getClass().getSimpleName()).add(result);
+					detailedEvaluationResults.get(measure.getName()).add(result);
 				}
 				//save time of ranker building
 				detailedEvaluationResults.get(Util.RANKER_BUILD_TIMES).add(buildTime);
+				detailedEvaluationResults.get("classifier_string").add(ranker.getClassifierString());
+				
+				String predictedRankingString = "";
+				for (Classifier classifier : predictedRanking) {
+					predictedRankingString += classifier.getClass().getSimpleName() + ", ";
+				}
+
+				String actualRankingString = "";
+				for (int i = 0; i < perfectRanking.size(); i++) {
+					actualRankingString += perfectRanking.get(i).getClass().getSimpleName() + ", ";
+				}
+				
+				detailedEvaluationResults.get("predicted_ranking").add(predictedRankingString);
+				detailedEvaluationResults.get("actual_ranking").add(actualRankingString);
 			} catch (Exception e) {
 				throw(e);
 			}
 		}
 	}
+
 }

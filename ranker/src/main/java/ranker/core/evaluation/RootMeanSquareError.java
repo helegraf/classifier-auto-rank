@@ -19,9 +19,8 @@ public class RootMeanSquareError extends RankerEvaluationMeasure {
 	@Override
 	public double evaluate(List<Classifier> predictedRanking, List<Classifier> perfectRanking, List<Double> estimates,
 			List<Double> performanceMeasures) {
-		System.out.print("RMSE ");
-		List<Double> estimations = new ArrayList<Double>();
-		List<Double> actualValues = new ArrayList<Double>();
+		List<Double> estimations = new ArrayList<>();
+		List<Double> actualValues = new ArrayList<>();
 
 		// Find corresponding classifier values and compare
 		for (int i = 0; i < predictedRanking.size(); i++) {
@@ -38,7 +37,6 @@ public class RootMeanSquareError extends RankerEvaluationMeasure {
 		
 
 		double result = computeRMSE(estimations, actualValues);
-		System.out.println(result);
 		return result;
 	}
 	

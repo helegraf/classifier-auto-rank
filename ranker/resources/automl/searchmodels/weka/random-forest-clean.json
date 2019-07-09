@@ -1,0 +1,23 @@
+{
+  "repository" : "RF only",
+  "components" : 
+  [
+  	{
+    	"name" : "weka.classifiers.trees.RandomForest",
+    	"requiredInterface" : [ ],
+    	"providedInterface" : [ "AbstractClassifier", "WekaBaseClassifier", "BaseClassifier" ],
+    	"parameter" : 
+    	[ 
+    		{
+      			"name" : "I",
+      			"type" : "int",
+      			"default" : 10.0,
+      			"min" : 2.0,
+      			"max" : 256.0,
+      			"refineSplits" : 8,
+      			"minInterval" : 10
+    		} 	
+   		]
+	}
+   ]
+}

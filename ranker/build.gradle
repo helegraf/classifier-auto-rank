@@ -1,27 +1,40 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
     }
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '1.13.1' 
     id 'java-library'
     id 'eclipse'
     id 'maven'
 }
 
+sourceSets {
+		main {
+			java {
+				srcDir 'src/main/java'
+			}
+			resources {
+				srcDir 'conf'
+				srcDir 'resources'
+			}
+		}
+		test {
+			java {
+				srcDir 'src/test/java'
+			}
+		}
+}
+
+
 group = 'com.github.helegraf'
 description = ''
 // version = 
-
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
-}
 
 uploadArchives {
     repositories {
@@ -34,42 +47,63 @@ uploadArchives {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'ranker.Main'
+        attributes 'Main-Class': 'experiments.EmpiricalRankerExperimenter'
     }
 }
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
-    mavenLocal()
-	maven { url 'https://jitpack.io' }
+		mavenCentral()
+		mavenLocal()
+		maven { url "https://jitpack.io" }
+		maven { url "http://clojars.org/repo/" }
+		maven { url "https://plugins.gradle.org/m2/" }
+		maven { url "https://nexus.cs.upb.de/repository/maven-releases/" }
+		flatDir {
+			dirs 'lib'
+		}
 }
 
-dependencies {
+//configurations {
+ //     all*.exclude group: 'log4j', module: 'log4j'
+//}
 
+
+dependencies {
 	// OpenmlWebapplication for computing meta-features
 	implementation files ('libs/OpenmlWebapplication.jar')
 	
+	// Autoweka
+	//implementation files ('libs/autoweka.jar')
+	
 	// jPL
-	implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
+	//implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
 
 	// JAICore
-    implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'
+    //implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
     // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable 
-	api group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.1'
+	//api group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.1'
     
-    // https://mvnrepository.com/artifact/org.openml/apiconnector
-    implementation group: 'org.openml', name: 'apiconnector', version: '1.0.18'
+	// https://mvnrepository.com/artifact/org.openml/apiconnector
+	//compile group: 'org.openml', name: 'apiconnector', version: '1.0.22'
+
     
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.45'
+
+ 	implementation 'com.github.helegraf:data-handling:e4d6a1bbbb'
  	
+ 	compile 'ai.libs:mlplan'
+
 }
 
 
@@ -114,3 +148,39 @@ install {
   }
 }
 
+shadowJar {
+  zip64 true
+      mergeServiceFiles()
+    exclude "META-INF/*.SF"
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    exclude "LICENSE*"
+}
+
+task modeljar(type: Jar) {
+	zip64 = true
+    manifest {
+        attributes 'Main-Class': 'experiments.RankerModelTrainingExperimenter'
+    }
+    destinationDir = file("${projectDir}")
+    baseName = 'ranker_models'
+    exclude ('META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA')
+    from sourceSets.main.allSource
+    from { (configurations.compile)
+            .collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task mlplanregjar(type: Jar) {
+	zip64 = true
+    manifest {
+        attributes 'Main-Class': 'experiments.MLPlanRankerExperimenter'
+    }
+    destinationDir = file("${projectDir}")
+    baseName = 'mlplanreg'
+    exclude ('META-INF/*.RSA', 'META-INF/*.SF','META-INF/*.DSA')
+    from sourceSets.main.allSource
+    from { (configurations.compile)
+            .collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

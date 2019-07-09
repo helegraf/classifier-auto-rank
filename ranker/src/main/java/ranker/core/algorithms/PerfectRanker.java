@@ -1,11 +1,10 @@
 package ranker.core.algorithms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
-import de.upb.cs.is.jpl.api.dataset.defaultdataset.relative.Ranking;
-import de.upb.cs.is.jpl.api.exception.algorithm.PredictionFailedException;
-import ranker.core.algorithms.preference.PreferenceRanker;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 
@@ -21,7 +20,24 @@ import weka.core.Instance;
  * @author Helena Graf
  *
  */
-public class PerfectRanker extends PreferenceRanker {
+public class PerfectRanker extends Ranker {
+
+	/**
+	 * Contains a label for each learning algorithm (0 to n-1 for n learning
+	 * algorithms)
+	 */
+	protected ArrayList<Integer> labels;
+
+	/**
+	 * Maps classifier indices to labels
+	 */
+	protected HashMap<Integer, Integer> indicesMap;
+
+	/**
+	 * Maps labels to classifier indices
+	 */
+	protected HashMap<Integer, Integer> reverseIndicesMap;
+
 
 	/**
 	 * List with actual performance values ordered according to the last returned
@@ -30,8 +46,8 @@ public class PerfectRanker extends PreferenceRanker {
 	protected List<Double> performanceMeasures;
 
 	@Override
-	public List<Classifier> predictRankingforInstance(Instance instance) throws PredictionFailedException {
-		Ranking ranking = getRankingForInstance(instance);
+	public List<Classifier> predictRankingforInstance(Instance instance)  {
+		Ranking ranking = getOrderingForInstance(instance);
 
 		// Get actual performance measures
 		performanceMeasures = new ArrayList<Double>();
@@ -40,7 +56,66 @@ public class PerfectRanker extends PreferenceRanker {
 			performanceMeasures.add(instance.value(algorithmIndex));
 		}
 
-		return mapToOrdering(ranking);
+		return mapOrderingToClassifiersList(ranking);
+	}
+	
+	/**
+	 * Map labels to corresponding learning algorithms.
+	 * 
+	 * @param ordering
+	 *            The ranking of labels
+	 * @return The ordering of learning algorithms
+	 */
+	protected List<Classifier> mapOrderingToClassifiersList(Ranking ordering) {
+		int[] rankingResult = ordering.getObjectList();
+		List<Classifier> result = new ArrayList<Classifier>();
+		for (int classifier : rankingResult) {
+			result.add(classifiersMap.get(reverseIndicesMap.get(classifier)));
+		}
+		return result;
+	}
+	
+	/**
+	 * Converts the performance measure information given for an instance to an
+	 * ordering of labels.
+	 * 
+	 * @param instance
+	 * @return
+	 */
+	protected Ranking getOrderingForInstance(Instance instance) {
+		// Initialize temporary variables
+		int[] objectList = new int[targetAttributes.size()];
+		int[] compareOperators = new int[objectList.length - 1];
+		for (int i = 0; i < compareOperators.length; i++) {
+			compareOperators[i] = Ranking.COMPARABLE_ENCODING;
+		}
+
+		// Save performance values together with the learning algorithms that have
+		// achieved this value
+		TreeMap<Double, ArrayList<Integer>> classifierPerformances = new TreeMap<Double, ArrayList<Integer>>();
+		for (int attributeIndex : targetAttributes) {
+			double attributeValue = instance.value(attributeIndex);
+			if (classifierPerformances.containsKey(attributeValue)) {
+				classifierPerformances.get(attributeValue).add(indicesMap.get(attributeIndex));
+			} else {
+				ArrayList<Integer> indices = new ArrayList<Integer>();
+				indices.add(indicesMap.get(attributeIndex));
+				classifierPerformances.put(attributeValue, indices);
+			}
+		}
+		
+		// Ordering of learning algorithms
+		ArrayList<Integer> ordering = new ArrayList<Integer>();
+		for (double performanceValue : classifierPerformances.descendingKeySet()) {
+			ordering.addAll(classifierPerformances.get(performanceValue));
+		}
+		for (int i = 0; i < ordering.size(); i++) {
+			objectList[i] = ordering.get(i);
+		}
+
+		// Construct result
+		Ranking result = new Ranking(objectList, compareOperators);
+		return result;
 	}
 
 	@Override
@@ -51,5 +126,19 @@ public class PerfectRanker extends PreferenceRanker {
 	@Override
 	protected void initialize() throws Exception {
 		initializeLabels();
+	}
+	
+	/**
+	 * Initialize labels and mappings for labels
+	 */
+	protected void initializeLabels() {
+		labels = new ArrayList<Integer>();
+		indicesMap = new HashMap<Integer, Integer>();
+		reverseIndicesMap = new HashMap<Integer, Integer>();
+		for (int i = 0; i < targetAttributes.size(); i++) {
+			labels.add(i);
+			indicesMap.put(targetAttributes.get(i), i);
+			reverseIndicesMap.put(i, targetAttributes.get(i));
+		}
 	}
 }

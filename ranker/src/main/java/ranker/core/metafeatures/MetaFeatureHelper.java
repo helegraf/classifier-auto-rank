@@ -154,24 +154,57 @@ public class MetaFeatureHelper {
 		instances.addAll(metaFeaturesForDataSets.values());
 		return instances;
 	}
-
-	/**
-	 * Merges files containing the same set of meta features for different data set
-	 * into one meta feature data set.
-	 * 
-	 * @return The merged data set
-	 * @throws IOException
-	 *             If the files cannot be read correctly
-	 */
-	public static Instances mergeMetaFeatureParts() throws IOException {
+	
+	public static Instances gatherClassifierPerformanceValues(List<Integer> dataSetIds) throws IOException {	
+		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		attributes.add(new Attribute("DatasetId"));
+		
+		// Classifiers mapping name to index in created instances
+		Map<String, Integer> classifierIndices = new HashMap<String, Integer>();
+		for (int i = 0; i < Util.PORTFOLIO.length; i++) {
+			String classifierName = Util.PORTFOLIO[i].getClass().getName();
+			classifierIndices.put(classifierName, i + 1);
+			attributes.add(new Attribute(classifierName));
+		} 
+		
+		HashMap<Integer,Instance> metaFeaturesForDataSets = new HashMap<Integer,Instance>();
+		for (int i : dataSetIds) {
+			metaFeaturesForDataSets.put(i, new DenseInstance(classifierIndices.size()+1));
+			metaFeaturesForDataSets.get(i).setValue(0, i);
+		}
+		
+		// Add performance results
 		try (Stream<Path> paths = Files
-				.walk(FileSystems.getDefault().getPath(Util.METAFEATURE_COMPUTATION_RESULTS_FOLDER))) {
+				.walk(FileSystems.getDefault().getPath(Util.CLASSIFIER_EVALUATION_RESULTS_FOLDER))) {
 			paths.filter(Files::isRegularFile).forEach(file -> {
+				try {
+					BufferedReader reader = Files.newBufferedReader(file, Util.CHARSET);
+					String line = reader.readLine();
+					if (line != null) {
+						String fileName = file.getFileName().toString();
+						fileName = fileName.substring(0, fileName.length() - 4);
+						String[] parts = fileName.split(Util.CLASSIFIER_EVALUATION_RESULTS_SEPARATOR);
+						String classifierName = parts[0];
+						int dataSetId = Integer.parseInt(parts[1]);
+						if (dataSetIds.contains(dataSetId)) {
+							if (classifierIndices.get(classifierName) != null) {
+								Instance instance = metaFeaturesForDataSets.get(dataSetId);
+								int attIndex = classifierIndices.get(classifierName);
+								double value = Double.parseDouble(line);
+								instance.setValue(attIndex, value);
+							}
+						}
+					}
 
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			});
 		}
-		return null;
-
+		
+		Instances instances = new Instances("classifiers",attributes,metaFeaturesForDataSets.size());
+		instances.addAll(metaFeaturesForDataSets.values());
+		return instances;
 	}
 
 	/**

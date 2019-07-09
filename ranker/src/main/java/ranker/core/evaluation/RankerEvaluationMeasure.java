@@ -24,4 +24,8 @@ public abstract class RankerEvaluationMeasure {
 	public String getSummary() {
 		return summaryString.toString();
 	}
+
+	public String getName() {
+		return this.getClass().getSimpleName();
+	}
 }

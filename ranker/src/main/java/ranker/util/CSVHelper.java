@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,10 @@ public class CSVHelper {
 	public static String getCSVPath(Ranker ranker, Instances instances) {
 		return getCSVPath(ranker.getClass().getSimpleName(), instances.relationName());
 	}
+	
+	public static String getCSVPath(Ranker ranker, Instances instances, String suffix) {
+		return getCSVPath(ranker.getName(), instances.relationName() + "_" + suffix);
+	}
 
 	/**
 	 * Converts the given ranker name and data set name into a path. TO be used as a
@@ -50,7 +55,7 @@ public class CSVHelper {
 	 * @return The converted Path
 	 */
 	public static String getCSVPath(String rankerName, String instancesName) {
-		return Util.RANKER_EVALUATION_RESULTS + Util.SYSTEM_SEPARATOR + rankerName + Util.RANKER_EVALUATION_RESULTS_SEPARATOR + instancesName + ".csv";
+		return Util.RANKER_EVALUATION_RESULTS + Util.SEPARATOR + rankerName + Util.RANKER_EVALUATION_RESULTS_SEPARATOR + instancesName + System.currentTimeMillis() + ".csv";
 	}
 
 	/**
@@ -67,7 +72,7 @@ public class CSVHelper {
 	 * @throws IOException
 	 *             If an Exception occurs while writing to the disk
 	 */
-	public static void writeCSVFile(String destination, Map<String, List<Double>> contents) throws IOException {
+	public static void writeCSVFile(String destination, Map<String, List<Object>> contents) throws IOException {
 		// initialize writer
 		FileWriter fileWriter = new FileWriter(new File(destination.toString()));
 		BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -77,7 +82,7 @@ public class CSVHelper {
 		writer.write(createCSVHeader(keys));
 
 		// write each line
-		for (int i = 0; i < contents.size(); i++) {
+		for (int i = 0; i < contents.get(keys.get(0)).size(); i++) {
 			writer.newLine();
 			writer.write(createCSVDataLine(i, keys, contents));
 		}
@@ -137,7 +142,7 @@ public class CSVHelper {
 	 */
 	public static double[] getColumnValues(Path path, String column) throws IOException, ColumnNotFoundException {
 		// Initialize values and reader
-		List<Double> values = new ArrayList<Double>();
+		List<Double> values = new ArrayList<>();
 		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
 
 		// Find index of measure
@@ -159,7 +164,7 @@ public class CSVHelper {
 		List<String> toReturn = new ArrayList<>();
 
 		// ensure that data id is in the first column
-		Set<String> columnTitlesCopy = new HashSet<String>(columnTitles);
+		Set<String> columnTitlesCopy = new HashSet<>(columnTitles);
 		if (columnTitlesCopy.contains(Util.DATA_ID) && columnTitlesCopy.contains(Util.RANKER_BUILD_TIMES)) {
 			// TODO there must be a better way for this -> don't assume always exist / data
 			// id is first when deleting for analysis etc. ?
@@ -171,7 +176,10 @@ public class CSVHelper {
 			throw new RuntimeException("DataID or Ranker build times not in keyset of detailed evaluation results");
 		}
 		// add column titles to list and return
-		columnTitlesCopy.forEach(entry -> toReturn.add(entry));
+		List<String> sortedEntries = new ArrayList<>();
+		columnTitlesCopy.forEach(entry -> sortedEntries.add(entry));
+		Collections.sort(sortedEntries);
+		toReturn.addAll(sortedEntries);
 		return toReturn;
 	}
 
@@ -187,7 +195,7 @@ public class CSVHelper {
 
 	}
 
-	private static String createCSVDataLine(int index, List<String> columnTitles, Map<String, List<Double>> contents) {
+	private static String createCSVDataLine(int index, List<String> columnTitles, Map<String, List<Object>> contents) {
 		// append values in the correct order
 		String toReturn = "";
 		for (String key : columnTitles) {

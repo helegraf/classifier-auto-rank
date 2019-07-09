@@ -1,0 +1,59 @@
+{
+  "repository" : "Tiny repository",
+  "components" : [
+  {
+    "name" : "weka.classifiers.functions.LinearRegression",
+    "requiredInterface" : [ ],
+    "providedInterface" : [ "AbstractClassifier", "WekaBaseClassifier", "Regressor", "BaseClassifier" ],
+    "parameter" : [ {
+    	"name" : "S",
+    	"type" : "cat",
+    	"default" : "0",
+    	"values" : ["0","1","2"]
+    }, {
+    	"name" : "C",
+    	"type" : "boolean",
+    	"default" : "true"
+    }, {
+    	"name" : "R",
+    	"type" : "double",
+    	"default" : 1.0E-8,
+    	"min" : 1.0E-8,
+    	"max" : 10.0,
+      	"refineSplits" : 8,
+      	"minInterval" : 10
+    }
+    ],
+    "dependencies" : [ ]
+  }, {
+  	"name" : "weka.classifiers.functions.SMOreg",
+  	"requiredInterface" : [ {"id": "K", "name":  "K" } ],
+  	"providedInterface" : ["AbstractClassifier","WekaBaseClassifier","Regressor","BaseClassifier"],
+  	"parameter" : [ {
+  		"name" : "C",
+  		"type" : "double",
+    	"default" : 1.0,
+    	"min" : 0.5,
+    	"max" : 1.5,
+      	"refineSplits" : 8,
+      	"minInterval" : 10
+  	},  {
+    	"name" : "N",
+    	"type" : "cat",
+    	"default" : "0",
+    	"values" : ["0","1","2"]
+    }
+  	]
+  }, {
+    "name" : "weka.classifiers.functions.supportVector.NormalizedPolyKernel",
+    "requiredInterface" : [ ],
+    "providedInterface" : [ "K" ],
+    "parameter" : [ ]
+  },  {
+    "name" : "weka.classifiers.functions.supportVector.RBFKernel",
+    "requiredInterface" : [ ],
+    "providedInterface" : [ "K" ],
+    "parameter" : [ ]
+  }
+  ]
+}

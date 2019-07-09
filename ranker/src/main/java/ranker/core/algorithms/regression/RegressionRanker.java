@@ -34,8 +34,8 @@ public abstract class RegressionRanker extends Ranker {
 	@Override
 	public List<Classifier> predictRankingforInstance(Instance instance) throws Exception {
 		// Initialize data structures to save results
-		TreeMap<Double, List<Classifier>> predictions = new TreeMap<Double, List<Classifier>>();
-		ArrayList<Classifier> results = new ArrayList<Classifier>();
+		TreeMap<Double, List<Classifier>> predictions = new TreeMap<>();
+		ArrayList<Classifier> results = new ArrayList<>();
 
 		// Construct querying instance
 		double[] newFeatures = new double[features.size() + 1];
@@ -52,14 +52,14 @@ public abstract class RegressionRanker extends Ranker {
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(classifier);
 			} else {
-				ArrayList<Classifier> classifiers = new ArrayList<Classifier>();
+				ArrayList<Classifier> classifiers = new ArrayList<>();
 				classifiers.add(classifier);
 				predictions.put(result, classifiers);
 			}
 		}
 
 		// Build list of results
-		estimates = new ArrayList<Double>();
+		estimates = new ArrayList<>();
 		predictions.descendingMap().forEach((value, classifierList) -> {
 			results.addAll(classifierList);
 			classifierList.forEach(classifier -> estimates.add(value));
@@ -83,10 +83,10 @@ public abstract class RegressionRanker extends Ranker {
 
 	@Override
 	protected void initialize() throws Exception {
-		trainingData = new HashMap<Classifier, Instances>();
+		trainingData = new HashMap<>();
 
 		// Get all attributes
-		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+		ArrayList<Attribute> attributes = new ArrayList<>();
 		for (int i : features) {
 			attributes.add(new Attribute(data.attribute(i).name()));
 		}

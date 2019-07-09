@@ -4,13 +4,14 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.openml.apiconnector.io.OpenmlConnector;
 import org.openml.apiconnector.settings.Settings;
 import org.openml.apiconnector.xml.Data;
@@ -29,7 +30,7 @@ import weka.core.converters.ConverterUtils.DataSource;
  *
  */
 public class OpenMLHelper {
-	
+
 	public static String apiKey;
 
 	/**
@@ -42,16 +43,20 @@ public class OpenMLHelper {
 	 * @return
 	 * @throws IOException
 	 */
+	@SuppressWarnings("deprecation")
 	public static Instances getInstancesById(int dataId) throws IOException {
 		// Set the cache according to specified directory
 		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
-		
+
 		Instances dataset = null;
 
 		// Get apiKey if not given
 		if (OpenMLHelper.apiKey == null) {
-			BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath(Util.APIKEY), Util.CHARSET);
-			OpenMLHelper.apiKey = reader.readLine();
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			InputStream inputStream = classLoader.getResourceAsStream(Util.APIKEY);
+			//BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath(Util.APIKEY),
+				//	Util.CHARSET);
+			OpenMLHelper.apiKey =IOUtils.toString(inputStream);
 		}
 
 		// Get dataset from OpenML
@@ -73,7 +78,25 @@ public class OpenMLHelper {
 	}
 
 	/**
-	 * Creates a list of data sets by id in a file with caps for the maximum of features and instances. Caps ignored if set to values smaller than 0.
+	 * Gets the data set name for a given data set id on OpenML.
+	 * 
+	 * @param dataSetId
+	 *            The id of a data set on OpenML
+	 * @return The corresponding name of the data set
+	 * @throws Exception
+	 *             If something goes wrong while connecting to OpenML
+	 */
+	public static String getDataSetName(int dataSetId) throws Exception {
+		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
+
+		OpenmlConnector client = new OpenmlConnector();
+		DataSetDescription description = client.dataGet(dataSetId);
+		return description.getName();
+	}
+
+	/**
+	 * Creates a list of data sets by id in a file with caps for the maximum of
+	 * features and instances. Caps ignored if set to values smaller than 0.
 	 * 
 	 * @param maxNumFeatures
 	 * @param maxNumInstances
@@ -87,44 +110,44 @@ public class OpenMLHelper {
 		int filteredTarget = 0;
 		int filteredNumeric = 0;
 		int fitForAnalysis = 0;
-	
+
 		// For saving data sets
 		BufferedWriter writer = Files.newBufferedWriter(path, Util.CHARSET);
-	
+
 		// OpenML connection
 		OpenmlConnector client = new OpenmlConnector();
-	
+
 		// Get data sets that are active
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("status", "active");
 		Data data = client.dataList(map);
 		DataSet[] data_raw = data.getData();
 		unfiltered = data_raw.length;
-	
+
 		// Filter out data sets not fit for analysis
 		for (int i = 0; i < data_raw.length; i++) {
 			// Keep track of progress to see if something freezes
 			System.out.println("Progress: " + (Math.round(i * 1.0 / data_raw.length * 100.0)));
-	
+
 			// No generated streaming data
 			if (data_raw[i].getName().contains("BNG")) {
 				filteredBNG++;
 				continue;
 			}
-	
+
 			// No non-.ARFF files
 			if (!data_raw[i].getFormat().equals("ARFF")) {
 				filteredARFF++;
 				continue;
 			}
-	
+
 			// Analyze features
 			DataFeature dataFeature = client.dataFeatures(data_raw[i].getDid());
 			Feature[] features = dataFeature.getFeatures();
 			if (maxNumFeatures > 0 && features.length > maxNumFeatures) {
 				continue;
 			}
-	
+
 			boolean noTarget = true;
 			boolean numericTarget = true;
 			for (int j = features.length - 1; j >= 0; j--) {
@@ -136,7 +159,7 @@ public class OpenMLHelper {
 					break;
 				}
 			}
-	
+
 			// Analyze instances
 			String numInst = data_raw[i].getQualityMap().get("NumberOfInstances");
 			if (numInst == null) {
@@ -146,28 +169,28 @@ public class OpenMLHelper {
 					continue;
 				}
 			}
-	
+
 			// No non-existent target attributes
 			if (noTarget) {
 				filteredTarget++;
 				continue;
 			}
-	
+
 			// No numeric target attributes
 			if (numericTarget) {
 				filteredNumeric++;
 				continue;
 			}
-	
+
 			// Data is fit for analysis, save
 			writer.write(Integer.toString(data_raw[i].getDid()));
 			writer.newLine();
 			fitForAnalysis++;
-	
+
 		}
-	
+
 		writer.close();
-	
+
 		// Print statistics
 		System.out.println("Unfiltered: " + unfiltered);
 		System.out.println("BNG: " + filteredBNG);

@@ -26,12 +26,15 @@ public class LeaveOneOut extends RankerEstimationProcedure {
 			List<Integer> targetAttributes) throws Exception {
 		// Initialize variables
 		for (RankerEvaluationMeasure measure : measures) {
-			detailedEvaluationResults.put(measure.getClass().getSimpleName(), new ArrayList<Double>());
+			detailedEvaluationResults.put(measure.getClass().getSimpleName(), new ArrayList<>());
 		}
 		detailedEvaluationResults.put(Util.DATA_ID, new ArrayList<>());
 		detailedEvaluationResults.put(Util.RANKER_BUILD_TIMES, new ArrayList<>());
 		detailedEvaluationResults.put(Util.RANKER_PREDICT_TIMES, new ArrayList<>());
-
+		detailedEvaluationResults.put("actual_ranking", new ArrayList<>());
+		detailedEvaluationResults.put("predicted_ranking", new ArrayList<>());
+		detailedEvaluationResults.put("classifier_string", new ArrayList<>());
+		
 		// Evaluate all instances separately
 		for (int i = 0; i < metaData.numInstances(); i++) {
 			Instances train = new Instances(metaData);
@@ -58,7 +61,8 @@ public class LeaveOneOut extends RankerEstimationProcedure {
 		List<Double> results = new ArrayList<Double>();
 		for (String measure : detailedEvaluationResults.keySet()) {
 			double result = 0;
-			for (double value : detailedEvaluationResults.get(measure)) {
+			for (Object val : detailedEvaluationResults.get(measure)) {
+				double value = (double) val;
 				if (!Double.isNaN(value)) {
 					result += value;
 				} else {

@@ -9,10 +9,6 @@ import org.apache.commons.math3.stat.inference.MannWhitneyUTest;
 import org.apache.commons.math3.stat.ranking.NaNStrategy;
 import org.apache.commons.math3.stat.ranking.TiesStrategy;
 
-import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoung;
-import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoungSQRTN;
-import ranker.core.algorithms.preference.InstanceBasedLabelRankingRanker;
-import ranker.core.algorithms.preference.PairwiseComparisonRanker;
 import ranker.core.algorithms.regression.LinearRegressionRanker;
 import ranker.core.algorithms.regression.M5PRanker;
 import ranker.core.algorithms.regression.REPTreeRanker;
@@ -41,10 +37,11 @@ public class MannWhitneyUEvaluator {
 			Loss.class.getSimpleName(), BestThreeLoss.class.getSimpleName());
 
 	public static final List<String> ALL_RANKER_NAMES = Arrays.asList(
-			InstanceBasedLabelRankingRanker.class.getSimpleName(),
-			InstanceBasedLabelRankingKemenyYoung.class.getSimpleName(),
-			InstanceBasedLabelRankingKemenyYoungSQRTN.class.getSimpleName(),
-			PairwiseComparisonRanker.class.getSimpleName(), RandomForestRanker.class.getSimpleName(),
+			//InstanceBasedLabelRankingRanker.class.getSimpleName(),
+			//InstanceBasedLabelRankingKemenyYoung.class.getSimpleName(),
+			//InstanceBasedLabelRankingKemenyYoungSQRTN.class.getSimpleName(),
+			//PairwiseComparisonRanker.class.getSimpleName(), 
+			RandomForestRanker.class.getSimpleName(),
 			LinearRegressionRanker.class.getSimpleName(), REPTreeRanker.class.getSimpleName(),
 			M5PRanker.class.getSimpleName());
 

@@ -30,6 +30,7 @@ public class Loss extends RankerEvaluationMeasure {
 					// best <= predicted
 					loss = predicted - best;
 				}
+				break;
 			}
 		}
 		System.out.println(loss);
