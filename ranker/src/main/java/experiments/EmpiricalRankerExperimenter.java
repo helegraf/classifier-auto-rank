@@ -223,7 +223,7 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 	}
 
 	private int getRepetitionTimes(String string) {
-		return Integer.parseInt(string.split("")[0]);
+		return Integer.parseInt(string.split("_")[0]);
 	}
 
 	@Subscribe
