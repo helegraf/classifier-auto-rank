@@ -34,7 +34,13 @@ import jaicore.experiments.exceptions.ExperimentDBInteractionFailedException;
 import jaicore.experiments.exceptions.ExperimentEvaluationFailedException;
 import jaicore.experiments.exceptions.IllegalExperimentSetupException;
 import jaicore.ml.WekaUtil;
+import ranker.core.algorithms.BestAlgorithmRanker;
 import ranker.core.algorithms.Ranker;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoung;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoungSQRTN;
+import ranker.core.algorithms.preference.InstanceBasedLabelRankingRanker;
+import ranker.core.algorithms.preference.PairwiseComparisonRanker;
+import ranker.core.algorithms.preference.PreferenceRanker;
 import ranker.core.algorithms.regression.MLPlanRegressionRanker;
 import ranker.core.algorithms.regression.WEKARegressionRanker;
 import ranker.core.evaluation.EvaluationHelper;
@@ -79,11 +85,8 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 			for ( Logger logger : loggers ) {
 				System.out.println("WARN level logger " + logger.getName());
 			    logger.setLevel(Level.WARN);
-		//	    logger.removeAllAppenders();
-	//		    logger.addAppender(new NullAppender());
 			}
-//			Logger.getRootLogger().removeAllAppenders();
-//			Logger.getRootLogger().addAppender(new NullAppender());
+
 			
 			
 			this.experimentID = experimentEntry.getId();
@@ -108,11 +111,11 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 			RankerEstimationProcedure estim = getEstimationProcedure(experimentValues.get("split"), experimentValues.get("seed"));
 			
 			List<Double> result;
-			//if (!(ranker instanceof PreferenceRanker)) {
+			if (!(ranker instanceof PreferenceRanker)) {
 				result = EvaluationHelper.evaluateRegressionRanker(estim, ranker, data, targetAttributes);
-			//} else {
-				//result = EvaluationHelper.evaluateRanker(new MCCV(5,.7),ranker, data, targetAttributes);
-			//}
+			} else {
+				result = EvaluationHelper.evaluateRanker(new MCCV(5,.7, experimentValues.get("seed")),ranker, data, targetAttributes);
+			}
 			L.info("result: {}", result);	
 			L.info("num results: {}",result.size());
 			
@@ -122,12 +125,12 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 			results.put("kendall_tied", result.get(1));
 			results.put("max_diff", result.get(2));
 			int index = 2;
-//			if (!(ranker instanceof PreferenceRanker)) {
+			if (!(ranker instanceof PreferenceRanker)) {
 				results.put("rmse", result.get(3));
 				index++;
-//			} else {
-//				results.put("rmse", -1);
-//			}
+			} else {
+				results.put("rmse", -1);
+			}
 			
 			for (int i = 1; i < 23; i++) {
 				results.put("bl_" + i, result.get(index + i));
@@ -185,32 +188,31 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 			return getMLPLanRanker(algorithm, experimentValues, experimentEntry);
 		} else if (algorithm.startsWith("weka")) {
 			return getWEKARanker(algorithm);
+		} else if (algorithm.startsWith("preference")) {
+			return getPreferenceRanker(algorithm);
+		} else if (algorithm.startsWith("baseline")) {
+			return getBaselineRanker(algorithm);
 		}
-//		} else if (algorithm.startsWith("preference")) {
-//			return getPreferenceRanker(algorithm);
-//		} else if (algorithm.startsWith("baseline")) {
-//			return getBaselineRanker(algorithm);
-//		}
 		
 		throw new IllegalArgumentException(algorithm + " is not a valid ranker.");
 	}
 
-//	private Ranker getBaselineRanker(String algorithm) {
-//		switch(algorithm) {
-//		case "baseline_bestAlgorithm" : return new BestAlgorithmRanker();
-//		default : throw new IllegalArgumentException(algorithm + " is not a valid baseline ranker.");
-//		}
-//	}
-//
-//	private Ranker getPreferenceRanker(String algorithm) {
-//		switch(algorithm) {
-//		case "preference_PCR" : return new PairwiseComparisonRanker();
-//		case "preference_IBLR": return new InstanceBasedLabelRankingRanker();
-//		case "preference_IBLR_KY" : return new InstanceBasedLabelRankingKemenyYoung();
-//		case "preference_IBLRKYS_SQRTN" : return new InstanceBasedLabelRankingKemenyYoungSQRTN();
-//		default : throw new IllegalArgumentException(algorithm + " is not a valid preference ranker.");
-//		}
-//	}
+	private Ranker getBaselineRanker(String algorithm) {
+		switch(algorithm) {
+		case "baseline_bestAlgorithm" : return new BestAlgorithmRanker();
+		default : throw new IllegalArgumentException(algorithm + " is not a valid baseline ranker.");
+		}
+	}
+
+	private Ranker getPreferenceRanker(String algorithm) {
+		switch(algorithm) {
+		case "preference_PCR" : return new PairwiseComparisonRanker();
+		case "preference_IBLR": return new InstanceBasedLabelRankingRanker();
+		case "preference_IBLR_KY" : return new InstanceBasedLabelRankingKemenyYoung();
+		case "preference_IBLRKYS_SQRTN" : return new InstanceBasedLabelRankingKemenyYoungSQRTN();
+		default : throw new IllegalArgumentException(algorithm + " is not a valid preference ranker.");
+		}
+	}
 
 	private Ranker getWEKARanker(String algorithm) {
 		return new WEKARegressionRanker(algorithm);

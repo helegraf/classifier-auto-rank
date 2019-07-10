@@ -79,7 +79,7 @@ dependencies {
 	//implementation files ('libs/autoweka.jar')
 	
 	// jPL
-	//implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
+	implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
 
 	// JAICore
     //implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'
