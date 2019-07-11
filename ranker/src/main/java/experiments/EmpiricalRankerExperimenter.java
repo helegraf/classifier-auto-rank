@@ -40,6 +40,7 @@ import ranker.core.algorithms.regression.WEKARegressionRanker;
 import ranker.core.evaluation.EvaluationHelper;
 import ranker.core.evaluation.MCCV;
 import ranker.core.evaluation.NFoldCrossvalidation;
+import ranker.core.evaluation.NFoldCrossvalidationOnlyOneFold;
 import ranker.core.evaluation.RankerEstimationProcedure;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader.ArffReader;
@@ -105,7 +106,7 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 			Ranker ranker = getRanker(experimentValues.get("algorithm"), experimentValues, experimentEntry);
 					
 			// Evalate
-			RankerEstimationProcedure estim = getEstimationProcedure(experimentValues.get("split"), experimentValues.get("seed"));
+			RankerEstimationProcedure estim = getEstimationProcedure(experimentValues.get("split"), experimentValues.get("seed"), experimentValues);
 			
 			List<Double> result;
 			//if (!(ranker instanceof PreferenceRanker)) {
@@ -155,10 +156,14 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 		}
 	}
 	
-	private RankerEstimationProcedure getEstimationProcedure(String procedure, String seed) {
+	private RankerEstimationProcedure getEstimationProcedure(String procedure, String seed, Map<String, String> experimentValues) {
 
 		if (procedure.endsWith("Folds")) {
-			return new NFoldCrossvalidation(Integer.parseInt(procedure.split("_")[0]), seed);
+			if (experimentValues.get("fold") != null) {
+				return new NFoldCrossvalidationOnlyOneFold(Integer.parseInt(procedure.split("_")[0]),Integer.parseInt(experimentValues.get("fold")), seed);
+			} else {
+				return new NFoldCrossvalidation(Integer.parseInt(procedure.split("_")[0]), seed);
+			}
 		} else if (procedure.endsWith("MCCV")) {
 			int numbers = Integer.parseInt(procedure.split("_")[0]);
 			double portions = Double.parseDouble(procedure.split("_")[1]);
@@ -217,8 +222,9 @@ public class EmpiricalRankerExperimenter implements IExperimentSetEvaluator {
 	}
 
 	private Ranker getMLPLanRanker(String algorithm, Map<String, String> experimentValues, ExperimentDBEntry experimentEntry) {
+		int divisor = experimentValues.get("fold") != null ? 1 : getRepetitionTimes(experimentValues.get("split"));
 		return new MLPlanRegressionRanker(Integer.parseInt(experimentValues.get("seed")),
-				experimentEntry.getExperiment().getNumCPUs(), Integer.parseInt(experimentValues.get("timeout"))/getRepetitionTimes(experimentValues.get("split")),
+				experimentEntry.getExperiment().getNumCPUs(), Integer.parseInt(experimentValues.get("timeout"))/divisor,
 				Integer.parseInt(experimentValues.get("evaluationTimeout")),this, algorithm.split("_")[1]);
 	}
 

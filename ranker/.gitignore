@@ -85,3 +85,5 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
+/empirical_ranker_preference.jar
+/empirical_ranker_single.jar
