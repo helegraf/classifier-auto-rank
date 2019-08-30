@@ -14,8 +14,8 @@ import org.openml.webapplication.fantail.dc.Characterizer;
 
 import ranker.Rankprediction;
 import ranker.Util;
-import ranker.core.algorithms.PerfectRanker;
 import ranker.core.algorithms.Ranker;
+import ranker.core.algorithms.baseline.PerfectRanker;
 import ranker.core.metafeatures.GlobalCharacterizer;
 import weka.core.Instances;
 

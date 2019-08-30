@@ -22,6 +22,7 @@ sourceSets {
 			resources {
 				srcDir 'conf'
 				srcDir 'resources'
+				srcDir 'src/test/resources'
 			}
 		}
 		test {

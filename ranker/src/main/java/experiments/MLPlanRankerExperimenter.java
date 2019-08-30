@@ -32,9 +32,9 @@ import jaicore.experiments.exceptions.ExperimentDBInteractionFailedException;
 import jaicore.experiments.exceptions.ExperimentEvaluationFailedException;
 import jaicore.experiments.exceptions.IllegalExperimentSetupException;
 import jaicore.ml.WekaUtil;
-import ranker.core.algorithms.regression.MLPlanRegressionRanker;
+import ranker.core.algorithms.decomposition.regression.MLPlanRegressionRanker;
 import ranker.core.evaluation.EvaluationHelper;
-import ranker.core.evaluation.MCCV;
+import ranker.core.evaluation.strategies.MCCV;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader.ArffReader;
 

@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ranker.core.algorithms.Ranker;
-import ranker.core.algorithms.regression.SavedModelRanker;
+import ranker.core.algorithms.decomposition.regression.SavedModelRanker;
 import ranker.core.evaluation.EvaluationHelper;
-import ranker.core.evaluation.MCCV;
+import ranker.core.evaluation.strategies.MCCV;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader.ArffReader;
 

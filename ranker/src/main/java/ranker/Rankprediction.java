@@ -8,9 +8,9 @@ import java.util.Map;
 import org.openml.webapplication.fantail.dc.Characterizer;
 
 import ranker.core.algorithms.Ranker;
-import ranker.core.algorithms.regression.RandomForestRanker;
+import ranker.core.algorithms.decomposition.regression.WEKARegressionRanker;
 import ranker.core.metafeatures.NoProbingCharacterizer;
-import weka.classifiers.Classifier;
+import weka.classifiers.trees.RandomForest;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -70,7 +70,7 @@ public class Rankprediction {
 
 		characterizer = new NoProbingCharacterizer();
 
-		this.ranker = new RandomForestRanker();
+		this.ranker = new WEKARegressionRanker(RandomForest.class.getName());
 
 		ranker.buildRanker(metaData, targetAttributes);
 
@@ -83,7 +83,7 @@ public class Rankprediction {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Classifier> predictRanking(Instances instances) throws Exception {
+	public List<String> predictRanking(Instances instances) throws Exception {
 		// Get meta features for instance
 		Map<String, Double> metaFeatures = characterizer.characterize(instances);
 

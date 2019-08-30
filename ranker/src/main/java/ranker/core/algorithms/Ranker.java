@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import weka.classifiers.AbstractClassifier;
-import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -30,7 +28,7 @@ public abstract class Ranker {
 	/**
 	 * Maps the index of an attribute to the classifier it represents.
 	 */
-	protected Map<Integer, Classifier> classifiersMap;
+	protected Map<Integer, String> classifiersMap;
 
 	/**
 	 * Generates a ranker.
@@ -50,13 +48,13 @@ public abstract class Ranker {
 		// Initialize variables
 		this.data = data;
 		this.targetAttributes = targetAttributes;
-		classifiersMap = new HashMap<Integer, Classifier>();
+		classifiersMap = new HashMap<Integer, String>();
 		features = new ArrayList<Integer>();
 
 		for (int i = 0; i < data.numAttributes(); i++) {
 			String attributeName = data.attribute(i).name();
 			if (targetAttributes.contains(i)) {
-				classifiersMap.put(i, AbstractClassifier.forName(attributeName, null));
+				classifiersMap.put(i, attributeName);
 			} else {
 				features.add(i);
 			}
@@ -77,7 +75,7 @@ public abstract class Ranker {
 	 * @throws Exception
 	 *             If a prediction cannot be made
 	 */
-	public abstract List<Classifier> predictRankingforInstance(Instance instance) throws Exception;
+	public abstract List<String> predictRankingforInstance(Instance instance) throws Exception;
 
 	/**
 	 * Returns a list with the exact performance values predicted for each
