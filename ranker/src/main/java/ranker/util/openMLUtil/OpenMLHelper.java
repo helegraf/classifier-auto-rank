@@ -34,73 +34,15 @@ public class OpenMLHelper {
 	public static String apiKey;
 
 	/**
-	 * Downloads the data set with the given id and returns the Instances file for
-	 * it. Will save the {@link org.openml.apiconnector.xml.DataSetDescription} and
-	 * the Instances to the location specified in the
-	 * {@link org.openml.apiconnector.settings.Settings} Class.
-	 * 
-	 * @param dataId
-	 * @return
-	 * @throws IOException
-	 */
-	@SuppressWarnings("deprecation")
-	public static Instances getInstancesById(int dataId) throws IOException {
-		// Set the cache according to specified directory
-		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
-
-		Instances dataset = null;
-
-		// Get apiKey if not given
-		if (OpenMLHelper.apiKey == null) {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			InputStream inputStream = classLoader.getResourceAsStream(Util.APIKEY);
-			//BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath(Util.APIKEY),
-				//	Util.CHARSET);
-			OpenMLHelper.apiKey =IOUtils.toString(inputStream);
-		}
-
-		// Get dataset from OpenML
-		OpenmlConnector client = new OpenmlConnector();
-		try {
-			DataSetDescription description = client.dataGet(dataId);
-			File file = description.getDataset(apiKey);
-			// Instances convert
-			DataSource source = new DataSource(file.getCanonicalPath());
-			dataset = source.getDataSet();
-			dataset.setClassIndex(dataset.numAttributes() - 1);
-			Attribute targetAttribute = dataset.attribute(description.getDefault_target_attribute());
-			dataset.setClassIndex(targetAttribute.index());
-		} catch (Exception e) {
-			// These are IOExceptions anyways in the extended sense of this method
-			throw new IOException(e.getMessage());
-		}
-		return dataset;
-	}
-
-	/**
-	 * Gets the data set name for a given data set id on OpenML.
-	 * 
-	 * @param dataSetId
-	 *            The id of a data set on OpenML
-	 * @return The corresponding name of the data set
-	 * @throws Exception
-	 *             If something goes wrong while connecting to OpenML
-	 */
-	public static String getDataSetName(int dataSetId) throws Exception {
-		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
-
-		OpenmlConnector client = new OpenmlConnector();
-		DataSetDescription description = client.dataGet(dataSetId);
-		return description.getName();
-	}
-
-	/**
 	 * Creates a list of data sets by id in a file with caps for the maximum of
 	 * features and instances. Caps ignored if set to values smaller than 0.
 	 * 
-	 * @param maxNumFeatures
-	 * @param maxNumInstances
-	 * @throws Exception
+	 * @param maxNumFeatures  the maximal number of features (inclusive) the data
+	 *                        set can have
+	 * @param maxNumInstances the maximal number of instances (inclusive) the data
+	 *                        set can have
+	 * @param path            the path to which the index will be saved
+	 * @throws Exception if the index cannot be retrieved from OpenML
 	 */
 	public static void createDataSetIndex(int maxNumFeatures, int maxNumInstances, Path path) throws Exception {
 		// For statistics
@@ -200,6 +142,13 @@ public class OpenMLHelper {
 		System.out.println("Fit for analysis: " + fitForAnalysis);
 	}
 
+	/**
+	 * Get the ids of the data sets from a previously created index.
+	 * 
+	 * @param path the path of the index
+	 * @return the ids
+	 * @throws Exception if the index is not found
+	 */
 	public static List<Integer> getDataSetsFromIndex(Path path) throws Exception {
 		List<Integer> dataSets = new ArrayList<Integer>();
 		BufferedReader reader = Files.newBufferedReader(path, Util.CHARSET);
@@ -209,6 +158,66 @@ public class OpenMLHelper {
 			dataSets.add(dataSetId);
 		}
 		return dataSets;
+	}
+
+	/**
+	 * Downloads the data set with the given id and returns the Instances file for
+	 * it. Will save the {@link org.openml.apiconnector.xml.DataSetDescription} and
+	 * the Instances to the location specified in the
+	 * {@link org.openml.apiconnector.settings.Settings} Class.
+	 * 
+	 * @param dataId the data set id
+	 * @return the data set in WEKA Instances form
+	 * @throws IOException if the data set cannot be retrieved from OpenML
+	 */
+	@SuppressWarnings("deprecation")
+	public static Instances getInstancesById(int dataId) throws IOException {
+		// Set the cache according to specified directory
+		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
+
+		Instances dataset = null;
+
+		// Get apiKey if not given
+		if (OpenMLHelper.apiKey == null) {
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			InputStream inputStream = classLoader.getResourceAsStream(Util.APIKEY);
+			// BufferedReader reader =
+			// Files.newBufferedReader(FileSystems.getDefault().getPath(Util.APIKEY),
+			// Util.CHARSET);
+			OpenMLHelper.apiKey = IOUtils.toString(inputStream);
+		}
+
+		// Get dataset from OpenML
+		OpenmlConnector client = new OpenmlConnector();
+		try {
+			DataSetDescription description = client.dataGet(dataId);
+			File file = description.getDataset(apiKey);
+			// Instances convert
+			DataSource source = new DataSource(file.getCanonicalPath());
+			dataset = source.getDataSet();
+			dataset.setClassIndex(dataset.numAttributes() - 1);
+			Attribute targetAttribute = dataset.attribute(description.getDefault_target_attribute());
+			dataset.setClassIndex(targetAttribute.index());
+		} catch (Exception e) {
+			// These are IOExceptions anyways in the extended sense of this method
+			throw new IOException(e.getMessage());
+		}
+		return dataset;
+	}
+
+	/**
+	 * Gets the data set name for a given data set id on OpenML.
+	 * 
+	 * @param dataSetId The id of a data set on OpenML
+	 * @return The corresponding name of the data set
+	 * @throws Exception If something goes wrong while connecting to OpenML
+	 */
+	public static String getDataSetName(int dataSetId) throws Exception {
+		Settings.CACHE_DIRECTORY = Util.OPENML_CACHE_FOLDER;
+
+		OpenmlConnector client = new OpenmlConnector();
+		DataSetDescription description = client.dataGet(dataSetId);
+		return description.getName();
 	}
 
 }

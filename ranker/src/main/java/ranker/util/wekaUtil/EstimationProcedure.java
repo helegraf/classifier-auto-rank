@@ -26,7 +26,7 @@ public interface EstimationProcedure {
 	 *            The data set on which the performance of the classifier is
 	 *            estimated.
 	 * @return The performance of the classifier on the datas et.
-	 * @throws Exception
+	 * @throws Exception if the estimate cannot be made
 	 */
 	public double estimate(Classifier classifier, EvaluationMeasure evaluationMeasure, Instances dataSet)
 			throws Exception;

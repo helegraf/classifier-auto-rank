@@ -25,7 +25,7 @@ public class ColumnNotFoundException extends Exception {
 	 * Constructs a new {@link ColumnNotFoundException} with the specified detail
 	 * message.
 	 * 
-	 * @param message
+	 * @param message a description of the exception
 	 */
 	public ColumnNotFoundException(String message) {
 		super(message);
@@ -36,7 +36,7 @@ public class ColumnNotFoundException extends Exception {
 	 * a detail message of {@code cause==null? null : cause.toString())} (which
 	 * typically contains the class and detail message of cause)
 	 * 
-	 * @param cause
+	 * @param cause the cause of the exception
 	 */
 	public ColumnNotFoundException(Throwable cause) {
 		super(cause);
@@ -46,8 +46,8 @@ public class ColumnNotFoundException extends Exception {
 	 * Constructs a new {@link ColumnNotFoundException} with the specified detail
 	 * message and cause.
 	 * 
-	 * @param message
-	 * @param cause
+	 * @param message a description of the exception
+	 * @param cause the cause of the exception
 	 */
 	public ColumnNotFoundException(String message, Throwable cause) {
 		super(message, cause);

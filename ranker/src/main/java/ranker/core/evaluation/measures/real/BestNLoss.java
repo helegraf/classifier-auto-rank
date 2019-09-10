@@ -6,7 +6,7 @@ import ranker.core.algorithms.PerformanceOrder;
 import ranker.core.evaluation.measures.RankerEvaluationMeasure;
 
 /**
- * Assumes max. loss of 100.
+ * Computes the minimal loss among the first n elements. Assumes max. loss of 100.
  * 
  * @author Helena Graf
  *
@@ -17,6 +17,11 @@ public class BestNLoss extends RankerEvaluationMeasure {
 	
 	private int n;
 	
+	/**
+	 * Constructs a new BestNLoss object using the given value as a cutoff.
+	 * 
+	 * @param n the cutoff point (inclusive, starting from 1)
+	 */
 	public BestNLoss(int n) {
 		this.n = n;
 	}
@@ -60,6 +65,8 @@ public class BestNLoss extends RankerEvaluationMeasure {
 
 	/**
 	 * Gets the Performance Order. Standard is {@link PerformanceOrder#DESCENDING}
+	 * 
+	 * @return the used performance order
 	 */
 	public PerformanceOrder getPerformanceOrder() {
 		return order;
@@ -68,7 +75,7 @@ public class BestNLoss extends RankerEvaluationMeasure {
 	/**
 	 * Sets the Performance Order. Standard is {@link PerformanceOrder#DESCENDING}
 	 * 
-	 * @param order
+	 * @param order the new order
 	 */
 	public void setPerformanceOrder(PerformanceOrder order) {
 		this.order = order;

@@ -34,11 +34,18 @@ public class Rankprediction {
 	protected Ranker ranker;
 
 	/**
-	 * @param metaData
-	 * @param targetAttributes
-	 * @param characterizer
-	 * @param ranker
-	 * @throws Exception
+	 * Creates a new RankPrediction object that makes predictions based on the given
+	 * information.
+	 * 
+	 * @param metaData         instances containing meta features of datasets and
+	 *                         performance information for classifiers to be ranked
+	 * @param targetAttributes indicates which features in the gien meta data set
+	 *                         are performance features of classifiers
+	 * @param characterizer    a characterizer producing the same meta data for as
+	 *                         in the meta data set for new data sets
+	 * @param ranker           a ranker to use to make predictions (will be trained
+	 *                         by the Rankprediction using th egiven information)
+	 * @throws Exception if the ranker cannot be built
 	 */
 	public Rankprediction(Instances metaData, List<Integer> targetAttributes, Characterizer characterizer,
 			Ranker ranker) throws Exception {
@@ -54,7 +61,7 @@ public class Rankprediction {
 	 * Predicts rankings of classifiers with a RandomForestRanker and uses a
 	 * standard set of meta features (without probing) as a basis.
 	 * 
-	 * @throws Exception
+	 * @throws Exception creates a Rankprediction using standard values.
 	 */
 	public Rankprediction() throws Exception {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -79,9 +86,9 @@ public class Rankprediction {
 	/**
 	 * Predicts a ranking of classifiers for the given data set.
 	 * 
-	 * @param instances
-	 * @return
-	 * @throws Exception
+	 * @param instances the data set for which to make a prediction
+	 * @return a ranking of classifiers
+	 * @throws Exception if the prediction cannot be made
 	 */
 	public List<String> predictRanking(Instances instances) throws Exception {
 		// Get meta features for instance

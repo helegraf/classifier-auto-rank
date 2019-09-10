@@ -23,7 +23,7 @@ public class DataGetter {
 		Instances metadata = connection.getMetaDataSetForDataSetSet("all", "all");
 
 		System.out.println("merging");
-		Instances complete = classifiervalues.mergeInstances(metadata, classifiervalues);
+		Instances complete = Instances.mergeInstances(metadata, classifiervalues);
 
 		System.out.println("saving");
 		ArffSaver saver = new ArffSaver();

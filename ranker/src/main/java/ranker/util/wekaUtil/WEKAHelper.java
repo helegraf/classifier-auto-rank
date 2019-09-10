@@ -81,8 +81,8 @@ public class WEKAHelper {
 	 * Takes an Instances object and saves it in the .arff format with the filename
 	 * as the relation name.
 	 * 
-	 * @param instances
-	 * @throws IOException
+	 * @param instances the instance to save
+	 * @throws IOException if the file cannot be saved
 	 */
 	public static void saveAsArff(Instances instances) throws IOException {
 		ArffSaver saver = new ArffSaver();

@@ -4,6 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ * A strategy to resolve conflicts in a predicted ranking, i.e. the case where
+ * to algorithms have the same predicted rank.
+ * 
+ * @author helegraf
+ *
+ */
 public interface ConflictResolutionStrategy {
 
 	/**

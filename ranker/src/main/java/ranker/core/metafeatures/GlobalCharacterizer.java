@@ -58,7 +58,7 @@ public class GlobalCharacterizer extends Characterizer {
 	 * {@link #initializeCharacterizerNames()} and
 	 * {@link #initializeMetaFeatureIds()} in order.
 	 * 
-	 * @throws Exception
+	 * @throws Exception if the characterizer cannot be initialized
 	 */
 	public GlobalCharacterizer() throws Exception {
 		initializeCharacterizers();
@@ -152,7 +152,7 @@ public class GlobalCharacterizer extends Characterizer {
 	/**
 	 * Adds the required characterizers to {@link #characterizers}.
 	 * 
-	 * @throws Exception
+	 * @throws Exception if the characterizer cannot be properly initialized
 	 */
 	protected void initializeCharacterizers() throws Exception {
 		Characterizer[] characterizerArray = { new SimpleMetaFeatures(), new Statistical(),

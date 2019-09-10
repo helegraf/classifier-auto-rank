@@ -22,12 +22,14 @@ sourceSets {
 			resources {
 				srcDir 'conf'
 				srcDir 'resources'
-				srcDir 'src/test/resources'
 			}
 		}
 		test {
 			java {
 				srcDir 'src/test/java'
+			}
+			resources {
+				srcDir 'src/test/resources'
 			}
 		}
 }
@@ -63,13 +65,13 @@ repositories {
 		maven { url "https://plugins.gradle.org/m2/" }
 		maven { url "https://nexus.cs.upb.de/repository/maven-releases/" }
 		flatDir {
-			dirs 'lib'
+			dirs 'libs'
 		}
 }
 
-//configurations {
- //     all*.exclude group: 'log4j', module: 'log4j'
-//}
+configurations.all {
+   exclude group: 'org.slf4j', module: 'slf4j-jdk14'
+}
 
 
 dependencies {
@@ -80,7 +82,13 @@ dependencies {
 	//implementation files ('libs/autoweka.jar')
 	
 	// jPL
-	//implementation files ('libs/jpl-api-0.0.9-jar-with-dependencies.jar')
+	//implementation (':jpl-api-0.0.9-jar-with-dependencies:') { transitive = false }
+	implementation (':jpl-api-0.0.9:') { transitive = false }
+	
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson 
+	// needed for jPL, as jPL is included without dependencies to mitigate a slf4j-binding problem
+	compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
+	
 
 	// JAICore
     //implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'

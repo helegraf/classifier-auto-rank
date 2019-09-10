@@ -33,7 +33,6 @@ import jaicore.experiments.exceptions.ExperimentDBInteractionFailedException;
 import jaicore.experiments.exceptions.ExperimentEvaluationFailedException;
 import jaicore.experiments.exceptions.IllegalExperimentSetupException;
 import jaicore.ml.WekaUtil;
-import jaicore.ml.core.evaluation.measure.singlelabel.RootMeanSquaredErrorLoss;
 import jaicore.ml.weka.dataset.splitter.ArbitrarySplitter;
 import weka.classifiers.Classifier;
 import weka.classifiers.evaluation.Evaluation;

@@ -1,7 +1,6 @@
 package ranker.core.algorithms.decomposition.rankprediction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -17,20 +16,38 @@ import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.NumericToNominal;
 
+/**
+ * Predicts a ranking of algorithms by predicting the rank of each algorithm
+ * separately, posed as a classification problem. A conflict resolutions
+ * strategy is used for algorithms for which the same rank has been predicted.
+ *
+ * @author helegraf
+ *
+ */
 public class RankClassificationRanker extends RankRegressionRanker {
-	
+
 	private ConflictResolutionStrategy conflictResolutionStrategy = new MeanRankStrategy();
 
+	/**
+	 * Construct a RankClassificationRanker with the given name (fully qualified name of
+	 * a weka classifier which will be used for predictions).
+	 * 
+	 * @param name fully qualified name of a weka classifier
+	 */
+	public RankClassificationRanker(String name) {
+		super(name);
+	}
+
 	@Override
-	protected void buildRegressionModels(Map<String, Instances> train) throws Exception {
+	protected void buildModels(Map<String, Instances> train) throws Exception {
 		for (Map.Entry<String, Instances> entry : train.entrySet()) {
 			NumericToNominal filter = new NumericToNominal();
-			filter.setOptions(new String[] { "-R","last" });
+			filter.setOptions(new String[] { "-R", "last" });
 			filter.setInputFormat(entry.getValue());
 			entry.setValue(Filter.useFilter(entry.getValue(), filter));
 		}
 
-		super.buildRegressionModels(train);
+		super.buildModels(train);
 	}
 
 	@Override
@@ -48,21 +65,21 @@ public class RankClassificationRanker extends RankRegressionRanker {
 		HashMap<String, double[][]> distributions = new HashMap<>();
 
 		// Calculate results
-		for (String item : regressionModels.keySet()) {
+		for (String item : models.keySet()) {
 			Instance newInstance = new DenseInstance(newFeatures.length, newFeatures);
 			newInstance.setDataset(trainingData.get(item));
-			int resultindex = (int) regressionModels.get(item).classifyInstance(newInstance);
-			double[] distribution = regressionModels.get(item).distributionForInstance(newInstance);
-			
-			Enumeration<Object> attVals = trainingData.get(item).attribute(trainingData.get(item).classIndex()).enumerateValues();
+			int resultindex = (int) models.get(item).classifyInstance(newInstance);
+			double[] distribution = models.get(item).distributionForInstance(newInstance);
+
+			Enumeration<Object> attVals = trainingData.get(item).attribute(trainingData.get(item).classIndex())
+					.enumerateValues();
 
 			double[] values = Collections.list(attVals).stream().mapToDouble(o -> {
-				return Double.parseDouble((String)o);
+				return Double.parseDouble((String) o);
 			}).toArray();
-			
+
 			double result = values[resultindex];
-			System.out.println("values: " + Arrays.toString(values) + ", prediction: " + result + ", len: " + values.length);
-			distributions.put(item,new double[][] {distribution,values});
+			distributions.put(item, new double[][] { distribution, values });
 
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(item);
@@ -83,12 +100,6 @@ public class RankClassificationRanker extends RankRegressionRanker {
 			classifierList.forEach(classifier -> estimates.add(value));
 		});
 		return results;
-	}
-
-
-
-	public RankClassificationRanker(String name) {
-		super(name);
 	}
 
 	public ConflictResolutionStrategy getConflictResolutionStrategy() {

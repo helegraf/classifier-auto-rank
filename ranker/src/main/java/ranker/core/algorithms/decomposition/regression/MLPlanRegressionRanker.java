@@ -22,6 +22,13 @@ import weka.classifiers.Classifier;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
+/**
+ * Constructs a single instance of {@link MLPlan} to predict the performance of
+ * each algorithm.
+ * 
+ * @author helegraf
+ *
+ */
 public class MLPlanRegressionRanker extends DecompositionRanker {
 
 	private int seed;
@@ -33,7 +40,22 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MLPlanRegressionRanker.class);
 
-	public MLPlanRegressionRanker(int seed, int numCPUS, int totalTimeoutSeconds, int evaluationTimeoutSeconds,Object listener, String searchSpace) {
+	/**
+	 * Constructs a new MLPlanRegressionRanker that is using the given parameters
+	 * for constructing new MLPlan-instances.
+	 * 
+	 * @param seed                     the random seed
+	 * @param numCPUS                  the number of available cpus
+	 * @param totalTimeoutSeconds      the total available timeout in seconds (will
+	 *                                 be divided by the number of MLPlan-instances
+	 *                                 that need to be built)
+	 * @param evaluationTimeoutSeconds the evaluation timeout to be used
+	 * @param listener                 a listener object that will be added to each
+	 *                                 MLPlan-instance
+	 * @param searchSpace              the search space to be used
+	 */
+	public MLPlanRegressionRanker(int seed, int numCPUS, int totalTimeoutSeconds, int evaluationTimeoutSeconds,
+			Object listener, String searchSpace) {
 		this.seed = seed;
 		this.numCPUS = numCPUS;
 		this.totalTimeoutSeconds = totalTimeoutSeconds;
@@ -43,8 +65,8 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 	}
 
 	@Override
-	protected void buildRegressionModels(Map<String, Instances> train) throws Exception {
-		regressionModels = new HashMap<>();
+	protected void buildModels(Map<String, Instances> train) throws Exception {
+		models = new HashMap<>();
 
 		train.forEach((item, instances) -> {
 
@@ -55,15 +77,24 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 			MLPlanWekaRegressionBuilder builder;
 			try {
 				builder = AbstractMLPlanBuilder.forWekaRegression();
-				
-				switch(searchSpace) {
-				case "full" : builder.withWEKARegressionConfiguration(); break;
-				case "rfClean" :  builder.withRandomForestOnlyAndNoPreprocessorsConfiguration(); break;
-				case "rfPreproc" : builder.withRandomForestAndPreprocessorsOnlyConfiguration(); break;
-				case "fullnoSMOreg": builder.withWEKARegressionConfigurationNoSMO(); break;
-				default : throw new IllegalArgumentException(searchSpace + " is not a valid search space identifier!");
+
+				switch (searchSpace) {
+				case "full":
+					builder.withWEKARegressionConfiguration();
+					break;
+				case "rfClean":
+					builder.withRandomForestOnlyAndNoPreprocessorsConfiguration();
+					break;
+				case "rfPreproc":
+					builder.withRandomForestAndPreprocessorsOnlyConfiguration();
+					break;
+				case "fullnoSMOreg":
+					builder.withWEKARegressionConfigurationNoSMO();
+					break;
+				default:
+					throw new IllegalArgumentException(searchSpace + " is not a valid search space identifier!");
 				}
-				
+
 				builder.withTimeOut(new TimeOut(totalTimeoutSeconds / train.size(), TimeUnit.SECONDS));
 				builder.withNodeEvaluationTimeOut(new TimeOut(evaluationTimeoutSeconds, TimeUnit.SECONDS));
 				builder.withCandidateEvaluationTimeOut(new TimeOut(evaluationTimeoutSeconds, TimeUnit.SECONDS));
@@ -73,17 +104,18 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 				mlplan.setLoggerName("mlplan");
 				mlplan.setRandomSeed(seed);
 				mlplan.setId("mlplan_" + item);
-				mlplan.registerListener(listener);
+				if (listener != null) {
+					mlplan.registerListener(listener);
+				}				
 				mlplan.setTimeout(new TimeOut(totalTimeoutSeconds / train.size(), TimeUnit.SECONDS));
 				mlplan.setTimeoutPrecautionOffset(1000);
-				
+
 				Classifier optimizedClassifier = mlplan.call();
 
-				regressionModels.put(item, optimizedClassifier);
+				models.put(item, optimizedClassifier);
 			} catch (IOException | AlgorithmTimeoutedException | AlgorithmException | InterruptedException
 					| AlgorithmExecutionCanceledException e) {
-				LOGGER.warn("Could not train model for {} due to {}, using random forest.",
-						item, e);
+				LOGGER.warn("Could not train model for {} due to {}, using random forest.", item, e);
 
 				RandomForest forest = new RandomForest();
 				try {
@@ -91,7 +123,7 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 				} catch (Exception e1) {
 					LOGGER.error("No model could be built for {} at all. {}", item, e);
 				}
-				regressionModels.put(item, forest);
+				models.put(item, forest);
 			}
 
 		});
@@ -100,7 +132,7 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 	public String getSelectedModelString() {
 		StringBuilder builder = new StringBuilder();
 
-		this.regressionModels.values().forEach(mlplan -> {
+		this.models.values().forEach(mlplan -> {
 			if (mlplan instanceof MLPlan) {
 				Classifier selectedClassifier = ((MLPlan) mlplan).getSelectedClassifier();
 
@@ -128,14 +160,16 @@ public class MLPlanRegressionRanker extends DecompositionRanker {
 
 		return builder.toString();
 	}
-	
+
 	@Override
 	public String getName() {
-		return super.getName() + "_" + seed + "_" + numCPUS + "_" + totalTimeoutSeconds + "_" + evaluationTimeoutSeconds + "_" + searchSpace;
+		return super.getName() + "_" + seed + "_" + numCPUS + "_" + totalTimeoutSeconds + "_" + evaluationTimeoutSeconds
+				+ "_" + searchSpace;
 	}
-	 @Override
+
+	@Override
 	public String getClassifierString() {
-		 return getSelectedModelString();
-	 }
+		return getSelectedModelString();
+	}
 
 }

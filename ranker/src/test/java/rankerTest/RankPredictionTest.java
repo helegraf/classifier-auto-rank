@@ -3,8 +3,8 @@ package rankerTest;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class RankPredictionTest {
 
 	@BeforeClass
 	public static void loadMetaData() throws Exception {
-		BufferedReader reader = Files.newBufferedReader(FileSystems.getDefault().getPath("metaData_small_allPerformanceValues.arff"),
+		BufferedReader reader = Files.newBufferedReader(Paths.get("src/test/resources/noProbing_nonan_noid.arff").toAbsolutePath(),
 				Util.CHARSET);
 		testInstances = new Instances(reader);
 		targetAttributes = new ArrayList<Integer>();

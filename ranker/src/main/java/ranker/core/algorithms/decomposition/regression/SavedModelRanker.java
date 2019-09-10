@@ -19,34 +19,47 @@ import weka.core.SerializationHelper;
  *
  */
 public class SavedModelRanker extends DecompositionRanker {
-	
-	private String prefix = "models/split_";
-	
-	public SavedModelRanker(int seed) {
-		this.prefix = prefix + seed + "/";
+
+	private String prefix = "models/";
+	private String suffix = "";
+
+	/**
+	 * Constructs a new ranker from saved models, which are located by prefix + item
+	 * + suffix, where item is the label of the algorithms to be ranked. E.g. if the
+	 * prefix is "models/", an algorithm "weka.classifiers.RandomForest", and the
+	 * suffix ".txt", the searched location for a model for this algorithms will be
+	 * "models/weka.classifiers.RandomForest.txt".
+	 * 
+	 * @param prefix string that is prepended to a label to search for its model
+	 *               (default: models/)
+	 * @param suffix string that is appended to a label to search for its model
+	 *               (default: empty)
+	 */
+	public SavedModelRanker(String prefix, String suffix) {
+		this.prefix = prefix;
+		this.suffix = suffix;
 	}
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SavedModelRanker.class);
+	private Logger logger = LoggerFactory.getLogger(SavedModelRanker.class);
 
 	@Override
-	protected void buildRegressionModels(Map<String, Instances> train) throws Exception {
-		regressionModels = new HashMap<String, Classifier>();
-		
-		train.forEach((item,dataset)->{
+	protected void buildModels(Map<String, Instances> train) throws Exception {
+		models = new HashMap<String, Classifier>();
+
+		train.forEach((item, dataset) -> {
 			Classifier regressionModel;
 			try {
-				regressionModel = (Classifier) SerializationHelper.read(prefix + item + ".txt");
+				regressionModel = (Classifier) SerializationHelper.read(prefix + item + suffix);
 			} catch (Exception e) {
-				LOGGER.warn("Could not initialize model {} due to {}, try using RandomForest instead",item,e);
-				System.err.println("Not init " + item + " due to " + e);
+				logger.warn("Could not initialize model {} due to {}, try using RandomForest instead", item, e);
 				regressionModel = new RandomForest();
 				try {
 					regressionModel.buildClassifier(dataset);
 				} catch (Exception e1) {
-					LOGGER.error("No classifier could be trained for {}",item);
+					logger.error("No classifier could be trained for {}", item);
 				}
 			}
-			regressionModels.put(item, regressionModel);
+			models.put(item, regressionModel);
 		});
 
 	}

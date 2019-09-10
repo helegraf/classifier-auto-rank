@@ -23,13 +23,11 @@ public class MeanRankStrategy implements ConflictResolutionStrategy {
 		// find value for each distribution
 		distributions.forEach((item, distribution) -> {
 			double value = 0;
-			System.out.println("Dist len: " + distribution[0].length + "/" + distribution[1].length);
+
 			for (int i = 0; i < distribution[0].length; i++) {
 				value += distribution[0][i] * distribution[1][i];
 			}
 			value /= distribution[0].length;
-
-			System.out.println("adding value: " + value + " + classifier: " + item);
 
 			if (predictions.get(value) == null) {
 				predictions.put(value, new ArrayList<>());
@@ -37,7 +35,5 @@ public class MeanRankStrategy implements ConflictResolutionStrategy {
 
 			predictions.get(value).add(item);
 		});
-
-		System.out.println(predictions.size());
 	}
 }

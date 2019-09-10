@@ -80,8 +80,8 @@ public class PerfectRanker extends Ranker {
 	 * Converts the performance measure information given for an instance to an
 	 * ordering of labels.
 	 * 
-	 * @param instance
-	 * @return
+	 * @param instance the instance for which to get an ordering
+	 * @return an ordering of algorithms 
 	 */
 	protected Ranking getOrderingForInstance(Instance instance) {
 		// Initialize temporary variables
@@ -115,15 +115,10 @@ public class PerfectRanker extends Ranker {
 		}
 
 		// Construct result
-		Ranking result = new Ranking(objectList, compareOperators);
+		Ranking result = new Ranking(objectList);
 		return result;
 	}
 
-	@Override
-	public List<Double> getEstimates() {
-		return performanceMeasures;
-	}
-	
 	@Override
 	protected void initialize() throws Exception {
 		initializeLabels();
@@ -141,5 +136,10 @@ public class PerfectRanker extends Ranker {
 			indicesMap.put(targetAttributes.get(i), i);
 			reverseIndicesMap.put(i, targetAttributes.get(i));
 		}
+	}
+
+	@Override
+	public List<Double> getEstimates() {
+		return performanceMeasures;
 	}
 }

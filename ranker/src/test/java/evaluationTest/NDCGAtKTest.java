@@ -36,7 +36,7 @@ public class NDCGAtKTest {
 	@Test
 	public void testComputeNDCGAtKUnequalNoCutoff() {
 		List<String> perfectRanking = Arrays.asList("ZeroR", "OneR", "RandomForest");
-		List<String> predictedRanking = Arrays.asList("RandomForest", "oneR", "ZeroR");
+		List<String> predictedRanking = Arrays.asList("RandomForest", "OneR", "ZeroR");
 		List<Double> performanceValues = Arrays.asList(100.0, 66.0, 33.0);
 
 		NDCGAtK dcgAtK = new NDCGAtK(3);

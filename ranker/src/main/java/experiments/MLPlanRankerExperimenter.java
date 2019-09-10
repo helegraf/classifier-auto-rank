@@ -20,7 +20,6 @@ import com.google.common.eventbus.Subscribe;
 
 import de.upb.crc901.mlplan.core.events.ClassifierFoundEvent;
 import de.upb.crc901.mlplan.multiclass.wekamlplan.weka.model.MLPipeline;
-import hasco.events.HASCOSolutionEvent;
 import jaicore.basic.SQLAdapter;
 import jaicore.experiments.ExperimentDBEntry;
 import jaicore.experiments.ExperimentRunner;

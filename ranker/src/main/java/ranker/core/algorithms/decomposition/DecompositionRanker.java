@@ -13,15 +13,22 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
+/**
+ * Ranks algorithm by decomposing the problem into predicting a value for every
+ * single item to be ranked and then ranking by the predicted values.
+ * 
+ * @author helegraf
+ *
+ */
 public abstract class DecompositionRanker extends Ranker {
 
 	/**
-	 * Maps learning algorithms to their regression models.
+	 * Maps learning algorithms to their models.
 	 */
-	protected Map<String, Classifier> regressionModels;
+	protected Map<String, Classifier> models;
 
 	/**
-	 * Maps regression models to their training data.
+	 * Maps learning algorithms to their training data.
 	 */
 	protected HashMap<String, Instances> trainingData;
 
@@ -45,10 +52,10 @@ public abstract class DecompositionRanker extends Ranker {
 		newFeatures[newFeatures.length - 1] = Double.NaN;
 
 		// Calculate results
-		for (String item : regressionModels.keySet()) {
+		for (String item : models.keySet()) {
 			Instance newInstance = new DenseInstance(newFeatures.length, newFeatures);
 			newInstance.setDataset(trainingData.get(item));
-			double result = regressionModels.get(item).classifyInstance(newInstance);
+			double result = models.get(item).classifyInstance(newInstance);
 			if (predictions.containsKey(result)) {
 				predictions.get(result).add(item);
 			} else {
@@ -67,19 +74,13 @@ public abstract class DecompositionRanker extends Ranker {
 		return results;
 	}
 
-	@Override
-	public List<Double> getEstimates() {
-		return estimates;
-	}
-
 	/**
-	 * Builds a regression model for each classifier. Has to initialize the list of
-	 * regressionModels
+	 * Builds a model for each classifier. Has to initialize the list of models
 	 * 
-	 * @param train
-	 * @throws Exception
+	 * @param train the training data for each item to be ranked
+	 * @throws Exception if something goes wrong while building the models
 	 */
-	protected abstract void buildRegressionModels(Map<String, Instances> train) throws Exception;
+	protected abstract void buildModels(Map<String, Instances> train) throws Exception;
 
 	@Override
 	protected void initialize() throws Exception {
@@ -94,8 +95,7 @@ public abstract class DecompositionRanker extends Ranker {
 
 		// Create new Instances for each target attribute
 		for (int i : targetAttributes) {
-			trainingData.put(classifiersMap.get(i),
-					new Instances(classifiersMap.get(i), attributes, 0));
+			trainingData.put(classifiersMap.get(i), new Instances(classifiersMap.get(i), attributes, 0));
 			trainingData.get(classifiersMap.get(i)).setClassIndex(features.size());
 		}
 
@@ -118,7 +118,7 @@ public abstract class DecompositionRanker extends Ranker {
 			}
 		}
 
-		buildRegressionModels(trainingData);
+		buildModels(trainingData);
 	}
 
 	/**
@@ -130,5 +130,10 @@ public abstract class DecompositionRanker extends Ranker {
 	 */
 	protected void modifyInstance(Instance instance, List<Integer> targetAttributes) {
 		// by default, no modification is done
+	}
+
+	@Override
+	public List<Double> getEstimates() {
+		return estimates;
 	}
 }

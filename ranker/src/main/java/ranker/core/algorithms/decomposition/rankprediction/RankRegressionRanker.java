@@ -6,16 +6,30 @@ import java.util.List;
 import ranker.core.algorithms.decomposition.regression.WEKARegressionRanker;
 import weka.core.Instance;
 
+/**
+ * Predicts a ranking of algorithms by predicting the rank of each algorithm
+ * with a regression model. To this end, performance data in the training data
+ * is replaced by rank information.
+ * 
+ * @author helegraf
+ *
+ */
 public class RankRegressionRanker extends WEKARegressionRanker {
 
+	/**
+	 * Construct a RankRegressionRanker with the given name (fully qualified name of
+	 * a weka classifier which will be used for predictions).
+	 * 
+	 * @param name fully qualified name of a weka classifier
+	 */
 	public RankRegressionRanker(String name) {
 		super(name);
 	}
 
 	@Override
 	protected void modifyInstance(Instance instance, List<Integer> targetAttributes) {
-		// replace target attributes by their ranks
-
+		// for each instance, the performance of the classifiers is substituted with
+		// their rank
 		// get target value values
 		double[] targetValues = new double[targetAttributes.size()];
 		for (int i = 0; i < targetAttributes.size(); i++) {
@@ -23,7 +37,7 @@ public class RankRegressionRanker extends WEKARegressionRanker {
 		}
 
 		// sort (in ascending order (worst first) so that the LOWEST predicted rank
-		// later will be the LAST in the ranking 
+		// later will be the LAST in the ranking
 		Arrays.sort(targetValues);
 
 		// go through the values and replace with ranks

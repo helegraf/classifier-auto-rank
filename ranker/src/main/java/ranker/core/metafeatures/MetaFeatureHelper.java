@@ -28,14 +28,11 @@ public class MetaFeatureHelper {
 	 * Compute a set of meta features for a number of data sets identified by their
 	 * OpenML data set ID. Adds the OpenML ID of the data set as a feature.
 	 * 
-	 * @param dataSetIds
-	 *            The IDs of the data sets
-	 * @param characterizer
-	 *            The characterizer used to compute the meta features
-	 * @param metaDataSetName
-	 *            The name which will be given to the data set
+	 * @param dataSetIds      The IDs of the data sets
+	 * @param characterizer   The characterizer used to compute the meta features
+	 * @param metaDataSetName The name which will be given to the data set
 	 * @return The data set containing the meta features
-	 * @throws Exception
+	 * @throws Exception if the meta features cannot be computed
 	 */
 	public static Instances computeMetaFeatures(List<Integer> dataSetIds, GlobalCharacterizer characterizer,
 			String metaDataSetName) throws Exception {
@@ -154,25 +151,25 @@ public class MetaFeatureHelper {
 		instances.addAll(metaFeaturesForDataSets.values());
 		return instances;
 	}
-	
-	public static Instances gatherClassifierPerformanceValues(List<Integer> dataSetIds) throws IOException {	
+
+	public static Instances gatherClassifierPerformanceValues(List<Integer> dataSetIds) throws IOException {
 		ArrayList<Attribute> attributes = new ArrayList<Attribute>();
 		attributes.add(new Attribute("DatasetId"));
-		
+
 		// Classifiers mapping name to index in created instances
 		Map<String, Integer> classifierIndices = new HashMap<String, Integer>();
 		for (int i = 0; i < Util.PORTFOLIO.length; i++) {
 			String classifierName = Util.PORTFOLIO[i].getClass().getName();
 			classifierIndices.put(classifierName, i + 1);
 			attributes.add(new Attribute(classifierName));
-		} 
-		
-		HashMap<Integer,Instance> metaFeaturesForDataSets = new HashMap<Integer,Instance>();
+		}
+
+		HashMap<Integer, Instance> metaFeaturesForDataSets = new HashMap<Integer, Instance>();
 		for (int i : dataSetIds) {
-			metaFeaturesForDataSets.put(i, new DenseInstance(classifierIndices.size()+1));
+			metaFeaturesForDataSets.put(i, new DenseInstance(classifierIndices.size() + 1));
 			metaFeaturesForDataSets.get(i).setValue(0, i);
 		}
-		
+
 		// Add performance results
 		try (Stream<Path> paths = Files
 				.walk(FileSystems.getDefault().getPath(Util.CLASSIFIER_EVALUATION_RESULTS_FOLDER))) {
@@ -201,8 +198,8 @@ public class MetaFeatureHelper {
 				}
 			});
 		}
-		
-		Instances instances = new Instances("classifiers",attributes,metaFeaturesForDataSets.size());
+
+		Instances instances = new Instances("classifiers", attributes, metaFeaturesForDataSets.size());
 		instances.addAll(metaFeaturesForDataSets.values());
 		return instances;
 	}
@@ -211,9 +208,9 @@ public class MetaFeatureHelper {
 	 * Gets the meta features from OpenML for all the data sets contained in the
 	 * file located at the given Path.
 	 * 
-	 * @param dataSetIndices
-	 * @return
-	 * @throws Exception
+	 * @param dataSetIndices the indices for which to get meta features
+	 * @return a data set containing the meta features for the data sets
+	 * @throws Exception if the meta data cannot be retrieved
 	 */
 	public static Instances getMetaFeaturesFromOpenML(Path dataSetIndices) throws Exception {
 		// Set the OpenML cache to the specified directory

@@ -59,7 +59,7 @@ public class MannWhitneyUEvaluator {
 	 * @param measureName
 	 *            The measure according to which to compare the evaluation results
 	 *            (must be a column name)
-	 * @return
+	 * @return the result of the evaluation
 	 * @throws IOException
 	 *             If an Exception occurs while reading one of the files
 	 * @throws ColumnNotFoundException

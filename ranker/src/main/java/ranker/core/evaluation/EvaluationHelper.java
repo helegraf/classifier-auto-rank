@@ -40,11 +40,12 @@ public class EvaluationHelper {
 	 * Evaluates all currently available measures for this type of ranker by means
 	 * of leave one out on the given instances.
 	 * 
-	 * @param ranker
-	 * @param instances
-	 * @param targetAttributes
-	 * @return
-	 * @throws Exception
+	 * @param estim the estimation procedure to use for the evaluation
+	 * @param ranker the ranker to evaluate
+	 * @param instances the data to evaluate the ranker on
+	 * @param targetAttributes the attributes of the data that are performance values
+	 * @return estimates for a number of measures
+	 * @throws Exception if the evaluation of the ranker fails
 	 */
 	public static List<Double> evaluateRanker(RankerEstimationProcedure estim,Ranker ranker, Instances instances, List<Integer> targetAttributes)
 			throws Exception {
@@ -89,11 +90,11 @@ public class EvaluationHelper {
 	/**
 	 * Evaluates the predictive accuracy of the classifier on the data set by means
 	 * of five times stratified MCCV with a 70%/30% train/test split. Return 0 if
-	 * any errors ocurr during evaluation.
+	 * any errors occur during evaluation.
 	 * 
-	 * @param classifier
-	 * @param dataset
-	 * @return
+	 * @param classifier the classifier to evaluate
+	 * @param dataset the data to evaluate the classifier on
+	 * @return an estimate of the performance of the classifier
 	 */
 	public static double evaluateClassifier(Classifier classifier, Instances dataset) {
 		// Get result of evaluation
@@ -124,13 +125,6 @@ public class EvaluationHelper {
 		writer.close();
 	}
 
-	/**
-	 * Executes the given jobs which must have been generated before.
-	 * 
-	 * @param args
-	 * @throws IOException
-	 * @throws Exception
-	 */
 	public static void executeJobs(String[] args) throws IOException, Exception {
 		// Read input args
 		if (args.length != 2) {
@@ -170,16 +164,6 @@ public class EvaluationHelper {
 		});
 	}
 
-	/**
-	 * Evaluates all classifiers on all data sets and saves results in a new data
-	 * set (Features = Classifiers, Instances = data sets).
-	 * 
-	 * @param classifiers
-	 * @param datasets
-	 * @param evalM
-	 * @param estimProc
-	 * @param filepath
-	 */
 	public static void generatePerformanceMeasures(List<Classifier> classifiers, List<Instances> datasets,
 			EvaluationMeasure evalM, EstimationProcedure estimProc, String filepath) {
 		// Prepare table of results

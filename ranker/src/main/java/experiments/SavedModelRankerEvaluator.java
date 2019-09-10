@@ -22,7 +22,7 @@ public class SavedModelRankerEvaluator {
 			Instances data = arff.getData();		
 			
 			// Init ranker
-			Ranker ranker = new SavedModelRanker(i);
+			Ranker ranker = new SavedModelRanker("models/split_" + i, ".txt");
 			List<Integer> targetAttributes = new ArrayList<>();
 			for (int j = 104; j < 126; j++) {
 				targetAttributes.add(j);

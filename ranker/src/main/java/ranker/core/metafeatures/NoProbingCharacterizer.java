@@ -23,7 +23,7 @@ public class NoProbingCharacterizer extends GlobalCharacterizer {
 	 * {@link ranker.core.metafeatures.GlobalCharacterizer}, except that only Characterizers that do not use probing
 	 * are initialized.
 	 * 
-	 * @throws Exception
+	 * @throws Exception if the characterizer cannot be initialized successfully
 	 */
 	public NoProbingCharacterizer() throws Exception {
 		super();

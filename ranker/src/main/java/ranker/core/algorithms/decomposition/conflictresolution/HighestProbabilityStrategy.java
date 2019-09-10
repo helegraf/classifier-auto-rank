@@ -6,11 +6,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-public class DefaultStrategy implements ConflictResolutionStrategy {
+/**
+ * Attempts to resolve conflicts in a ranking in the following way:
+ * 
+ * <ol>
+ * <li>Starting from the first rank, check if the same rank is predicted for two
+ * algorithms. In this case, only keep this predicted rank for the algorithm for
+ * which this rank has the highest probability.</li>
+ * 
+ * <li>All other algorithms are assigned the next rank that has the highest
+ * probability (except ones that have already been tried in the course of the
+ * conflict resolution).</li>
+ * 
+ * <li>If all possible ranks have been tried for an algorithm, it is queued. At
+ * the end, the queued list is assigned the previously unsassigned ranks,
+ * starting from the first rank and first queue element.</li>
+ * </ol>
+ * 
+ * @author helegraf
+ *
+ */
+public class HighestProbabilityStrategy implements ConflictResolutionStrategy {
 
 	@Override
 	public void resolveConflictsAmongPredictions(TreeMap<Double, List<String>> predictions,
 			HashMap<String, double[][]> distributions) {
+
+		HashMap<String, double[][]> newDistributions = new HashMap<>();
+		distributions.forEach((item, distribution) -> {
+			newDistributions.put(item, Arrays.copyOf(distribution, distribution.length));
+		});
 
 		List<String> unassignedClassifiers = new ArrayList<>();
 		HashMap<String, Double> oldPredictions = new HashMap<>();
@@ -30,11 +55,11 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 
 					// find out best
 					for (String classifier : classifierList) {
-						double newConfidence = getConfidenceForClass(classifier, value, distributions);
+						double newConfidence = getConfidenceForClass(classifier, value, newDistributions);
 						if (newConfidence > confidence) {
 							// move the previous one away
 							if (best != null) {
-								assignNextPriority(best, value, distributions.get(best), newPredictions,
+								assignNextPriority(best, value, newDistributions.get(best), newPredictions,
 										oldPredictions, unassignedClassifiers);
 							}
 
@@ -42,7 +67,7 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 							best = classifier;
 						} else {
 							// move the current one away
-							assignNextPriority(classifier, value, distributions.get(classifier), newPredictions,
+							assignNextPriority(classifier, value, newDistributions.get(classifier), newPredictions,
 									oldPredictions, unassignedClassifiers);
 						}
 					}
@@ -64,7 +89,7 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 			});
 
 		} while (!newPredictions.isEmpty());
-		
+
 		// add leftovers
 		for (double i = 0; i < predictions.size(); i++) {
 			if (predictions.get(i) == null) {
@@ -72,26 +97,22 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 				unassignedClassifiers.remove(0);
 			}
 		}
-		
-		System.out.println(predictions.size());
-
 	}
-	
-	private double getConfidenceForClass(String item, double clazz, HashMap<String, double[][]> distributions) {	
+
+	private double getConfidenceForClass(String item, double clazz, HashMap<String, double[][]> distributions) {
 		double[][] distributionsForClassifire = distributions.get(item);
 		for (int i = 0; i < distributionsForClassifire[1].length; i++) {
 			if (distributionsForClassifire[1][i] == clazz) {
 				return distributionsForClassifire[0][i];
 			}
 		}
-		
-		System.err.println("Warn: predicted class that is not in the actual possible values somehow");
-		
+
 		throw new IllegalArgumentException();
 	}
 
 	private void assignNextPriority(String item, double conflictingClass, double[][] distributions,
-			HashMap<String, Double> newPredictions, HashMap<String, Double> oldPredictions, List<String> unassignedItems) {
+			HashMap<String, Double> newPredictions, HashMap<String, Double> oldPredictions,
+			List<String> unassignedItems) {
 		// mark old class for removal
 		oldPredictions.put(item, conflictingClass);
 
@@ -102,7 +123,7 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 				break;
 			}
 		}
-		
+
 		// find max probability
 		double max = 0;
 		int index = -1;
@@ -112,7 +133,7 @@ public class DefaultStrategy implements ConflictResolutionStrategy {
 				index = i;
 			}
 		}
-		
+
 		// assign new class
 		if (max == 0) {
 			unassignedItems.add(item);

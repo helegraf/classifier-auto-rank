@@ -18,14 +18,11 @@ public interface EvaluationMeasure {
 	 * on the test data set according to the implemented measure, e.g. predictive
 	 * accuracy or the area under the ROC curve.
 	 * 
-	 * @param classifier
-	 *            The Classifier to be used for evaluation.
-	 * @param train
-	 *            The Data set for training the classifier.
-	 * @param test
-	 *            The Data set for testing the classifier.
+	 * @param classifier The Classifier to be used for evaluation.
+	 * @param train      The Data set for training the classifier.
+	 * @param test       The Data set for testing the classifier.
 	 * @return The performance of the classifier on the data set.
-	 * @throws Exception
+	 * @throws Exception if the evaluation cannot be completed
 	 */
 	public double evaluate(Classifier classifier, Instances train, Instances test) throws Exception;
 }
