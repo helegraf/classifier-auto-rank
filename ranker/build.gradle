@@ -76,10 +76,7 @@ configurations.all {
 
 dependencies {
 	// OpenmlWebapplication for computing meta-features
-	implementation files ('libs/OpenmlWebapplication.jar')
-	
-	// Autoweka
-	//implementation files ('libs/autoweka.jar')
+	implementation (':OpenmlWebapplication:')
 	
 	// jPL
 	//implementation (':jpl-api-0.0.9-jar-with-dependencies:') { transitive = false }
@@ -88,20 +85,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson 
 	// needed for jPL, as jPL is included without dependencies to mitigate a slf4j-binding problem
 	compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
-	
-
-	// JAICore
-    //implementation 'com.github.fmohr:JAICore:a5aabbfefb0fdd210bc24ca9e17c503e4b10f96d'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
-    
-    // https://mvnrepository.com/artifact/nz.ac.waikato.cms.weka/weka-stable 
-	//api group: 'nz.ac.waikato.cms.weka', name: 'weka-stable', version: '3.8.1'
-    
-	// https://mvnrepository.com/artifact/org.openml/apiconnector
-	//compile group: 'org.openml', name: 'apiconnector', version: '1.0.22'
-
     
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'

@@ -18,7 +18,6 @@ import ranker.core.algorithms.decomposition.conflictresolution.HighestProbabilit
 import ranker.core.algorithms.decomposition.conflictresolution.MeanRankStrategy;
 import ranker.core.algorithms.decomposition.rankprediction.RankClassificationRanker;
 import ranker.core.algorithms.decomposition.rankprediction.RankRegressionRanker;
-import ranker.core.algorithms.decomposition.regression.MLPlanRegressionRanker;
 import ranker.core.algorithms.decomposition.regression.WEKARegressionRanker;
 import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoung;
 import ranker.core.algorithms.preference.InstanceBasedLabelRankingKemenyYoungSQRTN;
@@ -52,8 +51,8 @@ public class RankerTest {
 				new RankRegressionRanker(RandomForest.class.getName()),
 				new WEKARegressionRanker(RandomForest.class.getName()), new InstanceBasedLabelRankingRanker(),
 				new InstanceBasedLabelRankingKemenyYoung(), new InstanceBasedLabelRankingKemenyYoungSQRTN(),
-				new PairwiseComparisonRanker(), new PairwiseComparisonWEKARanker(),
-				new MLPlanRegressionRanker(0, 4, 330, 15, null, "rfClean"));
+				new PairwiseComparisonRanker(), new PairwiseComparisonWEKARanker());
+				//new MLPlanRegressionRanker(0, 4, 330, 15, null, "rfClean"));
 	}
 
 	@Test

@@ -15,7 +15,7 @@ import ranker.core.evaluation.measures.RankerEvaluationMeasure;
  */
 public class NDCGAtK extends RankerEvaluationMeasure {
 
-	private DCGAtK dcgAtk;
+	private DCGAtK dcgAtK;
 
 	/**
 	 * Create an NDCG@k evaluator with a truncation threshold at the given value
@@ -25,18 +25,22 @@ public class NDCGAtK extends RankerEvaluationMeasure {
 	 *            the truncation threshold
 	 */
 	public NDCGAtK(int truncationThresholdK) {
-		this.dcgAtk = new DCGAtK(truncationThresholdK);
+		this.dcgAtK = new DCGAtK(truncationThresholdK);
+	}
+	
+	public NDCGAtK(DCGAtK dcgAtK) {
+		this.dcgAtK = dcgAtK;
 	}
 
 	@Override
 	public double evaluate(List<String> predictedRanking, List<String> perfectRanking, List<Double> estimates,
 			List<Double> performanceMeasures) {
-		return dcgAtk.evaluate(predictedRanking, perfectRanking, estimates, performanceMeasures)
-				/ dcgAtk.evaluate(perfectRanking, perfectRanking, performanceMeasures, performanceMeasures);
+		return dcgAtK.evaluate(predictedRanking, perfectRanking, estimates, performanceMeasures)
+				/ dcgAtK.evaluate(perfectRanking, perfectRanking, performanceMeasures, performanceMeasures);
 	}
 	
 	@Override
 	public String getName() {
-		return this.getClass().getSimpleName() + "_" + dcgAtk.getName();
+		return this.getClass().getSimpleName() + "_" + dcgAtK.getName();
 	}
 }
