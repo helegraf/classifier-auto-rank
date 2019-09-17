@@ -25,6 +25,10 @@ public class RankRegressionRanker extends WEKARegressionRanker {
 	public RankRegressionRanker(String name) {
 		super(name);
 	}
+	
+	public RankRegressionRanker(String name, String[] hyperparameters) {
+		super(name, hyperparameters);
+	}
 
 	@Override
 	protected void modifyInstance(Instance instance, List<Integer> targetAttributes) {

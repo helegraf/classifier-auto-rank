@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import ranker.core.algorithms.decomposition.conflictresolution.ConflictResolutionStrategy;
-import ranker.core.algorithms.decomposition.conflictresolution.MeanRankStrategy;
+import ranker.core.algorithms.decomposition.conflictresolution.ExpectedRankStrategy;
 import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -26,7 +26,7 @@ import weka.filters.unsupervised.attribute.NumericToNominal;
  */
 public class RankClassificationRanker extends RankRegressionRanker {
 
-	private ConflictResolutionStrategy conflictResolutionStrategy = new MeanRankStrategy();
+	private ConflictResolutionStrategy conflictResolutionStrategy = new ExpectedRankStrategy();
 
 	/**
 	 * Construct a RankClassificationRanker with the given name (fully qualified name of
@@ -36,6 +36,10 @@ public class RankClassificationRanker extends RankRegressionRanker {
 	 */
 	public RankClassificationRanker(String name) {
 		super(name);
+	}
+	
+	public RankClassificationRanker(String name, String[] hyperparameters) {
+		super(name, hyperparameters);
 	}
 
 	@Override

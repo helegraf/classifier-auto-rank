@@ -7,12 +7,13 @@ import java.util.TreeMap;
 
 /**
  * Resolves conflicts in given ranking by ranking classifiers according to the
- * mean of the probabilities of predicted ranks multiplied by the ranks.
+ * probabilities of predicted ranks multiplied by the ranks (the expected value
+ * for the rank).
  * 
  * @author helegraf
  *
  */
-public class MeanRankStrategy implements ConflictResolutionStrategy {
+public class ExpectedRankStrategy implements ConflictResolutionStrategy {
 
 	@Override
 	public void resolveConflictsAmongPredictions(TreeMap<Double, List<String>> predictions,

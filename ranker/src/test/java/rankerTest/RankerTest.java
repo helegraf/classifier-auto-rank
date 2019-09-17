@@ -15,7 +15,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.decomposition.conflictresolution.HighestProbabilityStrategy;
-import ranker.core.algorithms.decomposition.conflictresolution.MeanRankStrategy;
+import ranker.core.algorithms.decomposition.conflictresolution.ExpectedRankStrategy;
 import ranker.core.algorithms.decomposition.rankprediction.RankClassificationRanker;
 import ranker.core.algorithms.decomposition.rankprediction.RankRegressionRanker;
 import ranker.core.algorithms.decomposition.regression.WEKARegressionRanker;
@@ -46,7 +46,7 @@ public class RankerTest {
 		rankClassificationRankerProbabilityStrategy.setConflictResolutionStrategy(new HighestProbabilityStrategy());
 		RankClassificationRanker rankClassificationRankerMeanStrategy = new RankClassificationRanker(
 				RandomForest.class.getName());
-		rankClassificationRankerMeanStrategy.setConflictResolutionStrategy(new MeanRankStrategy());
+		rankClassificationRankerMeanStrategy.setConflictResolutionStrategy(new ExpectedRankStrategy());
 		return Arrays.asList(rankClassificationRankerProbabilityStrategy, rankClassificationRankerMeanStrategy,
 				new RankRegressionRanker(RandomForest.class.getName()),
 				new WEKARegressionRanker(RandomForest.class.getName()), new InstanceBasedLabelRankingRanker(),

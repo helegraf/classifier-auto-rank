@@ -17,6 +17,7 @@ import weka.core.Instances;
 public class WEKARegressionRanker extends DecompositionRanker {
 	
 	private String name;
+	private String[] hyperparameters;
 	
 	/**
 	 * Constructs a new WEKARegressionRanker that will use the given classifier to predict the peformance of each algorithm.
@@ -26,13 +27,18 @@ public class WEKARegressionRanker extends DecompositionRanker {
 	public WEKARegressionRanker(String name) {
 		this.name = name;
 	}
+	
+	public WEKARegressionRanker(String name, String[] hyperparameters) {
+		this(name);
+		this.hyperparameters = hyperparameters;
+	}
 
 	@Override
 	protected void buildModels(Map<String, Instances> train) throws Exception {
 		models = new HashMap<String,Classifier>();
 		
 		for (Map.Entry<String, Instances> entry : train.entrySet()) {
-			AbstractClassifier model = (AbstractClassifier) AbstractClassifier.forName(name,null);
+			AbstractClassifier model = (AbstractClassifier) AbstractClassifier.forName(name,hyperparameters);
 			model.setDoNotCheckCapabilities(true);
 			model.buildClassifier(entry.getValue());
 			models.put(entry.getKey(), model);
