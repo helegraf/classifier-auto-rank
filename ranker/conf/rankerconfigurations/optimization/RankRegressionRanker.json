@@ -1,0 +1,23 @@
+{
+	"repository" : "RankRegressionRankerConfiguration",
+	"include": 
+	[
+		"./weka-regression-classifiers_noSMOreg.json", 
+		"./weka-universal-classifiers.json"
+	],
+	
+	"components" : 
+	[
+		{
+			"name" : "RankRegressionRanker",
+			"providedInterface" : [ "Ranker"],
+			"requiredInterface" : [
+				{ 
+					"id": "classifier",
+					"name": "BaseClassifier"
+				}
+			],
+			"parameter" : [ ]
+		}
+	]
+}

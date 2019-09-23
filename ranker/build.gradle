@@ -98,6 +98,9 @@ dependencies {
  	implementation 'com.github.helegraf:data-handling:e4d6a1bbbb'
  	
  	compile 'ai.libs:mlplan'
+ 	
+ 	//ALORS
+ 	implementation 'com.github.helegraf:ALORS-java:85e70fbae0'
 
 }
 

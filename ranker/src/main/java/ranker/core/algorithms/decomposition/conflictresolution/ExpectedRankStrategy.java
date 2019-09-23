@@ -28,7 +28,6 @@ public class ExpectedRankStrategy implements ConflictResolutionStrategy {
 			for (int i = 0; i < distribution[0].length; i++) {
 				value += distribution[0][i] * distribution[1][i];
 			}
-			value /= distribution[0].length;
 
 			if (predictions.get(value) == null) {
 				predictions.put(value, new ArrayList<>());

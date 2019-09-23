@@ -7,7 +7,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import experiments.two_part.CSVHandler.COLUMN;
+import experiments.two_part.part_two.output.CSVHandler;
+import experiments.two_part.part_two.output.CSVHandler.COLUMN;
 import jaicore.basic.SQLAdapter;
 
 public class CSVHandlerTest {

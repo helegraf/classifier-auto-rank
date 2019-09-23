@@ -49,8 +49,8 @@ public abstract class Ranker {
 		// Initialize variables
 		this.data = data;
 		this.targetAttributes = targetAttributes;
-		classifiersMap = new HashMap<Integer, String>();
-		features = new ArrayList<Integer>();
+		classifiersMap = new HashMap<>();
+		features = new ArrayList<>();
 
 		for (int i = 0; i < data.numAttributes(); i++) {
 			String attributeName = data.attribute(i).name();
