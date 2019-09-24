@@ -113,5 +113,4 @@ public class RankClassificationRanker extends RankRegressionRanker {
 	public void setConflictResolutionStrategy(ConflictResolutionStrategy conflictResolutionStrategy) {
 		this.conflictResolutionStrategy = conflictResolutionStrategy;
 	}
-
 }

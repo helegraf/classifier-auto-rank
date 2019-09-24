@@ -16,4 +16,14 @@ public class WEKARegressionRankerExecutor extends RankerExecutor {
 		
 		return new WEKARegressionRanker(config.getAlgorithm(), config.getHyperparameter());
 	}
+	
+	public static void main (String [] args) throws Exception {
+		new WEKARegressionRankerExecutor().evaluateRankerWithArgs(args);
+	}
+
+	@Override
+	protected String getActiveConfiguration() {
+		// TODO Auto-generated method stub
+		return "";
+	}
 }

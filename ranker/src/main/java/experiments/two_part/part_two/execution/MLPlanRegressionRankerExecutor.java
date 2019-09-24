@@ -3,6 +3,7 @@ package experiments.two_part.part_two.execution;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 	private SQLAdapter adapter;
 	private String intermediateResultsTable;
 	private int experimentId;
+	private MLPlanRegressionRankerConfig config;
 
 	@Override
 	protected Class<? extends RankerConfig> getRankerConfigClass() {
@@ -30,7 +32,7 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 
 	@Override
 	protected Ranker instantiate(RankerConfig configuration) {
-		MLPlanRegressionRankerConfig config = (MLPlanRegressionRankerConfig) configuration;
+		config = (MLPlanRegressionRankerConfig) configuration;
 
 		try {
 			if (config.uploadIntermediateResults()) {
@@ -94,5 +96,21 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 		} else {
 			logger.error("no adapter!");
 		}
+	}
+	
+	public static void main (String [] args) throws Exception {
+		new MLPlanRegressionRankerExecutor().evaluateRankerWithArgs(args);
+	}
+
+	@Override
+	protected String getActiveConfiguration() {	
+		Properties properties = new Properties();
+		properties.setProperty("mlplan.seed", String.valueOf(config.getSeed()));
+		properties.setProperty("mlplan.numCPUs", String.valueOf(config.getNumCPUs()));
+		properties.setProperty("mlplan.totalTimeoutSeconds", String.valueOf(config.getTotalTimeoutSeconds()));
+		properties.setProperty("mlplan.evaluationTimeoutSeconds", String.valueOf(config.getEvaluationTimeoutSeconds()));
+		properties.setProperty("mlplan.searchSpace", config.getSearchSpace());
+
+		return properties.toString();
 	}
 }

@@ -3,7 +3,7 @@ package experiments.two_part.part_two.execution;
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.decomposition.rankprediction.RankRegressionRanker;
 
-public class RankRegressionRankerExperimenter extends RankerExecutor {
+public class RankRegressionRankerExecutor extends RankerExecutor {
 
 	@Override
 	protected Class<? extends RankerConfig> getRankerConfigClass() {
@@ -16,5 +16,13 @@ public class RankRegressionRankerExperimenter extends RankerExecutor {
 
 		return new RankRegressionRanker(config.getRegressorName(), config.getRegressorOptions());
 	}
+	
+	public static void main (String [] args) throws Exception {
+		new RankRegressionRankerExecutor().evaluateRankerWithArgs(args);
+	}
 
+	@Override
+	protected String getActiveConfiguration() {
+		return "";
+	}
 }

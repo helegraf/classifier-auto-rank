@@ -2,10 +2,10 @@ package experiments.two_part.part_two.output;
 
 import org.aeonbits.owner.Config;
 
-public interface CSVOutputConfig extends Config {
+public interface OutputConfig extends Config {
 	
-	@Key("outfile")
-	@DefaultValue("output.csv")
+	@Key("outfilepath")
+	@DefaultValue("results")
 	public String getOutFilePath();
 	
 	@Key("column.experiment")

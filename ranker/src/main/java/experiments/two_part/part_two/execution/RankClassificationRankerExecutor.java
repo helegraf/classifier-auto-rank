@@ -1,12 +1,9 @@
 package experiments.two_part.part_two.execution;
 
-import java.util.Arrays;
-
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.decomposition.conflictresolution.ExpectedRankStrategy;
 import ranker.core.algorithms.decomposition.conflictresolution.HighestProbabilityStrategy;
 import ranker.core.algorithms.decomposition.rankprediction.RankClassificationRanker;
-import weka.classifiers.trees.RandomForest;
 
 public class RankClassificationRankerExecutor extends RankerExecutor {
 
@@ -37,8 +34,14 @@ public class RankClassificationRankerExecutor extends RankerExecutor {
 		return ranker;
 	}
 	
-	public static void main (String [] args) {
-		System.out.println(Arrays.toString(new RandomForest().getOptions()));
+	public static void main (String [] args) throws Exception {
+		new RankClassificationRankerExecutor().evaluateRankerWithArgs(args);
+	}
+
+	@Override
+	protected String getActiveConfiguration() {
+		// TODO Auto-generated method stub
+		return "";
 	}
 
 }

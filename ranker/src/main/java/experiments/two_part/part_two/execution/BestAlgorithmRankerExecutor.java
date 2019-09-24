@@ -19,4 +19,9 @@ public class BestAlgorithmRankerExecutor extends RankerExecutor {
 		new BestAlgorithmRankerExecutor().evaluateRankerWithArgs(args);
 	}
 
+	@Override
+	protected String getActiveConfiguration() {
+		return "";
+	}
+
 }

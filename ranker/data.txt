@@ -1,3 +1,0 @@
-dataset_id	true_ranking	true_values	predicted_ranking	predicted_values	training_time	prediction_time
-id1	[A, B, C]	[3.0, 2.0, 1.0]	[C, B, A]	[3.0, 2.0, 1.0]	1000	1
-id2	[A, B, C]	[3.0, 2.0, 1.0]	\N	\N	1000	0

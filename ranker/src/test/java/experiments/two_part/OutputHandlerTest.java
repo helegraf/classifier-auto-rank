@@ -7,11 +7,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import experiments.two_part.part_two.output.CSVHandler;
-import experiments.two_part.part_two.output.CSVHandler.COLUMN;
+import experiments.two_part.part_two.output.OutputHandler;
+import experiments.two_part.part_two.output.OutputHandler.COLUMN;
 import jaicore.basic.SQLAdapter;
 
-public class CSVHandlerTest {
+public class OutputHandlerTest {
 
 	private String host;
 	private String user;
@@ -28,14 +28,14 @@ public class CSVHandlerTest {
 		map.put(COLUMN.TRAINING_TIME, "training_time");
 		map.put(COLUMN.PREDICTION_TIME, "prediction_time");
 
-		CSVHandler handler = new CSVHandler(map);
+		OutputHandler handler = new OutputHandler(map);
 		List<String> correctRanking = Arrays.asList("A", "B", "C");
 		List<String> predictedRanking = Arrays.asList("C", "B", "A");
 		List<Double> values = Arrays.asList(3.0, 2.0, 1.0);
 		handler.addRecord("id1", correctRanking, values, predictedRanking, values, 1000, 1);
 		handler.addRecord("id2", correctRanking, values, null, null, 1000, 0);
 
-		handler.writeFile("data.txt");
+		handler.writeFile(".", "data.txt");
 
 		try (SQLAdapter adapter = new SQLAdapter(host, user, pw, db)) {
 			String create = String.format(
@@ -44,7 +44,7 @@ public class CSVHandlerTest {
 					handler.getHeader()[3], handler.getHeader()[4], handler.getHeader()[5], handler.getHeader()[6]);
 			adapter.update(create);
 
-			handler.uploadFile(adapter, "data.txt", "test", 1);
+			handler.uploadFile(adapter, ".", "data.txt", "test", 1);
 		}
 	}
 }

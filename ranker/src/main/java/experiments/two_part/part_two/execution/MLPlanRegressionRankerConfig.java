@@ -17,24 +17,24 @@ public interface MLPlanRegressionRankerConfig extends RankerConfig {
 	@Key("mlplan.searchSpace")
 	public String getSearchSpace();
 	
-	@Key("mlplan.db.upload_intermediate_results")
+	@Key("db.upload_intermediate_results")
 	public boolean uploadIntermediateResults();
 	
-	@Key("mlplan.db.host")
+	@Key("db.host")
 	public String getHost();
 	
-	@Key("mlplan.db.user")
+	@Key("db.user")
 	public String getUser();
 	
-	@Key("mlplan.db.pw")
+	@Key("db.pw")
 	public String getPassword();
 	
-	@Key("mlplan.db.db")
+	@Key("db.db")
 	public String getDatabase();
 	
-	@Key("mlplan.db.intermediate_results_table")
+	@Key("db.intermediate_results_table")
 	public String getIntermediateResultsTable();
 	
-	@Key("mlplan.db.experiment_id")
+	@Key("db.experiment_id")
 	public int getExperimentId();
 }

@@ -86,7 +86,7 @@ public class RankerTest {
 		List<Integer> targetAttributes = new ArrayList<>();
 
 		for (int i = 0; i < data.numAttributes(); i++) {
-			if (data.attribute(i).name().startsWith("weka")) {
+			if (data.attribute(i).name().startsWith("target:")) {
 				targetAttributes.add(i);
 			}
 		}
