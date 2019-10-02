@@ -1,0 +1,44 @@
+scenario_id: minimal
+performance_measures:
+- percentageCorrect
+- runtime
+maximize:
+- true
+- false
+performance_type:
+- solution_quality
+- runtime
+algorithm_cutoff_time: 1001
+algorithm_cutoff_memory: '?'
+features_cutoff_time: '?'
+features_cutoff_memory: '?'
+metainfo_algorithms:
+	MLP:
+		configuration: ''
+		deterministic: true
+	DecisionTable:
+		configuration: ''
+		deterministic: true
+	randomforest:
+		configuration: ''
+		deterministic: false
+number_of_feature_steps: 1
+step_1:
+	provides:
+	- feature_1
+step_2:
+	requires:
+	- feature_1
+	provides
+	- feature_2
+	- feature_3
+default_steps:
+- feature_2
+- feature_3
+features_deterministic:
+- feature_1
+- feature_2
+- feature_3
+features_stochastic:
+
+

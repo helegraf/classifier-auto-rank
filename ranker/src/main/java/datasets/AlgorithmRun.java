@@ -30,8 +30,8 @@ public class AlgorithmRun {
 
 	private void initialize() {
 		averagePerformanceMap = new HashMap<>();
-		int numberOfValidMeasurements = 0;
 		for (PerformanceMeasure measure : performanceMeasurements.keySet()) {
+			int numberOfValidMeasurements = 0;
 			double averagePerformance = 0;
 			for (int i = 0; i < performanceMeasurements.get(measure).size(); i++) {
 				double measurement = performanceMeasurements.get(measure).get(i);
@@ -46,11 +46,10 @@ public class AlgorithmRun {
 	}
 
 	public void addRun(PerformanceMeasure measure, double result, RunStatus runStatus) {
-		if (!performanceMeasurements.containsKey(measure)) {
-			performanceMeasurements.put(measure, new ArrayList<>());
-		}
+		performanceMeasurements.computeIfAbsent(measure, k -> new ArrayList<>());
 		performanceMeasurements.get(measure).add(result);
 		this.runStatus.add(runStatus);
+		initialize();
 	}
 
 	public Instance getInstance() {

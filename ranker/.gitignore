@@ -6,6 +6,16 @@
 /bin/
 /data/openML_cache/*
 logs/
+/src/test/resources/ASLibParserTest/real/
+/data/ranker_evaluation_results
+/cofirank/clog.txt
+/cofirank/COFI-DONE
+/cofirank/COFI-RUNNING
+/cofirank/config/
+/cofirank/default_out/
+/cofirank/data
+/results/
+
 
 # GENERAL IGNORES #
 

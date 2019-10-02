@@ -1,0 +1,13 @@
+@Relation featureValues_minimal
+
+@Attribute instance_id string
+@Attribute repetition numeric
+@attribute feature_1 numeric
+@attribute feature_2 numeric
+@attribute feature_3 numeric
+
+@Data
+a,1,1,2,3
+a,2,1,2,4
+b,1,2,3,4
+b,2,2,3,5

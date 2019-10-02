@@ -1,0 +1,12 @@
+@relation minimal_repetition-2_fold-1_train
+
+@attribute id string
+@attribute feature_1 numeric
+@attribute feature_2 numeric
+@attribute feature_3 numeric
+@attribute target:MLP numeric
+@attribute target:DecisionTable numeric
+@attribute target:randomforest numeric
+
+@data
+a,1,2,3.5,-1000,-10,-403.333333

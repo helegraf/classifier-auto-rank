@@ -1,0 +1,11 @@
+@relation cv
+
+@attribute instance_id STRING
+@attribute repetition NUMERIC
+@attribute fold NUMERIC
+
+@Data
+a,1,1
+b,1,2
+a,2,2
+b,2,1

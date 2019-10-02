@@ -1,0 +1,20 @@
+@relation minimal
+
+@attribute instance_id STRING
+@attribute repetition NUMERIC
+@attribute algorithm STRING
+@attribute percentageCorrect NUMERIC
+@attribute runtime NUMERIC
+@attribute runstatus {ok, timeout, memout, not_applicable, crash, other}
+
+@Data
+a,1,randomforest,99,100,ok
+a,2,randomforest,90,110,ok
+a,3,randomforest,0,1000,crash
+a,1,MLP,80,1000,ok
+a,1,DecisionTable,20,10,ok
+b,1,randomforest,89,150,ok
+b,2,randomforest,0,1000,memout
+b,3,randomforest,88,175,ok
+b,1,MLP,0,1000,timeout
+b,1,DecisionTable,10,10,ok
