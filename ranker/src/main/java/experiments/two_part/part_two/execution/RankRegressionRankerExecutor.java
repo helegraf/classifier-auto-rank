@@ -1,7 +1,10 @@
 package experiments.two_part.part_two.execution;
 
+import java.util.List;
+
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.decomposition.rankprediction.RankRegressionRanker;
+import weka.core.Instances;
 
 public class RankRegressionRankerExecutor extends RankerExecutor {
 
@@ -17,12 +20,20 @@ public class RankRegressionRankerExecutor extends RankerExecutor {
 		return new RankRegressionRanker(config.getRegressorName(), config.getRegressorOptions());
 	}
 	
-	public static void main (String [] args) throws Exception {
-		new RankRegressionRankerExecutor().evaluateRankerWithArgs(args);
+	@Override
+	protected String getActiveConfiguration() {
+		//TODO
+		return "";
 	}
 
 	@Override
-	protected String getActiveConfiguration() {
-		return "";
+	protected Ranker getOptimalRanker(Instances hyperTrain, Instances hyperTest, List<Integer> targetAttributes,
+			RankerConfig configuration) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static void main (String [] args) throws Exception {
+		new RankRegressionRankerExecutor().evaluateRankerWithArgs(args);
 	}
 }

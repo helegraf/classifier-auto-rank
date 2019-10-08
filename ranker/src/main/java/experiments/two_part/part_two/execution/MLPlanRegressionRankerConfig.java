@@ -34,7 +34,4 @@ public interface MLPlanRegressionRankerConfig extends RankerConfig {
 	
 	@Key("db.intermediate_results_table")
 	public String getIntermediateResultsTable();
-	
-	@Key("db.experiment_id")
-	public int getExperimentId();
 }

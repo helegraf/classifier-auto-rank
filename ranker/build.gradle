@@ -50,7 +50,8 @@ uploadArchives {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'experiments.EmpiricalRankerExperimenter'
+        //attributes 'Main-Class': 'experiments.EmpiricalRankerExperimenter'
+        attributes 'Main-Class': 'experiments.two_part.part_two.execution.BestAlgorithmRankerExecutor'
     }
 }
 

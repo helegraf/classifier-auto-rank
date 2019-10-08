@@ -38,12 +38,7 @@ public class OutputHandlerTest {
 		handler.writeFile(".", "data.txt");
 
 		try (SQLAdapter adapter = new SQLAdapter(host, user, pw, db)) {
-			String create = String.format(
-					"CREATE TABLE IF NOT EXISTS `%s`.`%s` (`id` INT NOT NULL AUTO_INCREMENT, experiment_id INT NOT NULL, `%s` VARCHAR(255) NOT NULL , `%s` TEXT NOT NULL, `%s` TEXT NOT NULL, `%s` TEXT NULL , `%s` TEXT NULL , `%s` BIGINT NOT NULL, `%s` BIGINT NOT NULL, `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE = InnoDB;",
-					db, "test", handler.getHeader()[0], handler.getHeader()[1], handler.getHeader()[2],
-					handler.getHeader()[3], handler.getHeader()[4], handler.getHeader()[5], handler.getHeader()[6]);
-			adapter.update(create);
-
+			handler.createIntermediateResultsTable(adapter, db, "test");
 			handler.uploadFile(adapter, ".", "data.txt", "test", 1);
 		}
 	}

@@ -2,6 +2,7 @@ package experiments.two_part.part_two.execution;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -16,6 +17,7 @@ import jaicore.basic.SQLAdapter;
 import jaicore.ml.WekaUtil;
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.decomposition.regression.MLPlanRegressionRanker;
+import weka.core.Instances;
 
 public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 
@@ -39,7 +41,7 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 				adapter = new SQLAdapter(config.getHost(), config.getUser(), config.getPassword(),
 						config.getDatabase());
 				intermediateResultsTable = config.getIntermediateResultsTable();
-				experimentId = config.getExperimentId();
+				experimentId = super.getExperimentId();
 				createIntermediateResultsTableIfNotExists(intermediateResultsTable);
 			}
 		} catch (SQLException e) {
@@ -98,10 +100,6 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 		}
 	}
 	
-	public static void main (String [] args) throws Exception {
-		new MLPlanRegressionRankerExecutor().evaluateRankerWithArgs(args);
-	}
-
 	@Override
 	protected String getActiveConfiguration() {	
 		Properties properties = new Properties();
@@ -110,7 +108,17 @@ public class MLPlanRegressionRankerExecutor extends RankerExecutor {
 		properties.setProperty("mlplan.totalTimeoutSeconds", String.valueOf(config.getTotalTimeoutSeconds()));
 		properties.setProperty("mlplan.evaluationTimeoutSeconds", String.valueOf(config.getEvaluationTimeoutSeconds()));
 		properties.setProperty("mlplan.searchSpace", config.getSearchSpace());
-
 		return properties.toString();
 	}
+	
+	@Override
+	protected Ranker getOptimalRanker(Instances hyperTrain, Instances hyperTest, List<Integer> targetAttributes,
+			RankerConfig configuration) {
+		return this.instantiate(configuration);
+	}
+
+	public static void main (String [] args) throws Exception {
+		new MLPlanRegressionRankerExecutor().evaluateRankerWithArgs(args);
+	}
+
 }

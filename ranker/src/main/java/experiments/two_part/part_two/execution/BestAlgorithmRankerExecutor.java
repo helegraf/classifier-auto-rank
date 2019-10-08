@@ -1,7 +1,10 @@
 package experiments.two_part.part_two.execution;
 
+import java.util.List;
+
 import ranker.core.algorithms.Ranker;
 import ranker.core.algorithms.baseline.BestAlgorithmRanker;
+import weka.core.Instances;
 
 public class BestAlgorithmRankerExecutor extends RankerExecutor {
 
@@ -22,6 +25,12 @@ public class BestAlgorithmRankerExecutor extends RankerExecutor {
 	@Override
 	protected String getActiveConfiguration() {
 		return "";
+	}
+
+	@Override
+	protected Ranker getOptimalRanker(Instances hyperTrain, Instances hyperTest, List<Integer> targetAttributes,
+			RankerConfig configuration) {
+		return this.instantiate(configuration);
 	}
 
 }

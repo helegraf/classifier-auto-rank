@@ -8,5 +8,4 @@ import jaicore.ml.experiments.IMultiClassClassificationExperimentConfig;
 @Sources({ "file:conf/twopartranker.properties" })
 public interface TwoPartExperimenterConfig extends IMultiClassClassificationExperimentConfig, IDatabaseConfig {
 
-
 }

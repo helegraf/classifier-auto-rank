@@ -71,11 +71,19 @@ public class OutputHandler {
 		}
 	}
 
-	public void uploadFile(SQLAdapter adapter, String location, String name, String table, int experimentId) throws SQLException {
+	public void createIntermediateResultsTable(SQLAdapter adapter, String db, String table) throws SQLException {
+		String create = String.format(
+				"CREATE TABLE IF NOT EXISTS `%s`.`%s` (`id` INT NOT NULL AUTO_INCREMENT, experiment_id INT NOT NULL, `%s` VARCHAR(255) NOT NULL , `%s` TEXT NOT NULL, `%s` TEXT NOT NULL, `%s` TEXT NULL , `%s` TEXT NULL , `%s` BIGINT NOT NULL, `%s` BIGINT NOT NULL, `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (`id`)) ENGINE = InnoDB;",
+				db, table, header[0], header[1], header[2], header[3], header[4], header[5], header[6]);
+		adapter.update(create);
+	}
+
+	public void uploadFile(SQLAdapter adapter, String location, String name, String table, int experimentId)
+			throws SQLException {
 		String sql = String.format(
 				"LOAD DATA LOCAL INFILE \"%s\" into table %s IGNORE 1 LINES (%s,%s,%s,%s,%s,%s,%s) SET experiment_id=%d",
-				location + "/" + name, table, header[0], header[1], header[2], header[3], header[4], header[5], header[6],
-				experimentId);
+				location + "/" + name, table, header[0], header[1], header[2], header[3], header[4], header[5],
+				header[6], experimentId);
 		adapter.insertNoNewValues(sql, new ArrayList<Object>());
 	}
 

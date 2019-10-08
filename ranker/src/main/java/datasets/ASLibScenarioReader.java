@@ -43,7 +43,7 @@ public class ASLibScenarioReader {
 			DataSource source = new DataSource(pathToScenario + "/cv.arff");
 			data = source.getDataSet();
 		} catch (Exception exception) {
-			throw new IOException("Cannot read feature_values.arff file.", exception);
+			throw new IOException("Cannot read cv.arff file.", exception);
 		}
 
 		splitMembers = new HashMap<>();
